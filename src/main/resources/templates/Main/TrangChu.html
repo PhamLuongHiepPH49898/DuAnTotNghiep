@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Trang tổng - Đặt sân bóng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .san-bong-card img {
+            height: 160px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        .san-bong-card:hover {
+            transform: scale(1.02);
+            transition: 0.3s;
+        }
+        .form-select {
+            width: auto;
+            display: inline-block;
+            margin-right: 1rem;
+        }
+        .hero-image {
+            width: 100%;
+            height: 300px;
+            background-image: url('/images/san-bong.jpg'); /* Thay bằng ảnh thật */
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+<header class="bg-primary text-white text-center py-4">
+    <h1>HỆ THỐNG ĐẶT SÂN BÓNG</h1>
+</header>
+
+<nav class="nav justify-content-center bg-white shadow-sm py-2">
+    <a class="nav-link text-primary fw-bold" onclick="showSection('home')">Trang chủ</a>
+    <a class="nav-link text-primary fw-bold" onclick="showSection('search')">Tìm kiếm</a>
+    <a class="nav-link text-primary fw-bold" onclick="showSection('detail')">Chi tiết sân</a>
+</nav>
+
+<div class="hero-image"></div>
+
+<div class="container">
+    <!-- Trang chủ -->
+    <div id="home" class="section active">
+        <h2 class="mb-4">Danh sách sân bóng</h2>
+        <div class="row g-4">
+            <div th:each="san : ${danhSachSan}" class="col-md-4">
+                <div class="card san-bong-card shadow-sm h-100" th:onclick="'showDetail(' + ${san.id_san_bong} + ')'">
+                    <img th:src="@{'/static/image/anh3.jpg' + ${san.hinh_anh}}" class="card-img-top" alt="Hình sân">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${san.ten_san_bong}">Tên sân</h5>
+                        <p class="card-text text-success fw-bold" th:text="'Giá: ' + ${san.gia} + ' VNĐ'"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${danhSachSan == null or #lists.isEmpty(danhSachSan)}" class="text-center mt-3">
+            <p>Hiện chưa có sân nào để hiển thị.</p>
+        </div>
+    </div>
+
+    <!-- Tìm kiếm -->
+    <div id="search" class="section" style="display:none">
+        <h2 class="mb-4">Tìm kiếm sân</h2>
+        <form th:action="@{/tim-kiem}" method="get" class="bg-white p-4 shadow-sm rounded">
+            <div class="mb-3">
+                <label class="form-label">Loại sân:</label>
+                <select name="loaiSan" class="form-select">
+                    <option value="">--Chọn--</option>
+                    <option th:each="loai : ${dsLoaiSan}" th:value="${loai.id}" th:text="${loai.ten_loai_san}"></option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Môn thể thao:</label>
+                <select name="monTheThao" class="form-select">
+                    <option value="">--Chọn--</option>
+                    <option th:each="mon : ${dsMonTheThao}" th:value="${mon.id}" th:text="${mon.ten_mon_the_thao}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Tìm</button>
+        </form>
+    </div>
+
+    <!-- Chi tiết sân -->
+    <div id="detail" class="section" style="display:none">
+        <h2 class="mb-4">Thông tin chi tiết sân</h2>
+        <div th:if="${sanBongChiTiet != null}" class="bg-white p-4 shadow-sm rounded">
+            <p><strong>Tên sân:</strong> <span th:text="${sanBongChiTiet.ten_san_bong}"></span></p>
+            <p><strong>Địa chỉ:</strong> <span th:text="${sanBongChiTiet.dia_chi}"></span></p>
+            <p><strong>Giá:</strong> <span th:text="${sanBongChiTiet.gia} + ' VNĐ'"></span></p>
+            <p><strong>Mô tả:</strong> <span th:text="${sanBongChiTiet.mo_ta}"></span></p>
+            <img th:src="@{'/image/' + ${sanBongChiTiet.hinh_anh}}" alt="Hình ảnh sân" class="img-fluid rounded mt-3" style="max-width: 400px;">
+        </div>
+        <div th:if="${sanBongChiTiet == null}" class="text-center">
+            <p>Vui lòng chọn một sân để xem chi tiết.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+    }
+
+    function showDetail(sanId) {
+        showSection('detail');
+        window.location.href = '/chi-tiet-san?id=' + sanId;
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -8,7 +8,7 @@ public class DatnApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DatnApplication.class, args);
-        System.out.println("loading");
+        System.out.println("Đang chạy");
     }
 
 }

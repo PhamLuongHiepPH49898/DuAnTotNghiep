@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đặt sân bóng</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- BOOTSTRAP + ICONS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        .hero {
+            position: relative;
+            background: url('/static/image/anh4.webp') no-repeat center center;
+            background-size: cover;
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 2;
+            color: white;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .features i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #0d6efd;
+        }
+
+        .search-form .form-select,
+        .search-form .form-control {
+            min-width: 150px;
+        }
+
+        .search-form {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">SAMBA</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link active" href="#">Trang chủ</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Tìm kiếm sân</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Đặt sân</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Lịch sử đặt sân</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Đánh giá sân</a></li>
+            </ul>
+            <span class="navbar-text text-white">
+                <i class="bi bi-person-circle"></i> Tên người dùng
+            </span>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="container">
+        <h1>TÌM KIẾM VÀ ĐẶT SÂN BÓNG</h1>
+        <p>Đặt sân nhanh chóng và dễ dàng cùng với SAMBA</p>
+
+        <form class="row justify-content-center mt-4 search-form" method="GET" action="/tim-kiem-san">
+            <div class="col-md-3 col-sm-6 mb-2">
+                <input type="date" class="form-control" name="ngay" required>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-2">
+                <select class="form-select" name="gio" required>
+                    <option value="">Chọn giờ</option>
+                    <option>07:00</option>
+                    <option>09:00</option>
+                    <option>17:00</option>
+                    <option>19:00</option>
+                </select>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-2">
+                <select class="form-select" name="loaiSan" required>
+                    <option value="">Loại sân</option>
+                    <option>Sân 5</option>
+                    <option>Sân 7</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-2">
+                <button type="submit" class="btn btn-warning w-100">Tìm kiếm</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- FEATURES -->
+<div class="container text-center mt-5 mb-5 features">
+    <div class="row">
+        <div class="col-md-3 col-6 mb-4">
+            <i class="bi bi-search"></i>
+            <h5>Tìm kiếm sân</h5>
+            <p>Lựa chọn sân phù hợp nhu cầu</p>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <i class="bi bi-calendar-check"></i>
+            <h5>Đặt sân nhanh</h5>
+            <p>Chọn thời gian và đặt dễ dàng</p>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <i class="bi bi-clock-history"></i>
+            <h5>Lịch sử đặt</h5>
+            <p>Kiểm tra trạng thái đặt sân</p>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <i class="bi bi-star-half"></i>
+            <h5>Đánh giá sân</h5>
+            <p>Xem và gửi đánh giá sân bạn đã chơi</p>
+        </div>
+    </div>
+</div>
+
+<!-- BOOTSTRAP JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
