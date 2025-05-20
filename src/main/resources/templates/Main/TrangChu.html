@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đặt Sân Bóng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            position: relative;
+            background: url('/static/image/anh4.webp') no-repeat center center;
+            background-size: cover;
+            background-position: center;
+            image-rendering: optimizeQuality;
+            image-rendering: -webkit-optimize-contrast;
+            color: white;
+            padding: 150px 0;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* Overlay mờ tối để chữ nổi bật */
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            inset: 0; /* top:0; right:0; bottom:0; left:0 */
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+
+        .hero-section .container {
+            position: relative;
+            z-index: 1; /* Đưa nội dung lên trên overlay */
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .navbar-nav .nav-link.active {
+            font-weight: bold;
+            color: yellow !important;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#"><i class="bi bi-house-door-fill"></i></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link active" href="#">Trang chủ</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Danh sách sân bãi</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Giới thiệu</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Chính sách</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Điều khoản</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Dành cho chủ sân</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Liên hệ</a></li>
+            </ul>
+            <div class="d-flex">
+                <a href="#" class="btn btn-outline-light me-2">Đăng ký</a>
+                <a href="#" class="btn btn-light">Đăng nhập</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <h1 class="display-5 fw-bold">HỆ THỐNG HỖ TRỢ TÌM KIẾM SÂN BÃI NHANH</h1>
+        <p class="lead">Dữ liệu được SAMBA cập nhật thường xuyên giúp cho người dùng tìm được sân một cách nhanh nhất</p>
+
+        <!-- Search Box -->
+        <div class="search-box mt-4 shadow">
+            <form class="row g-2">
+                <div class="col-md-3">
+                    <select class="form-select">
+                        <option selected>Lọc theo loại sân</option>
+                        <option>Sân 5</option>
+                        <option>Sân 7</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" placeholder="Nhập tên sân hoặc địa chỉ...">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" placeholder="Nhập khu vực">
+                </div>
+                <div class="col-md-2 d-grid">
+                    <button class="btn btn-warning" type="submit">
+                        Tìm kiếm <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</section>
+<!-- FEATURES -->
+<div class="container text-center mt-5 mb-5 features">
+    <div class="row">
+        <div class="col-md-3 col-6 mb-4">
+            <i class="bi bi-search"></i>
+            <h5>Tìm kiếm sân</h5>
+            <p>Lựa chọn sân phù hợp nhu cầu</p>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <i class="bi bi-calendar-check"></i>
+            <h5>Đặt sân nhanh</h5>
+            <p>Chọn thời gian và đặt dễ dàng</p>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <i class="bi bi-clock-history"></i>
+            <h5>Lịch sử đặt</h5>
+            <p>Kiểm tra trạng thái đặt sân</p>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <i class="bi bi-star-half"></i>
+            <h5>Đánh giá sân</h5>
+            <p>Xem và gửi đánh giá sân bạn đã chơi</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</body>
+</html>
