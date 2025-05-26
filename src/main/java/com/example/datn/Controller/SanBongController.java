@@ -30,35 +30,40 @@ public class SanBongController {
         this.taiKhoanRepo = taiKhoanRepo;
     }
 
+    @GetMapping("/")
+    public String homeRedirect() {
+        return "redirect:/trangchu";
+    }
+
+    // ✅ Trang chủ chính
     @GetMapping("/trangchu")
     public String trangchu(Model model) {
         List<SanBong> danhSachSan = sanBongService.findAll();
+        model.addAttribute("danhSachSan", danhSachSan);
         model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
         model.addAttribute("dsMonTheThao", loaiMonTheThaoRepo.findAll());
-        model.addAttribute("danhSachSan", danhSachSan);
         return "/Main/TrangChu";
     }
+
+    // ✅ Trang tìm kiếm riêng
     @GetMapping("/tim-kiem")
     public String timKiem(Model model,
                           @RequestParam(required = false) Integer loaiSan,
                           @RequestParam(required = false) Integer monTheThao) {
         List<SanBong> ketQua = sanBongService.timKiemSan(loaiSan, monTheThao);
-
         model.addAttribute("danhSachSan", ketQua);
         model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
         model.addAttribute("dsMonTheThao", loaiMonTheThaoRepo.findAll());
-        return "/Main/TrangChu";
+        return "/Main/TimKiem"; // 👉 trang riêng biệt
     }
 
-    // 📌 Chi tiết sân
+    // ✅ Trang chi tiết riêng
+    @GetMapping("/chi-tiet/{id}")
     public String chiTietSan(@PathVariable("id") int id, Model model) {
         SanBong san = sanBongService.findById(id);
         model.addAttribute("sanBongChiTiet", san);
-
-        model.addAttribute("danhSachSan", sanBongService.findAll());
-        model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
-        model.addAttribute("dsMonTheThao", loaiMonTheThaoRepo.findAll());
-        return "/Main/TrangChu";
+        return "/Main/ChiTietSan"; // 👉 trang riêng biệt
     }
+
 
 }

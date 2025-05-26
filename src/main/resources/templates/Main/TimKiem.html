@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Tìm kiếm sân bóng - Samba</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0; padding: 0;
+            color: #1B1E21;
+        }
+        header, footer {
+            background-color: #6CABDD;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .menu a {
+            color: white;
+            margin: 0 20px;
+            font-size: 1.1rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .menu a:hover {
+            color: #0d6efd;
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(108, 171, 221, 0.3);
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1B1E21;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 35px;
+        }
+        select {
+            padding: 10px 15px;
+            border: 1px solid #6CABDD;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #1B1E21;
+            min-width: 200px;
+            transition: border-color 0.3s ease;
+        }
+        select:focus {
+            outline: none;
+            border-color: #0d6efd;
+            box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+        }
+        button {
+            background-color: #6CABDD;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 12px rgba(108, 171, 221, 0.5);
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #5aa0d8;
+        }
+
+        .result-item {
+            border: 1px solid #6CABDD;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 8px rgba(108, 171, 221, 0.2);
+            transition: box-shadow 0.3s ease;
+        }
+        .result-item:hover {
+            box-shadow: 0 6px 16px rgba(108, 171, 221, 0.4);
+        }
+        .result-item a {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1B1E21;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .result-item a:hover {
+            color: #0d6efd;
+            text-decoration: underline;
+        }
+        .result-item p {
+            margin-top: 8px;
+            font-size: 1rem;
+            color: #444;
+        }
+
+        footer p {
+            margin: 0 0 25px 0;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .features {
+            max-width: 900px;
+            margin: auto;
+        }
+        .features .row > div {
+            text-align: center;
+        }
+        .features i {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+        .features h5 {
+            margin-top: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: white;
+        }
+        .features p {
+            font-size: 0.95rem;
+            color: #e0e6f0;
+            margin-bottom: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px 20px;
+                margin: 20px 15px;
+            }
+            form {
+                flex-direction: column;
+                align-items: center;
+            }
+            select {
+                width: 100%;
+                max-width: 300px;
+            }
+            button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Hệ thống đặt sân bóng Samba</h1>
+    <div class="menu">
+        <a href="/trangchu">Trang Chủ</a>
+        <a href="/tim-kiem">Tìm kiếm</a>
+    </div>
+</header>
+
+<div class="container">
+    <h2>Tìm kiếm sân bóng</h2>
+    <form id="searchForm" th:action="@{/tim-kiem}" method="get">
+        <select name="loaiSan" id="loaiSan">
+            <option value="">-- Chọn loại sân --</option>
+            <option th:each="loai : ${dsLoaiSan}" th:value="${loai.id}" th:text="${loai.ten_loai_san}"></option>
+        </select>
+        <select name="monTheThao" id="monTheThao">
+            <option value="">-- Chọn môn thể thao --</option>
+            <option th:each="mon : ${dsMonTheThao}" th:value="${mon.id}" th:text="${mon.ten_mon_the_thao}"></option>
+        </select>
+        <button type="submit">Tìm kiếm</button>
+    </form>
+
+    <div th:if="${danhSachSan != null}">
+        <div th:each="san : ${danhSachSan}" class="result-item">
+            <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" th:text="${san.ten_san_bong}">Tên sân</a>
+            <p><strong>Giá thuê:</strong> <span th:text="${san.gia}">0</span> VNĐ</p>
+            <p><strong>Môn thể thao:</strong>
+                <span th:text="${san.loaiMonTheThao != null} ? ${san.loaiMonTheThao.ten_mon_the_thao} : 'Chưa cập nhật'"></span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Hệ thống đặt sân bóng Samba</p>
+    <div class="container text-center mt-5 mb-5 features">
+        <div class="row">
+            <div class="col-md-3 col-6 mb-4">
+                <i class="bi bi-search"></i>
+                <h5>Tìm kiếm sân</h5>
+                <p>Lựa chọn sân phù hợp nhu cầu</p>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <i class="bi bi-calendar-check"></i>
+                <h5>Đặt sân nhanh</h5>
+                <p>Chọn thời gian và đặt dễ dàng</p>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <i class="bi bi-clock-history"></i>
+                <h5>Lịch sử đặt</h5>
+                <p>Kiểm tra trạng thái đặt sân</p>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <i class="bi bi-star-half"></i>
+                <h5>Đánh giá sân</h5>
+                <p>Xem và gửi đánh giá sân bạn đã chơi</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectLoaiSan = document.querySelector('select[name="loaiSan"]');
+        const selectMonTheThao = document.querySelector('select[name="monTheThao"]');
+
+        function trySubmit() {
+            if (selectLoaiSan.value !== '' && selectMonTheThao.value !== '') {
+                // Tự submit form khi cả 2 đã chọn xong
+                selectLoaiSan.form.submit();
+            }
+        }
+
+        selectLoaiSan.addEventListener('change', trySubmit);
+        selectMonTheThao.addEventListener('change', trySubmit);
+    });
+</script>
+
+</body>
+</html>
