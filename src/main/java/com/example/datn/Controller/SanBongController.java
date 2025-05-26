@@ -51,7 +51,6 @@ public class SanBongController {
     }
 
     // 📌 Chi tiết sân
-    @GetMapping("/chi-tiet/{id}")
     public String chiTietSan(@PathVariable("id") int id, Model model) {
         SanBong san = sanBongService.findById(id);
         model.addAttribute("sanBongChiTiet", san);
