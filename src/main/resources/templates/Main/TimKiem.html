@@ -6,18 +6,27 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <title>Tìm kiếm sân bóng - Samba</title>
     <style>
+        /* Body và giao diện tổng thể */
         body {
             font-family: 'Segoe UI', sans-serif;
             background-color: #f0f2f5;
             margin: 0; padding: 0;
             color: #1B1E21;
         }
+
         header, footer {
             background-color: #6CABDD;
             color: white;
             padding: 20px;
             text-align: center;
         }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
         .menu a {
             color: white;
             margin: 0 20px;
@@ -26,11 +35,13 @@
             font-weight: 500;
             transition: color 0.3s ease;
         }
+
         .menu a:hover {
             color: #0d6efd;
             text-decoration: underline;
         }
 
+        /* Container chính */
         .container {
             max-width: 900px;
             margin: 40px auto;
@@ -48,6 +59,7 @@
             margin-bottom: 30px;
         }
 
+        /* Form tìm kiếm */
         form {
             display: flex;
             justify-content: center;
@@ -55,6 +67,7 @@
             flex-wrap: wrap;
             margin-bottom: 35px;
         }
+
         select {
             padding: 10px 15px;
             border: 1px solid #6CABDD;
@@ -64,11 +77,13 @@
             min-width: 200px;
             transition: border-color 0.3s ease;
         }
+
         select:focus {
             outline: none;
             border-color: #0d6efd;
             box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
         }
+
         button {
             background-color: #6CABDD;
             color: white;
@@ -81,10 +96,12 @@
             box-shadow: 0 5px 12px rgba(108, 171, 221, 0.5);
             transition: background-color 0.3s ease;
         }
+
         button:hover {
             background-color: #5aa0d8;
         }
 
+        /* Kết quả tìm kiếm */
         .result-item {
             border: 1px solid #6CABDD;
             border-radius: 10px;
@@ -93,9 +110,33 @@
             box-shadow: 0 3px 8px rgba(108, 171, 221, 0.2);
             transition: box-shadow 0.3s ease;
         }
+
         .result-item:hover {
             box-shadow: 0 6px 16px rgba(108, 171, 221, 0.4);
         }
+
+        .result-item img {
+            width: 100%;
+            max-width: 150px; /* Giới hạn chiều rộng tối đa */
+            height: auto; /* Đảm bảo tỷ lệ hình ảnh */
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Canh giữa hình ảnh và nội dung */
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .result-item img {
+                max-width: 120px; /* Điều chỉnh kích thước nhỏ hơn trên màn hình nhỏ */
+            }
+        }
+
         .result-item a {
             font-size: 1.25rem;
             font-weight: 700;
@@ -103,16 +144,19 @@
             text-decoration: none;
             transition: color 0.3s ease;
         }
+
         .result-item a:hover {
             color: #0d6efd;
             text-decoration: underline;
         }
+
         .result-item p {
             margin-top: 8px;
             font-size: 1rem;
             color: #444;
         }
 
+        /* Footer */
         footer p {
             margin: 0 0 25px 0;
             font-weight: 600;
@@ -123,20 +167,24 @@
             max-width: 900px;
             margin: auto;
         }
+
         .features .row > div {
             text-align: center;
         }
+
         .features i {
             font-size: 2.5rem;
             color: white;
             margin-bottom: 10px;
         }
+
         .features h5 {
             margin-top: 10px;
             font-weight: 600;
             font-size: 1.1rem;
             color: white;
         }
+
         .features p {
             font-size: 0.95rem;
             color: #e0e6f0;
@@ -149,14 +197,17 @@
                 padding: 25px 20px;
                 margin: 20px 15px;
             }
+
             form {
                 flex-direction: column;
                 align-items: center;
             }
+
             select {
                 width: 100%;
                 max-width: 300px;
             }
+
             button {
                 width: 100%;
                 max-width: 300px;
@@ -190,6 +241,7 @@
 
     <div th:if="${danhSachSan != null}">
         <div th:each="san : ${danhSachSan}" class="result-item">
+            <img th:src="@{'/image/' + ${san.hinh_anh}}" alt="Ảnh sân bóng">
             <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" th:text="${san.ten_san_bong}">Tên sân</a>
             <p><strong>Giá thuê:</strong> <span th:text="${san.gia}">0</span> VNĐ</p>
             <p><strong>Môn thể thao:</strong>
@@ -228,6 +280,7 @@
 </footer>
 
 <script>
+
     document.addEventListener('DOMContentLoaded', function() {
         const selectLoaiSan = document.querySelector('select[name="loaiSan"]');
         const selectMonTheThao = document.querySelector('select[name="monTheThao"]');
