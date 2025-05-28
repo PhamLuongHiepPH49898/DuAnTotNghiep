@@ -198,6 +198,54 @@
             text-align: center;
         }
 
+        .menu {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 20px;
+            /* Đảm bảo menu có chiều rộng full để dễ căn bên phải */
+            width: 100%;
+        }
+
+        /* user-area nằm cuối menu, đẩy sang phải */
+        .user-area {
+            margin-left: auto; /* đẩy phần tử này về bên phải */
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .user-area p {
+            margin: 0;
+        }
+
+        /* CSS nút đăng xuất theo style trước */
+        .logout-form button {
+            background-color: #4ca1af;
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgb(76 161 175 / 0.4);
+        }
+
+        .logout-form button:hover {
+            background-color: #357a87;
+            box-shadow: 0 6px 12px rgb(53 122 135 / 0.6);
+        }
+
+        .logout-form button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 161, 175, 0.5);
+        }
+
         footer .features i {
             font-size: 2.5rem;
             margin-bottom: 10px;
@@ -245,16 +293,19 @@
     <div class="menu">
         <a href="/trangchu">Trang Chủ</a>
         <a href="/tim-kiem">Tìm kiếm</a>
-        <a href="/login" id="login-link">Đăng nhập</a>
-        <div class="user-menu" style="display: none;">
-            <i class="bi bi-person-circle user-icon"></i>
-            <span class="user-name" id="user-name"></span>
-            <div class="dropdown-menu">
-                <a href="/logout" id="logout-link">Đăng xuất</a>
-            </div>
+
+        <!-- Nếu chưa đăng nhập, hiển thị nút "Đăng nhập" -->
+        <a href="/login" th:if="${username == null}">Đăng nhập</a>
+        <div class="user-area" th:if="${username != null}">
+            <p>Chào mừng <span th:text="${username}">Người dùng</span>!</p>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit">Đăng xuất</button>
+            </form>
         </div>
+
     </div>
 </header>
+
 
 <div class="banner">
     <img src="/image/anh7.jpg" alt="Banner Sân Bóng">
@@ -300,17 +351,17 @@
             <h5>Đánh giá sân</h5>
             <p>Xem và gửi đánh giá sân bạn đã chơi</p>
         </div>
-</div>
-<div class="mt-4">
-    <p>Email: support@sambabooking.vn | Hotline: 1800-1234</p>
-    <p>Địa chỉ: Đâu đó trên thế giới</p>
-    <div class="social-icons">
-        <a href="https://facebook.com"><i class="bi bi-facebook"></i></a>
-        <a href="https://twitter.com"><i class="bi bi-twitter"></i></a>
-        <a href="https://instagram.com"><i class="bi bi-instagram"></i></a>
     </div>
-    <a href="#" class="btn btn-outline-light mt-3">Lên đầu trang</a>
-</div>
+    <div class="mt-4">
+        <p>Email: support@sambabooking.vn | Hotline: 1800-1234</p>
+        <p>Địa chỉ: Đâu đó trên thế giới</p>
+        <div class="social-icons">
+            <a href="https://facebook.com"><i class="bi bi-facebook"></i></a>
+            <a href="https://twitter.com"><i class="bi bi-twitter"></i></a>
+            <a href="https://instagram.com"><i class="bi bi-instagram"></i></a>
+        </div>
+        <a href="#" class="btn btn-outline-light mt-3">Lên đầu trang</a>
+    </div>
 </footer>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -330,34 +381,6 @@
             loginLink.style.display = 'inline-block'; // Hiển thị nút Đăng nhập
             userMenu.style.display = 'none'; // Ẩn menu người dùng
         }
-
-        // Gắn sự kiện cho nút Đăng xuất
-        const logoutLink = document.getElementById('logout-link');
-        logoutLink.addEventListener('click', function (e) {
-            e.preventDefault();
-            window.location.href = '/logout';
-        });
-    });
-    document.addEventListener('DOMContentLoaded', function () {
-        const menu = document.querySelector('.menu');
-        const header = document.querySelector('header');
-        let lastScrollTop = 0;
-
-        window.addEventListener('scroll', function () {
-            const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-
-            if (currentScroll > lastScrollTop && currentScroll > 100) {
-                // Khi cuộn xuống
-                menu.classList.add('vertical');
-                menu.style.right = '0';
-            } else if (currentScroll < lastScrollTop) {
-                // Khi cuộn lên
-                menu.classList.remove('vertical');
-                menu.style.right = 'auto';
-            }
-
-            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // Tránh giá trị âm
-        });
     });
 
     // Nút lên đầu trang

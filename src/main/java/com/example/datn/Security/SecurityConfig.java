@@ -23,33 +23,37 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/trangchu", "/css/**", "/js/**", "/image/**").permitAll() // Cho phép truy cập công cộng
-                        .requestMatchers("/admin/**").hasAuthority("QUAN_TRI") // Quyền admin
-                        .requestMatchers("/user/**").hasAuthority("NGUOI_DUNG") // Quyền người dùng
-                        .requestMatchers("/login", "/register").permitAll() // Trang login và register công khai
-                        .anyRequest().authenticated() // Các yêu cầu khác phải được xác thực
+                        .requestMatchers("/", "/trangchu", "/css/**", "/js/**", "/image/**", "/login", "/register", "/error").permitAll() // ✅ Cho phép truy cập công khai
+                        .requestMatchers("/admin/**").hasAuthority("QUAN_TRI") // ✅ Chỉ admin mới có quyền truy cập
+                        .requestMatchers("/user/**").hasAuthority("NGUOI_DUNG") // ✅ Chỉ người dùng mới có quyền truy cập
+                        .anyRequest().authenticated() // ✅ Các trang khác yêu cầu đăng nhập
                 )
                 .formLogin(form -> form
-                        .loginPage("/login") // Trang đăng nhập tùy chỉnh
-                        .defaultSuccessUrl("/trangchu", true) // Sau khi đăng nhập chuyển về trang chủ
+                        .loginPage("/login") // ✅ Trang đăng nhập tùy chỉnh
+                        .defaultSuccessUrl("/trangchu", true) // ✅ Sau khi đăng nhập, chuyển đến trang chủ
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // URL đăng xuất
-                        .logoutSuccessUrl("/trangchu") // Chuyển hướng sau khi đăng xuất
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
+                        .logoutUrl("/logout") // ✅ URL đăng xuất
+                        .logoutSuccessUrl("/trangchu") // ✅ Sau khi đăng xuất, quay về trang chủ
+                        .invalidateHttpSession(true) // ✅ Hủy phiên đăng nhập
+                        .deleteCookies("JSESSIONID") // ✅ Xóa cookie phiên làm việc
                         .permitAll()
-                );
+                )
+                .csrf(csrf -> csrf.disable()); // ⚠️ CSRF bị vô hiệu hóa (cân nhắc bật nếu cần)
 
         return http.build();
     }
 
+
+
+    // Password encoder dùng BCrypt
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // Cấu hình AuthenticationManager dùng UserDetailsService và passwordEncoder
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authManagerBuilder =
@@ -59,4 +63,5 @@ public class SecurityConfig {
                 .passwordEncoder(passwordEncoder());
         return authManagerBuilder.build();
     }
+
 }
