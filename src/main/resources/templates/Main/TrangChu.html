@@ -14,10 +14,11 @@
         }
 
         header, footer {
-            background-color: #6CABDD; /* Man City blue */
+            background: linear-gradient(90deg, #4ca1af, #c4e0e5); /* Gradient xanh dương nhạt */
             color: white;
             padding: 20px;
             text-align: center;
+            border-bottom: 5px solid #89cff0; /* Màu xanh dịu */
         }
 
         header h1 {
@@ -37,7 +38,7 @@
             right: 0;
             transform: translateY(-50%);
             flex-direction: column;
-            background-color: #6CABDD;
+            background: linear-gradient(90deg, #4ca1af, #c4e0e5);
             padding: 10px;
             border-radius: 8px 0 0 8px;
             box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
@@ -63,7 +64,7 @@
             width: 100%;
             height: 350px;
             object-fit: cover;
-            border-bottom: 5px solid #6CABDD;
+            border-bottom: 5px solid #89cff0; /* Màu xanh dịu */
         }
 
         .intro {
@@ -97,11 +98,11 @@
         .san-item {
             background-color: white;
             border: 1px solid #ccc;
-            border-left: 5px solid #6CABDD;
+            border-left: 5px solid #4ca1af; /* Màu xanh gradient */
             padding: 20px;
             margin-bottom: 25px;
             border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
             opacity: 0;
@@ -125,7 +126,7 @@
         .san-item a {
             font-size: 1.3rem;
             font-weight: bold;
-            color: #0d6efd;
+            color: #4ca1af;
             text-decoration: none;
         }
 
@@ -139,40 +140,53 @@
             color: #333;
         }
 
-        footer p {
-            margin: 0;
-            font-size: 1rem;
+        footer .features {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
-        .features i {
+        footer .features div {
+            text-align: center;
+        }
+
+        footer .features i {
             font-size: 2.5rem;
-            color: white;
             margin-bottom: 10px;
         }
 
-        .features h5 {
-            margin-top: 10px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #1B1E21;
+        footer .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: transform 0.3s ease;
         }
 
-        .features p {
-            font-size: 0.95rem;
-            color: #444;
-            margin-bottom: 0;
+        footer .social-icons a:hover {
+            transform: scale(1.2);
+        }
+
+        footer .btn {
+            margin-top: 20px;
+            color: white;
+            border: 2px solid white;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        footer .btn:hover {
+            background-color: white;
+            color: #1e90ff;
         }
 
         @media (max-width: 768px) {
-            .san-item {
+            form {
                 flex-direction: column;
-                align-items: flex-start;
             }
 
-            .san-item img {
-                margin-bottom: 15px;
-                width: 100%;
-                height: auto;
+            form > * {
+                min-width: 100%;
             }
         }
     </style>
@@ -210,49 +224,38 @@
 </div>
 
 <footer>
-    <div class="container text-center">
-        <p class="mb-4">&copy; 2025 Hệ thống đặt sân bóng Samba. All rights reserved.</p>
-        <div class="row features">
-            <div class="col-md-3 col-6 mb-4">
-                <i class="bi bi-search"></i>
-                <h5>Tìm kiếm sân</h5>
-                <p>Lựa chọn sân phù hợp nhu cầu</p>
-            </div>
-            <div class="col-md-3 col-6 mb-4">
-                <i class="bi bi-calendar-check"></i>
-                <h5>Đặt sân nhanh</h5>
-                <p>Chọn thời gian và đặt dễ dàng</p>
-            </div>
-            <div class="col-md-3 col-6 mb-4">
-                <i class="bi bi-clock-history"></i>
-                <h5>Lịch sử đặt</h5>
-                <p>Kiểm tra trạng thái đặt sân</p>
-            </div>
-            <div class="col-md-3 col-6 mb-4">
-                <i class="bi bi-star-half"></i>
-                <h5>Đánh giá sân</h5>
-                <p>Xem và gửi đánh giá sân bạn đã chơi</p>
-            </div>
+    <div class="features">
+        <div>
+            <i class="bi bi-search"></i>
+            <h5>Tìm kiếm sân</h5>
+            <p>Lựa chọn sân phù hợp nhu cầu</p>
         </div>
-
-        <!-- Thêm thông tin liên hệ -->
-        <div class="contact-info mt-4">
-            <p><strong>Email:</strong> support@sambabooking.vn | <strong>Hotline:</strong> 1800-1234</p>
-            <p><strong>Địa chỉ:</strong> ABCXZY</p>
+        <div>
+            <i class="bi bi-calendar-check"></i>
+            <h5>Đặt sân nhanh</h5>
+            <p>Chọn thời gian và đặt dễ dàng</p>
         </div>
-
-        <!-- Liên kết mạng xã hội -->
-        <div class="social-icons mt-3">
-            <a href="https://facebook.com" class="text-white me-3"><i class="bi bi-facebook"></i></a>
-            <a href="https://twitter.com" class="text-white me-3"><i class="bi bi-twitter"></i></a>
-            <a href="https://instagram.com" class="text-white me-3"><i class="bi bi-instagram"></i></a>
-            <a href="https://linkedin.com" class="text-white"><i class="bi bi-linkedin"></i></a>
+        <div>
+            <i class="bi bi-clock-history"></i>
+            <h5>Lịch sử đặt</h5>
+            <p>Kiểm tra trạng thái đặt sân</p>
         </div>
-        <!-- Nút lên đầu trang -->
-        <div class="mt-4">
-            <a href="#" class="btn btn-outline-light">Lên đầu trang</a>
+        <div>
+            <i class="bi bi-star-half"></i>
+            <h5>Đánh giá sân</h5>
+            <p>Xem và gửi đánh giá sân bạn đã chơi</p>
         </div>
+</div>
+<div class="mt-4">
+    <p>Email: support@sambabooking.vn | Hotline: 1800-1234</p>
+    <p>Địa chỉ: Đâu đó trên thế giới</p>
+    <div class="social-icons">
+        <a href="https://facebook.com"><i class="bi bi-facebook"></i></a>
+        <a href="https://twitter.com"><i class="bi bi-twitter"></i></a>
+        <a href="https://instagram.com"><i class="bi bi-instagram"></i></a>
     </div>
+    <a href="#" class="btn btn-outline-light mt-3">Lên đầu trang</a>
+</div>
 </footer>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
