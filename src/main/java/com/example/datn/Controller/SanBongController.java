@@ -32,7 +32,7 @@ public class SanBongController {
 
     @GetMapping("/")
     public String homeRedirect() {
-        return "redirect:/trangchu";
+        return "redirect:/trang-chu";
     }
 
     // ✅ Trang chủ chính
