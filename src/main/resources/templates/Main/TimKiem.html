@@ -191,15 +191,27 @@
 <div class="container">
     <h2>Tìm kiếm sân bóng</h2>
     <form id="searchForm" th:action="@{/tim-kiem}" method="get">
-        <input type="text" name="keyword" id="keyword" placeholder="Nhập tên sân bóng..." th:value="${keyword}" class="form-control">
+        <input type="text" name="keyword" id="keyword" placeholder="Nhập tên sân bóng..."
+               th:value="${keyword}" class="form-control">
+
         <select name="loaiSan" id="loaiSan" class="form-select">
             <option value="">-- Chọn loại sân --</option>
-            <option th:each="loai : ${dsLoaiSan}" th:value="${loai.id}" th:text="${loai.ten_loai_san}"></option>
+            <option th:each="loai : ${dsLoaiSan}"
+                    th:value="${loai.id}"
+                    th:text="${loai.ten_loai_san}"
+                    th:selected="${loai.id} == ${loaiSan}">
+            </option>
         </select>
+
         <select name="monTheThao" id="monTheThao" class="form-select">
             <option value="">-- Chọn môn thể thao --</option>
-            <option th:each="mon : ${dsMonTheThao}" th:value="${mon.id}" th:text="${mon.ten_mon_the_thao}"></option>
+            <option th:each="mon : ${dsMonTheThao}"
+                    th:value="${mon.id}"
+                    th:text="${mon.ten_mon_the_thao}"
+                    th:selected="${mon.id} == ${monTheThao}">
+            </option>
         </select>
+
         <button type="submit" class="btn btn-primary">Tìm kiếm</button>
     </form>
 
@@ -211,13 +223,18 @@
         <div th:each="san : ${danhSachSan}" class="card mb-3 shadow-sm">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <img th:src="@{'/image/' + ${san.hinh_anh}}" class="img-fluid" alt="Ảnh sân bóng">
+                    <img th:src="@{'/image/' + ${san.hinh_anh}}"
+                         class="img-fluid"
+                         alt="Ảnh sân bóng"
+                         onerror="this.src='/images/default-field.jpg'"/>
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${san.ten_san_bong}">Tên sân</h5>
                         <p class="card-text"><strong>Giá thuê:</strong> <span th:text="${san.gia}">0</span> VNĐ</p>
-                        <p class="card-text"><strong>Loại sân:</strong> <span th:text="${san.loaiSan.ten_loai_san}"></span></p>
+                        <p class="card-text"><strong>Loại sân:</strong>
+                            <span th:text="${san.loaiSan != null} ? ${san.loaiSan.ten_loai_san} : 'Chưa cập nhật'"></span>
+                        </p>
                         <p class="card-text"><strong>Môn thể thao:</strong>
                             <span th:text="${san.loaiMonTheThao != null} ? ${san.loaiMonTheThao.ten_mon_the_thao} : 'Chưa cập nhật'"></span>
                         </p>
@@ -248,54 +265,18 @@
         </div>
         <div>
             <i class="bi bi-star-half"></i>
-            <h5>Đánh giá sân</h5>
-            <p>Xem và gửi đánh giá sân bạn đã chơi</p>
+            <h5>Đánh giá chất lượng</h5>
+            <p>Đánh giá sân bóng uy tín</p>
         </div>
     </div>
-    <div class="mt-4">
-        <p>Email: support@sambabooking.vn | Hotline: 1800-1234</p>
-        <p>Địa chỉ: Đâu đó trên thế giới</p>
-
-        <div class="social-icons">
-            <a href="https://facebook.com"><i class="bi bi-facebook"></i></a>
-            <a href="https://twitter.com"><i class="bi bi-twitter"></i></a>
-            <a href="https://instagram.com"><i class="bi bi-instagram"></i></a>
-        </div>
-        <a href="#" class="btn btn-outline-light mt-3">Lên đầu trang</a>
+    <div class="social-icons mt-3">
+        <a href="#"><i class="bi bi-facebook"></i></a>
+        <a href="#"><i class="bi bi-instagram"></i></a>
+        <a href="#"><i class="bi bi-twitter"></i></a>
+        <a href="#"><i class="bi bi-linkedin"></i></a>
     </div>
+    <a href="#" class="btn">Samba 2023 ©</a>
 </footer>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Auto-submit filter select
-        document.querySelectorAll('select').forEach(select => {
-            select.addEventListener('change', () => select.form.submit());
-        });
 
-        // Gõ chữ chạy cho placeholder
-        const input = document.getElementById("keyword");
-        const text = "Nhập tên sân bóng...";
-        let index = 0;
-
-        function typePlaceholder() {
-            if (index <= text.length) {
-                input.setAttribute("placeholder", text.substring(0, index));
-                index++;
-            } else {
-                index = 0;
-                input.setAttribute("placeholder", ""); // clear rồi chạy lại
-            }
-            setTimeout(typePlaceholder, 150);
-        }
-
-        typePlaceholder();
-    });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('select').forEach(select => {
-            select.addEventListener('change', () => select.form.submit());
-        });
-    });
-</script>
 </body>
 </html>
