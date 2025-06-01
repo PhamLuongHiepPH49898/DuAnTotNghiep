@@ -8,14 +8,14 @@
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            background-color: #f0f2f5;
+            background: linear-gradient(135deg, #e3f2fd, #ffffff);
             margin: 0;
             padding: 0;
             color: #1B1E21;
         }
 
-        header, footer {
-            background-color: #6CABDD; /* Man City blue */
+        header {
+            background: linear-gradient(90deg, #4ca1af, #c4e0e5);
             color: white;
             padding: 20px;
             text-align: center;
@@ -32,16 +32,16 @@
 
         .menu a:hover {
             text-decoration: underline;
-            color: #0d6efd;
+            color: #1B75BC;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 40px auto;
             background: white;
-            padding: 30px 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(108, 171, 221, 0.3);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(108, 171, 221, 0.3);
         }
 
         h2 {
@@ -62,10 +62,9 @@
         .field img {
             width: 180px;
             height: 130px;
-            border-radius: 12px;
+            border-radius: 16px;
             object-fit: cover;
-            flex-shrink: 0;
-            box-shadow: 0 3px 8px rgba(108, 171, 221, 0.4);
+            box-shadow: 0 4px 10px rgba(108, 171, 221, 0.5);
         }
 
         .field label {
@@ -73,7 +72,6 @@
             width: 140px;
             color: #1B1E21;
             font-size: 1.1rem;
-            flex-shrink: 0;
         }
 
         .field span {
@@ -88,61 +86,34 @@
         }
 
         .back-link a {
-            background-color: #6CABDD;
+            background: linear-gradient(90deg, #4ca1af, #c4e0e5);
             color: white;
             padding: 12px 28px;
-            border-radius: 10px;
-            font-weight: 600;
+            border-radius: 16px;
+            font-weight: bold;
             font-size: 1.1rem;
             text-decoration: none;
-            box-shadow: 0 5px 12px rgba(108, 171, 221, 0.5);
-            transition: background-color 0.3s ease;
-            display: inline-block;
+            box-shadow: 0 5px 15px rgba(108, 171, 221, 0.5);
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .back-link a:hover {
-            background-color: #5aa0d8;
+            background: #5aa0d8;
+            transform: translateY(-2px);
         }
 
-        footer p {
-            margin: 0 0 25px 0;
-            font-weight: 600;
-            font-size: 1rem;
-        }
-
-        .features {
-            max-width: 900px;
-            margin: auto;
-        }
-
-        .features .row > div {
-            text-align: center;
-        }
-
-        .features i {
-            font-size: 2.5rem;
-            color: white; /* giữ màu trắng cố định */
-            margin-bottom: 10px;
-        }
-
-        .features h5 {
-            margin-top: 10px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: white;
-        }
-
-        .features p {
-            font-size: 0.95rem;
-            color: #e0e6f0; /* trắng nhạt */
-            margin-bottom: 0;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
+            form {
+                flex-direction: column;
+            }
+
+            form > * {
+                min-width: 100%;
+            }
+
             .container {
-                padding: 25px 20px;
-                margin: 20px 15px;
+                padding: 20px;
+                margin: 20px;
             }
 
             .field {
@@ -165,8 +136,111 @@
                 width: 100%;
             }
         }
-    </style>
 
+        footer {
+            background: linear-gradient(90deg, #4ca1af, #c4e0e5);
+            color: white;
+            padding: 40px 20px 30px;
+            margin-top: 60px;
+        }
+
+        footer .features {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto 30px;
+        }
+
+        footer .features div {
+            flex: 1 1 200px;
+            text-align: center;
+            padding: 15px;
+        }
+
+        footer .features i {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            display: block;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        footer .features div:hover i {
+            transform: scale(1.2);
+        }
+
+        footer .features h5 {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            color: white;
+        }
+
+        footer .features p {
+            font-size: 0.95rem;
+            color: #f1f1f1;
+        }
+
+        footer .contact-info {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        footer .contact-info p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+        }
+
+        footer .social-icons {
+            margin-top: 10px;
+        }
+
+        footer .social-icons a {
+            color: white;
+            font-size: 1.6rem;
+            margin: 0 12px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        footer .social-icons a:hover {
+            transform: scale(1.2);
+        }
+
+        footer .btn {
+            margin-top: 20px;
+            color: white;
+            border: 2px solid white;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        footer .btn:hover {
+            background-color: white;
+            color: #1e90ff;
+        }
+
+        @media (max-width: 768px) {
+            footer .features {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            footer .features div {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            footer .btn {
+                padding: 8px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -180,7 +254,6 @@
 
 <div class="container">
     <h2>Thông tin chi tiết sân bóng</h2>
-
 
     <div class="field">
         <img th:src="@{'/image/' + ${sanBongChiTiet.hinh_anh}}" alt="Ảnh sân bóng">
@@ -202,6 +275,7 @@
         <label>Địa chỉ:</label>
         <span th:text="${sanBongChiTiet.dia_chi}"></span>
     </div>
+
     <div class="field">
         <label>Môn thể thao:</label>
         <span th:text="${sanBongChiTiet.loaiMonTheThao.ten_mon_the_thao}"></span>
@@ -213,30 +287,37 @@
 </div>
 
 <footer>
-    <div class="container text-center">
-        <p class="mb-4">&copy; 2025 Hệ thống đặt sân bóng Samba</p>
-        <div class="row features">
-            <div class="col-md-3 col-6 mb-4">
-                <i class="bi bi-search"></i>
-                <h5>Tìm kiếm sân</h5>
-                <p>Lựa chọn sân phù hợp nhu cầu</p>
-            </div>
-            <div class="col-md-3 col-6 mb-4">
-                <i class="bi bi-calendar-check"></i>
-                <h5>Đặt sân nhanh</h5>
-                <p>Chọn thời gian và đặt dễ dàng</p>
-            </div>
-            <div class="col-md-3 col-6 mb-4">
-                <i class="bi bi-clock-history"></i>
-                <h5>Lịch sử đặt</h5>
-                <p>Kiểm tra trạng thái đặt sân</p>
-            </div>
-            <div class="col-md-3 col-6 mb-4">
-                <i class="bi bi-star-half"></i>
-                <h5>Đánh giá sân</h5>
-                <p>Xem và gửi đánh giá sân bạn đã chơi</p>
-            </div>
+    <div class="features">
+        <div>
+            <i class="bi bi-search"></i>
+            <h5>Tìm kiếm sân</h5>
+            <p>Lựa chọn sân phù hợp nhu cầu</p>
         </div>
+        <div>
+            <i class="bi bi-calendar-check"></i>
+            <h5>Đặt sân nhanh</h5>
+            <p>Chọn thời gian và đặt dễ dàng</p>
+        </div>
+        <div>
+            <i class="bi bi-clock-history"></i>
+            <h5>Lịch sử đặt</h5>
+            <p>Kiểm tra trạng thái đặt sân</p>
+        </div>
+        <div>
+            <i class="bi bi-star-half"></i>
+            <h5>Đánh giá sân</h5>
+            <p>Xem và gửi đánh giá sân bạn đã chơi</p>
+        </div>
+    </div>
+    <div class="contact-info">
+        <p>Email: support@sambabooking.vn | Hotline: 1800-1234</p>
+        <p>Địa chỉ: Đâu đó trên thế giới</p>
+        <div class="social-icons">
+            <a href="https://facebook.com"><i class="bi bi-facebook"></i></a>
+            <a href="https://twitter.com"><i class="bi bi-twitter"></i></a>
+            <a href="https://instagram.com"><i class="bi bi-instagram"></i></a>
+        </div>
+        <a href="#" class="btn">Lên đầu trang</a>
     </div>
 </footer>
 

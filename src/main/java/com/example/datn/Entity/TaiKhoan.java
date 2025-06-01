@@ -13,10 +13,10 @@ public class TaiKhoan {
     private int id;
     @Column(name = "ho_ten")
     private String ho_ten;
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
     @Column(name = "mat_khau")
-    private String mat_khau;
+    private String password;
     @Column(name = "so_dien_thoai")
     private String so_dien_thoai;
     @Column(name = "vai_tro")
@@ -30,11 +30,11 @@ public class TaiKhoan {
     public TaiKhoan() {
     }
 
-    public TaiKhoan(int id, String ho_ten, String email, String mat_khau, String so_dien_thoai, String vai_tro, int trang_thai) {
+    public TaiKhoan(int id, String ho_ten, String email, String password, String so_dien_thoai, String vai_tro, int trang_thai) {
         this.id = id;
         this.ho_ten = ho_ten;
         this.email = email;
-        this.mat_khau = mat_khau;
+        this.password = password;
         this.so_dien_thoai = so_dien_thoai;
         this.vai_tro = vai_tro;
         this.trang_thai = trang_thai;
@@ -65,11 +65,11 @@ public class TaiKhoan {
     }
 
     public String getMat_khau() {
-        return mat_khau;
+        return password;
     }
 
     public void setMat_khau(String mat_khau) {
-        this.mat_khau = mat_khau;
+        this.password = mat_khau;
     }
 
     public String getSo_dien_thoai() {
