@@ -6,6 +6,7 @@ import com.example.datn.Repository.SanBongSpecification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SanBongService {
@@ -23,8 +24,12 @@ public class SanBongService {
         return sanbongRepo.findById(id).orElse(null);
     }
 
-    public List<SanBong> timKiemSan(Integer loaiSan, Integer monTheThao) {
-        return sanbongRepo.findAll(SanBongSpecification.searchBy(loaiSan, monTheThao));
+
+
+
+    public List<SanBong> timKiemSan(String keyword, Long loaiSan, Long monTheThao) {
+        return sanbongRepo.timKiemSan(keyword, loaiSan, monTheThao);
+
     }
 
     public void them(SanBong sanBong) {

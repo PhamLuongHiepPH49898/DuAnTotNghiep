@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Đăng nhập</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('/image/banner login 3.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100vh;
+            padding-left: 5%;
+        }
+
+        .login-box {
+            background: rgba(100, 100, 100, 0.6);
+            backdrop-filter: blur(8px); /* làm mờ background phía sau */
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .input-field {
+            margin-bottom: 20px;
+        }
+
+        .input-field input {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            margin: 0;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 1rem;
+            background-color: #fff;
+            box-sizing: border-box;
+        }
+
+        .input-field input:focus {
+            border-color: #6CABDD;
+            outline: none;
+        }
+
+        .input-field input::placeholder {
+            color: #aaa;
+        }
+
+        .forgot, .sign-up {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #cce0f5;
+            text-decoration: none;
+        }
+
+        .forgot:hover, .sign-up:hover {
+            text-decoration: underline;
+        }
+
+        .login-box button.login {
+            width: 100%;
+            background-color: #6CABDD;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-box button.login:hover {
+            background-color: #5896c9;
+        }
+
+        .login-box p {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #eee;
+        }
+    </style>
+</head>
+<body>
+
+<a href="/" class="back-button">Trở về</a>
+
+<div class="login-container">
+    <div class="login-box">
+        <h2>Đăng nhập</h2>
+        <form action="/login" method="post">
+            <div class="input-field">
+                <input type="text" name="email" placeholder="Email" required>
+            </div>
+            <div class="input-field">
+                <input type="password" name="password" placeholder="Mật khẩu" required>
+            </div>
+            <div style="color: red; font-size: 0.85rem; margin-top: -15px; margin-bottom: 15px;">
+                <span th:if="${errorMessage}" th:text="${errorMessage}"></span>
+            </div>
+            <a href="#" class="forgot">Quên mật khẩu?</a>
+            <button type="submit" class="login">Đăng nhập</button>
+            <p>Chưa có tài khoản? <a href="/dang-ky" class="sign-up">Đăng ký ngay</a></p>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
