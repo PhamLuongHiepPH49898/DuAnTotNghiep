@@ -4,11 +4,10 @@ import com.example.datn.Entity.SanBong;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-<<<<<<< HEAD
-import org.springframework.data.relational.core.sql.In;
+
+
 import org.springframework.data.repository.query.Param;
-=======
->>>>>>> origin/chuquyetthang
+
 
 import java.util.List;
 
