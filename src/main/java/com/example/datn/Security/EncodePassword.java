@@ -5,13 +5,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class EncodePassword {
     public static void main(String[] args) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String rawPassword = "123"; // Mật khẩu bạn nhập khi đăng nhập
-        String encodedPassword = encoder.encode(rawPassword);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        // Mật khẩu gốc người dùng nhập
+        String rawPassword = "123";
+
+        // Mã hóa mật khẩu (ví dụ lưu vào DB)
+        String encodedPassword = passwordEncoder.encode(rawPassword);
 
         System.out.println("Raw Password: " + rawPassword);
         System.out.println("Encoded Password: " + encodedPassword);
-        System.out.println("Matches: " + encoder.matches(rawPassword, "$2a$10$NYNtAAsp.Ntrl1pBI0yPFu1FwqoiBWB.Dj9tESCF2/MDF1k3lqN.K")); // Mật khẩu từ DB
+
+        // Kiểm tra mật khẩu nhập vào so với mật khẩu mã hóa (lấy từ DB)
+        boolean matches = passwordEncoder.matches(rawPassword, encodedPassword);
+
+        System.out.println("Matches: " + matches);
     }
 
 }

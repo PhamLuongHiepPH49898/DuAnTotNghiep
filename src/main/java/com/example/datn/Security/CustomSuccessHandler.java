@@ -19,6 +19,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
         for (GrantedAuthority auth : authentication.getAuthorities()) {
             String role = auth.getAuthority();
+            System.out.println("ROLE: " + role);
 
             if (role.equals("ROLE_QUAN_TRI")) {
                 response.sendRedirect("/admin/trang-chu");
