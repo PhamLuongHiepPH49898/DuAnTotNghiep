@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đặt Sân Bóng</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 1.5rem;
+      margin-top: 20px;
+    }
+
+    .arrow {
+      color: #5aa0d8;
+      cursor: pointer;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    .arrow:hover {
+      color: #0f0f4c;
+    }
+
+    #dateDisplay {
+      font-weight: 600;
+      color: #5aa0d8;
+      min-width: 150px;
+      text-align: center;
+    }
+
+    #bookingTable thead tr {
+      background-color: #5aa0d8;
+      color: white;
+      font-weight: bold;
+    }
+
+    /* Responsive - nút xếp dọc trên điện thoại */
+    @media (max-width: 480px) {
+      .controls {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      #dateDisplay {
+        min-width: unset;
+      }
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+    }
+    td.selected {
+      background-color: #b3e6b3;
+    }
+    td.disabled {
+      background-color: #f0f0f0;
+      color: #999;
+      cursor: not-allowed;
+    }
+    .controls {
+      margin-bottom: 15px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #5aa0d8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #5aa0d8;
+    }
+    #dateDisplay {
+      font-weight: bold;
+      font-size: 1.2em;
+      margin: 0 10px;
+      user-select: none;
+    }
+    a{
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+
+
+<div class="controls">
+  <span class="arrow" onclick="changeDate(-1)"><</span>
+  <span id="dateDisplay"></span>
+  <span class="arrow" onclick="changeDate(1)">></span>
+</div>
+<table id="bookingTable" aria-label="Bảng đặt sân bóng">
+  <thead>
+  <tr>
+    <th>Giờ</th>
+    <th th:each="san : ${danhSachSan}" th:text="${san.ten_san_bong}">Tên sân</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="khungGio : ${danhSachKhungGio}">
+    <td th:text="${khungGio.gioBatDau} + '-' + ${khungGio.gioKetThuc}"></td>
+    <td th:each="san : ${danhSachSan}"
+        th:with="key=${san.id_san_bong + '_' + khungGio.id}, gia=${bangGia[key]}"
+        th:attr="data-price=${bangGia[san.id_san_bong + '_' + khungGio.id] != null ? bangGia[san.id_san_bong + '_' + khungGio.id] : 0}, data-court=${san.ten_san_bong}, data-time=${khungGio.gioBatDau + '-' + khungGio.gioKetThuc}"
+        th:text="${#numbers.formatDecimal(bangGia[san.id_san_bong + '_' + khungGio.id], 1, 'COMMA', 2, 'POINT')}">
+
+    </td>
+  </tr>
+  </tbody>
+</table>
+<p>Đã chọn <span id="slotCount">0</span> lịch</p>
+<p>Tổng tiền: <strong><span id="totalPrice">0</span> đ</strong></p>
+<!--<button onclick="submitBooking()">Đặt lịch</button>-->
+
+<button> <a href="/xacnhan">Xác nhận đặt</a> </button>
+<script>
+  let selectedSlots = []; // Lưu nhiều slot theo từng ngày
+  let currentDate = new Date(); // Ngày hiện tại để hiển thị
+
+  function formatDate(date) {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day} tháng ${month} ${year}`;
+  }
+
+  function formatDateKey(date) {
+    return date.toISOString().split('T')[0]; // yyyy-mm-dd (key duy nhất)
+  }
+
+  function formatPrice(price) {
+    const num = Number(price);
+    if (isNaN(num)) return "";
+    return num.toLocaleString('vi-VN');
+  }
+
+  function loadToday() {
+    const display = document.getElementById('dateDisplay');
+    display.textContent = formatDate(currentDate);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    let checkDate = new Date(currentDate);
+    checkDate.setHours(0, 0, 0, 0);
+
+    const isPast = checkDate < today;
+
+    toggleBookingCells(!isPast, isPast);
+  }
+
+  function toggleBookingCells(enable, isPast) {
+    const cells = document.querySelectorAll("#bookingTable td[data-price]");
+    const dateKey = formatDateKey(currentDate);
+
+    cells.forEach(cell => {
+      cell.classList.remove("disabled");
+      cell.onclick = null;
+      cell.style.cursor = "pointer";
+
+      const slotId = `${dateKey}_${cell.dataset.court}_${cell.dataset.time}`;
+
+      if (isPast) {
+        cell.textContent = "";
+        cell.classList.add("disabled");
+        cell.style.cursor = "not-allowed";
+      } else if (enable) {
+        cell.textContent = formatPrice(cell.dataset.price);
+        cell.classList.remove("disabled");
+        cell.style.cursor = "pointer";
+        cell.onclick = () => selectSlot(cell, dateKey);
+      }
+
+      // Nếu slot này đã được chọn từ trước => tô màu
+      if (selectedSlots.find(s => s.id === slotId)) {
+        cell.classList.add("selected");
+      } else {
+        cell.classList.remove("selected");
+      }
+    });
+
+    updateTotal();
+  }
+
+  function selectSlot(cell, dateKey) {
+    if (cell.classList.contains("disabled")) return;
+
+    const slotId = `${dateKey}_${cell.dataset.court}_${cell.dataset.time}`;
+    const existing = selectedSlots.find(s => s.id === slotId);
+
+    if (existing) {
+      selectedSlots = selectedSlots.filter(s => s.id !== slotId);
+      cell.classList.remove("selected");
+    } else {
+      selectedSlots.push({
+        id: slotId,
+        cell: cell,
+        price: Number(cell.dataset.price || 0),
+        date: dateKey,
+        court: cell.dataset.court,
+        time: cell.dataset.time
+      });
+      cell.classList.add("selected");
+    }
+
+    updateTotal();
+  }
+
+  function updateTotal() {
+    const total = selectedSlots.reduce((sum, slot) => sum + slot.price, 0);
+    document.getElementById('slotCount').textContent = selectedSlots.length;
+    document.getElementById('totalPrice').textContent = total.toLocaleString('vi-VN');
+  }
+
+  function changeDate(offset) {
+    currentDate.setDate(currentDate.getDate() + offset);
+    loadToday();
+  }
+
+  window.onload = loadToday;
+</script>
+
+
+
+</body>
+</html>
+

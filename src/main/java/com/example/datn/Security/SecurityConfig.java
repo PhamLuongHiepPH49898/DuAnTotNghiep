@@ -1,0 +1,61 @@
+package com.example.datn.Security;
+import com.example.datn.Service.CustomUserDetailsService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+public class SecurityConfig {
+
+    private final CustomUserDetailsService customUserDetailsService;
+
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/trangchu", "/css/**", "/js/**", "/image/**").permitAll() // Cho phép truy cập công cộng
+                        .requestMatchers("/admin/**").hasAuthority("QUAN_TRI") // Quyền admin
+                        .requestMatchers("/user/**").hasAuthority("NGUOI_DUNG") // Quyền người dùng
+                        .requestMatchers("/login", "/register").permitAll() // Trang login và register công khai
+                        .anyRequest().authenticated() // Các yêu cầu khác phải được xác thực
+                )
+                .formLogin(form -> form
+                        .loginPage("/login") // Trang đăng nhập tùy chỉnh
+                        .defaultSuccessUrl("/trangchu", true) // Sau khi đăng nhập chuyển về trang chủ
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout") // URL đăng xuất
+                        .logoutSuccessUrl("/trangchu") // Chuyển hướng sau khi đăng xuất
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                );
+
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authManagerBuilder
+                .userDetailsService(customUserDetailsService)
+                .passwordEncoder(passwordEncoder());
+        return authManagerBuilder.build();
+    }
+}
