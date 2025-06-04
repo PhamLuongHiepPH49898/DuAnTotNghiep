@@ -232,7 +232,7 @@
     <h1>Hệ thống đặt sân bóng Samba</h1>
     <div class="menu">
         <div class="menu-left">
-            <a href="/user/trang-chu" class="active">Trang Chủ</a>
+            <a href="/admin/trang-chu" class="active">Trang Chủ</a>
             <a href="/tim-kiem">Tìm kiếm</a>
             <a href="/quan-ly-san">Quản lí sân</a>
         </div>
@@ -260,7 +260,17 @@
 <div class="san-container">
     <h2>Danh sách sân bóng nổi bật</h2>
     <div th:each="san : ${danhSachSan}" class="san-item">
-        <img th:src="@{'/image/' + ${san.hinh_anh}}" alt="Ảnh sân bóng">
+
+            <!-- Nếu là ảnh mặc định (ảnh chưa bị sửa đổi) -->
+            <img th:if="${#strings.startsWith(san.hinh_anh, 'anh')}"
+                 th:src="@{'/image/' + ${san.hinh_anh}}"
+                 alt="Ảnh mặc định" width="80"/>
+
+            <!-- Nếu là ảnh đã upload (có UUID đầu tên) -->
+            <img th:if="${!#strings.startsWith(san.hinh_anh, 'anh')}"
+                 th:src="@{'/uploads/' + ${san.hinh_anh}}"
+                 alt="Ảnh người dùng upload" width="80"/>
+
         <div>
             <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" th:text="${san.ten_san_bong}">Tên sân</a>
             <p><strong>Loại môn thể thao: </strong> <span th:text="${san.loaiMonTheThao.ten_mon_the_thao}"></span></p>
