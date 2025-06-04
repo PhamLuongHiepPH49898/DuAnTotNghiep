@@ -5,6 +5,8 @@
     <title>Hệ thống đặt sân bóng Samba - Người dùng</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+    <link rel="icon" type="image/png" th:href="@{/image/logo.png}">
+
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -232,7 +234,7 @@
     <h1>Hệ thống đặt sân bóng Samba</h1>
     <div class="menu">
         <div class="menu-left">
-            <a href="/admin/trang-chu" class="active">Trang Chủ</a>
+            <a th:href="@{/ve-trang-chu}">Trang chủ</a>
             <a href="/tim-kiem">Tìm kiếm</a>
             <a href="/quan-ly-san">Quản lí sân</a>
         </div>
@@ -274,6 +276,7 @@
         <div>
             <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" th:text="${san.ten_san_bong}">Tên sân</a>
             <p><strong>Loại môn thể thao: </strong> <span th:text="${san.loaiMonTheThao.ten_mon_the_thao}"></span></p>
+
             <p><strong>Địa chỉ:</strong> <span th:text="${san.dia_chi}"></span></p>
             <p><strong>Giá thuê:</strong> <span th:text="${san.gia}">0</span> VNĐ</p>
         </div>
