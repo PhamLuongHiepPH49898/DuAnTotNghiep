@@ -39,4 +39,5 @@ public class CustomUserDetailsService implements UserDetailsService {
         logger.debug("Vai trò: ROLE_{}", taiKhoan.getVai_tro());
         return new CustomUserDetails(taiKhoan);
     }
+
 }

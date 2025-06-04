@@ -1,12 +1,14 @@
 package com.example.datn.Security;
 
 import com.example.datn.Service.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -18,42 +20,44 @@ public class SecurityConfig {
     public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
     }
-
+    @Autowired
+    private CustomSuccessHandler customSuccessHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/trangchu", "/css/**", "/js/**", "/image/**", "/login", "/register", "/error").permitAll() // ✅ Cho phép truy cập công khai
-                        .requestMatchers("/admin/**").hasAuthority("QUAN_TRI") // ✅ Chỉ admin mới có quyền truy cập
-                        .requestMatchers("/user/**").hasAuthority("NGUOI_DUNG") // ✅ Chỉ người dùng mới có quyền truy cập
-                        .anyRequest().authenticated() // ✅ Các trang khác yêu cầu đăng nhập
+                        .requestMatchers("/", "/trangchu", "/css/**", "/js/**", "/image/**").permitAll() // Cho phép truy cập công cộng
+                        .requestMatchers("/admin/**").hasRole("QUAN_TRI")
+                        .requestMatchers("/user/**").hasRole("NGUOI_DUNG")
+                        .requestMatchers("/login", "/dang-ky").permitAll() // Trang login và register công khai
+                        .anyRequest().authenticated() // Các yêu cầu khác phải được xác thực
                 )
                 .formLogin(form -> form
-                        .loginPage("/login") // ✅ Trang đăng nhập tùy chỉnh
-                        .defaultSuccessUrl("/trangchu", true) // ✅ Sau khi đăng nhập, chuyển đến trang chủ
+                        .loginPage("/login")                  // Trang đăng nhập tùy chỉnh
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                        .successHandler(customSuccessHandler)
+                        .failureUrl("/login?error")            // Khi đăng nhập sai sẽ quay về /login với param error
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // ✅ URL đăng xuất
-                        .logoutSuccessUrl("/trangchu") // ✅ Sau khi đăng xuất, quay về trang chủ
-                        .invalidateHttpSession(true) // ✅ Hủy phiên đăng nhập
-                        .deleteCookies("JSESSIONID") // ✅ Xóa cookie phiên làm việc
+                        .logoutUrl("/logout") // URL đăng xuất
+                        .logoutSuccessUrl("/trangchu") // Chuyển hướng sau khi đăng xuất
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
-                )
-                .csrf(csrf -> csrf.disable()); // ⚠️ CSRF bị vô hiệu hóa (cân nhắc bật nếu cần)
+                );
 
         return http.build();
     }
 
-
-
-    // Password encoder dùng BCrypt
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(); // ✅ Dùng đúng encoder như khi lưu DB
     }
 
-    // Cấu hình AuthenticationManager dùng UserDetailsService và passwordEncoder
+
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authManagerBuilder =
@@ -63,5 +67,4 @@ public class SecurityConfig {
                 .passwordEncoder(passwordEncoder());
         return authManagerBuilder.build();
     }
-
 }
