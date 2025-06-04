@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Hệ thống đặt sân bóng Samba</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+  <link rel="icon" type="image/png" th:href="@{/image/logo.jpg}">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    header, footer {
+      background: linear-gradient(90deg, #4ca1af, #c4e0e5); /* Gradient xanh dương nhạt */
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 5px solid #89cff0; /* Màu xanh dịu */
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+
+    .menu {
+      display: flex;
+      justify-content: center;
+      transition: all 0.5s;
+    }
+
+    .menu.vertical {
+      position: fixed;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      flex-direction: column;
+      background: linear-gradient(90deg, #4ca1af, #c4e0e5);
+      padding: 10px;
+      border-radius: 8px 0 0 8px;
+      box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu a {
+      color: white;
+      margin: 0 20px;
+      font-size: 1.1rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .user-menu {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      color: white; /* Màu trắng cho phù hợp với header */
+    }
+
+    .user-menu .user-icon {
+      font-size: 1.5rem;
+      margin-right: 8px;
+    }
+
+    .user-menu .user-name {
+      font-size: 1rem;
+      font-weight: bold;
+      margin-right: 12px;
+    }
+
+    .user-menu .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      border-radius: 8px;
+      z-index: 10;
+    }
+
+    .user-menu:hover .dropdown-menu {
+      display: block;
+    }
+
+    .user-menu .dropdown-menu a {
+      color: #333;
+      text-decoration: none;
+      display: block;
+      padding: 5px 10px;
+      transition: background 0.3s;
+    }
+
+    .user-menu .dropdown-menu a:hover {
+      background: #f0f2f5;
+    }
+
+
+    .menu.vertical a {
+      margin: 10px 0;
+    }
+
+    .menu a:hover {
+      text-decoration: underline;
+    }
+
+    .banner img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      border-bottom: 5px solid #89cff0; /* Màu xanh dịu */
+    }
+
+    .intro {
+      padding: 40px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #e3f2fd, #ffffff);
+    }
+
+    .intro h2 {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #1B1E21;
+    }
+
+    .intro p {
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .san-container {
+      padding: 40px;
+    }
+
+    .san-container h2 {
+      color: #1B1E21;
+      margin-bottom: 30px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .san-item {
+      background-color: white;
+      border: 1px solid #ccc;
+      border-left: 5px solid #4ca1af; /* Màu xanh gradient */
+      padding: 20px;
+      margin-bottom: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease-in-out;
+    }
+
+    .san-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .san-item img {
+      border-radius: 10px;
+      width: 160px;
+      height: 120px;
+      object-fit: cover;
+      margin-right: 25px;
+    }
+
+    .san-item a {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #4ca1af;
+      text-decoration: none;
+    }
+
+    .san-item a:hover {
+      text-decoration: underline;
+    }
+
+    .san-item p {
+      margin: 5px 0;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    footer .features {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    footer .features div {
+      text-align: center;
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 20px;
+      /* Đảm bảo menu có chiều rộng full để dễ căn bên phải */
+      width: 100%;
+    }
+
+    /* user-area nằm cuối menu, đẩy sang phải */
+    .user-area {
+      margin-left: auto; /* đẩy phần tử này về bên phải */
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .user-area p {
+      margin: 0;
+    }
+
+    /* CSS nút đăng xuất theo style trước */
+    .logout-form button {
+      background-color: #4ca1af;
+      border: none;
+      color: white;
+      padding: 8px 18px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 8px rgb(76 161 175 / 0.4);
+    }
+
+    .logout-form button:hover {
+      background-color: #357a87;
+      box-shadow: 0 6px 12px rgb(53 122 135 / 0.6);
+    }
+
+    .logout-form button:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(76, 161, 175, 0.5);
+    }
+
+    footer .features i {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    footer .social-icons a {
+      color: white;
+      font-size: 1.5rem;
+      margin: 0 10px;
+      transition: transform 0.3s ease;
+    }
+    .user-area {
+      background-color: #f5f5f5;
+      padding: 8px 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      display: inline-block;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .user-area p {
+      margin: 0 0 8px 0;
+      color: #333;
+    }
+
+    .user-area span {
+      font-weight: 600;
+      color: #0066cc;
+    }
+
+    .user-area form {
+      display: inline;
+    }
+
+    .user-area button {
+      background-color: #ff4d4f;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background-color 0.2s ease;
+    }
+
+    .user-area button:hover {
+      background-color: #d9363e;
+    }
+
+
+    footer .social-icons a:hover {
+      transform: scale(1.2);
+    }
+
+    footer .btn {
+      margin-top: 20px;
+      color: white;
+      border: 2px solid white;
+      padding: 8px 16px;
+      border-radius: 20px;
+    }
+
+    footer .btn:hover {
+      background-color: white;
+      color: #1e90ff;
+    }
+
+    @media (max-width: 768px) {
+      form {
+        flex-direction: column;
+      }
+
+      form > * {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header class="menu-wrapper">
+  <h1>Hệ thống đặt sân bóng Samba</h1>
+  <div class="menu">
+    <a href="/trangchu">Trang Chủ</a>
+    <a href="/tim-kiem">Tìm kiếm</a>
+
+    <!-- Nếu chưa đăng nhập, hiển thị nút "Đăng nhập" -->
+    <a href="/login" th:if="${username == null}">Đăng nhập</a>
+    <div class="user-area" th:if="${username != null}">
+      <p>Chào mừng <span th:text="${username}">Người dùng</span>!</p>
+      <form th:action="@{/logout}" method="post">
+        <button type="submit">Đăng xuất</button>
+      </form>
+    </div>
+
+  </div>
+</header>
+
+
+<div class="banner">
+  <img src="/image/anh7.jpg" alt="Banner Sân Bóng">
+</div>
+
+<div class="intro">
+  <h2>Đặt sân nhanh chóng - Tiện lợi - Chính xác</h2>
+
+</div>
+
+<div class="san-container">
+  <h2>Danh sách sân bóng nổi bật</h2>
+  <div th:each="san : ${danhSachSan}" class="san-item">
+    <td>
+      <!-- Nếu là ảnh mặc định (ảnh chưa bị sửa đổi) -->
+      <img th:if="${#strings.startsWith(san.hinh_anh, 'anh')}"
+           th:src="@{'/image/' + ${san.hinh_anh}}"
+           alt="Ảnh mặc định" width="80"/>
+
+      <!-- Nếu là ảnh đã upload (có UUID đầu tên) -->
+      <img th:if="${!#strings.startsWith(san.hinh_anh, 'anh')}"
+           th:src="@{'/uploads/' + ${san.hinh_anh}}"
+           alt="Ảnh người dùng upload" width="80"/>
+    </td>
+    <div>
+      <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" th:text="${san.ten_san_bong}">Tên sân</a>
+      <p ><strong> Loại môn thể thao: </strong> <span th:text="${san.loaiMonTheThao.ten_mon_the_thao}" ></span></p>
+      <p><strong>Địa chỉ:</strong> <span th:text="${san.dia_chi}"></span></p>
+      <p><strong>Giá thuê:</strong> <span th:text="${san.gia}">0</span> VNĐ</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="features">
+    <div>
+      <i class="bi bi-search"></i>
+      <h5>Tìm kiếm sân</h5>
+      <p>Lựa chọn sân phù hợp nhu cầu</p>
+    </div>
+    <div>
+      <i class="bi bi-calendar-check"></i>
+      <h5>Đặt sân nhanh</h5>
+      <p>Chọn thời gian và đặt dễ dàng</p>
+    </div>
+    <div>
+      <i class="bi bi-clock-history"></i>
+      <h5>Lịch sử đặt</h5>
+      <p>Kiểm tra trạng thái đặt sân</p>
+    </div>
+    <div>
+      <i class="bi bi-star-half"></i>
+      <h5>Đánh giá sân</h5>
+      <p>Xem và gửi đánh giá sân bạn đã chơi</p>
+    </div>
+  </div>
+  <div class="mt-4">
+    <p>Email: support@sambabooking.vn | Hotline: 1800-1234</p>
+    <p>Địa chỉ: Đâu đó trên thế giới</p>
+    <div class="social-icons">
+      <a href="https://facebook.com"><i class="bi bi-facebook"></i></a>
+      <a href="https://twitter.com"><i class="bi bi-twitter"></i></a>
+      <a href="https://instagram.com"><i class="bi bi-instagram"></i></a>
+    </div>
+    <a href="#" class="btn btn-outline-light mt-3">Lên đầu trang</a>
+  </div>
+</footer>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Giả lập biến isLoggedIn và userName từ backend (cần được render từ backend)
+    const isLoggedIn = /*[[${#authentication?.name != null}]]*/ false; // Thay false bằng giá trị thực tế
+    const userName = /*[[${#authentication?.name}]]*/ 'Người dùng'; // Thay 'Người dùng' bằng giá trị thực tế
+
+    const loginLink = document.getElementById('login-link');
+    const userMenu = document.querySelector('.user-menu');
+    const userNameSpan = document.getElementById('user-name');
+
+    if (isLoggedIn) {
+      loginLink.style.display = 'none'; // Ẩn nút Đăng nhập
+      userMenu.style.display = 'flex'; // Hiển thị menu người dùng
+      userNameSpan.textContent = userName; // Gắn tên người dùng
+    } else {
+      loginLink.style.display = 'inline-block'; // Hiển thị nút Đăng nhập
+      userMenu.style.display = 'none'; // Ẩn menu người dùng
+    }
+  });
+
+  // Nút lên đầu trang
+  document.querySelector('.btn-outline-light').addEventListener('click', function (e) {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Hiệu ứng xuất hiện cho các phần tử
+  document.addEventListener('DOMContentLoaded', function () {
+    const items = document.querySelectorAll('.san-item');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1 // Kích hoạt khi 10% phần tử vào khung nhìn
+    });
+
+    items.forEach(item => observer.observe(item));
+  });
+</script>
+
+<style>
+  .menu a.active {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+</style>
+</body>
+</html>
