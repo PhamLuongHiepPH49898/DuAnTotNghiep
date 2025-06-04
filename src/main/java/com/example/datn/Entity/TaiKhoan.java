@@ -13,7 +13,7 @@ public class TaiKhoan {
     private int id;
     @Column(name = "ho_ten")
     private String ho_ten;
-    @Column(name = "email")
+    @Column(name = "email",unique = true)
     private String email;
     @Column(name = "mat_khau")
     private String mat_khau;

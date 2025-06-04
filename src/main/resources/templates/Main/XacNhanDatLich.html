@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Xác nhận đặt lịch</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        h2 { color: #007bff; }
+        .section { margin-top: 20px; }
+        label { font-weight: bold; }
+        input, textarea { width: 100%; padding: 8px; margin: 5px 0; }
+        button {
+            padding: 10px 20px;
+            margin: 10px 10px 0 0;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .confirm-btn { background-color: #5aa0d8; color: white; }
+        .cancel-btn { background-color: #e8646c; color: white; }
+    </style>
+</head>
+<body>
+
+<h2>Đặt lịch</h2>
+
+<div class="section">
+    <h3>THÔNG TIN CÁ NHÂN</h3>
+    <label>Họ và tên *</label>
+    <input type="text" placeholder="Nhập họ và tên">
+    <label>Di động *</label>
+    <input type="text" placeholder="Nhập số điện thoại">
+    <label>Email *</label>
+    <input type="email" placeholder="Nhập email">
+    <p style="color:red;">***Vui lòng cung cấp Email hoặc số Zalo để nhận thông báo về tình trạng đặt sân</p>
+</div>
+
+<div class="section">
+    <h3>THÔNG TIN CHI TIẾT ĐẶT SÂN</h3>
+    <table border="1">
+        <tr>
+            <th>Ngày</th>
+            <th>Thời gian</th>
+            <th>Sân</th>
+            <th>Giá</th>
+            <th>Xóa</th>
+        </tr>
+        <tr th:each="item, stat : ${dsDatLich}">
+            <td th:text="${item.ngay}"></td>
+            <td th:text="${item.thoiGian}"></td>
+            <td th:text="${item.san}"></td>
+            <td th:text="${item.gia} + 'đ'"></td>
+            <td><a href="#">Xoá</a></td> <!-- Xử lý xóa thêm sau -->
+        </tr>
+    </table>
+    <p>Google Maps:</p>
+    <iframe src="https://maps.google.com/maps?q=Dan%20Sport%20Center,%20Dong%20Ha&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="250"></iframe>
+</div>
+
+<div class="section">
+    <h3>THÔNG TIN THANH TOÁN</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/VietQR_Logo.svg/300px-VietQR_Logo.svg.png" width="120" alt="VietQR">
+    <p>Quét mã QR để thanh toán</p>
+</div>
+
+<!-- Nút xác nhận và huỷ -->
+<div class="section">
+    <button class="confirm-btn" onclick="confirmBooking()">Xác nhận đặt lịch</button>
+    <button class="cancel-btn" onclick="cancelBooking()">Huỷ</button>
+</div>
+
+<script>
+    // Lấy dữ liệu từ query string
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById("price").textContent = parseInt(params.get("price")).toLocaleString() + " đ";
+    document.getElementById("time").textContent = params.get("time");
+    document.getElementById("pitch").textContent = params.get("pitch");
+    document.getElementById("date").textContent = params.get("date");
+
+    function confirmBooking() {
+        alert("✅ Đặt lịch thành công!\nCảm ơn bạn đã sử dụng dịch vụ.");
+        // Nếu muốn chuyển trang sau khi xác nhận:
+        // window.location.href = 'camon.html';
+    }
+
+    function cancelBooking() {
+        if (confirm("Bạn có chắc muốn huỷ đặt lịch?")) {
+            window.history.back(); // hoặc window.location.href = "dat-san.html";
+        }
+    }
+</script>
+
+</body>
+</html>

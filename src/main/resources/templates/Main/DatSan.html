@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Đặt Sân Bóng</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #4ca1af, #c4e0e5);
+            padding: 20px;
+            color: #333;
+        }
+
+        .booking-form {
+            background: #fff;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .booking-form h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #4ca1af;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #0072ff;
+            outline: none;
+        }
+
+        .btn-submit {
+            background: #4ca1af;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #4ca1af;
+        }
+    </style>
+</head>
+<body>
+
+<form class="booking-form" id="booking-form" th:action="@{/datsan}" th:object="${lichDatSanDto}" method="post">
+    <h2>Đặt Sân Bóng</h2>
+
+    <div class="form-group">
+        <label for="idSanBong">Tên sân</label>
+        <select th:field="*{id_san_bong}" id="idSanBong" required>
+            <option value="" disabled selected>-- Chọn sân --</option>
+            <option th:each="san : ${danhSachSanBong}"
+                    th:value="${san.id_san_bong}"
+                    th:text="${san.ten_san_bong}"></option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="idKhungGio">Chọn khung giờ</label>
+        <select th:field="*{idKhungGio}" id="idKhungGio" required>
+            <option value="" disabled selected>-- Chọn khung giờ --</option>
+            <option th:each="gia : ${danhSachGiaTheoKhungGio}"
+                    th:value="${gia.id}"
+                    th:text="|${gia.khungGio.gioBatDau} - ${gia.khungGio.gioKetThuc}|"></option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ngayDat">Ngày đặt</label>
+        <input type="date" th:field="*{ngayDat}" id="ngayDat" required />
+    </div>
+
+    <div class="form-group">
+        <label for="tenNguoiDat">Tên người đặt</label>
+        <input type="text" th:field="*{tenNguoiDat}" id="tenNguoiDat" placeholder="Tên người đặt" required />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" th:field="*{email}" id="email" placeholder="Email" required />
+    </div>
+
+    <div class="form-group">
+        <label for="soDienThoai">Số điện thoại</label>
+        <input type="text" th:field="*{soDienThoai}" id="soDienThoai" placeholder="Số điện thoại" required />
+    </div>
+
+    <button type="submit" class="btn-submit">Đặt sân</button>
+</form>
+
+
+</body>
+</html>
