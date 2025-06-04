@@ -67,7 +67,7 @@ public class SanBongController {
 
 
     // ✅ Trang chủ chính
-    @GetMapping("/trangchu")
+    @GetMapping("/trang-chu")
     public String trangchu(Model model) {
 
         return "/Main/TrangChu";
