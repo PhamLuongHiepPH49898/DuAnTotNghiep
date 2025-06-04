@@ -122,17 +122,25 @@ public class SanBongController {
     @GetMapping("/tim-kiem")
     public String timKiem(Model model,
                           @RequestParam(value = "keyword", required = false) String keyword,
-                          @RequestParam(required = false) Long loaiSan,
-                          @RequestParam(required = false) Long monTheThao) {
+                          @RequestParam(required = false) Integer loaiSan,
+                          @RequestParam(required = false) Integer monTheThao,
+                          @RequestParam(required = false) Integer trangThai) {
+
         if (keyword != null) {
             keyword = keyword.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
+            if (keyword.isEmpty()) {
+                keyword = null;
+            }
         }
         List<SanBong> ketQua = sanBongService.timKiemSan(keyword, loaiSan, monTheThao);
+        List<SanBong> sanBongs = sanBongService.findAll();
+        model.addAttribute("sanBongs", sanBongs);
         model.addAttribute("danhSachSan", ketQua);
         model.addAttribute("khongCoKetQua", ketQua.isEmpty());
-        populateModel(model);
-        return "/Main/TimKiem"; // 👉 trang riêng biệt
+        populateModel(model); // Gợi ý: đảm bảo phương thức này nạp các danh sách như danh sách loại sân, môn thể thao v.v.
+        return "/Main/TimKiem";
     }
+
     // ✅ Trang chi tiết riêng
     @GetMapping("/chi-tiet/{id}")
     public String chiTietSan(@PathVariable("id") int id, Model model) {
