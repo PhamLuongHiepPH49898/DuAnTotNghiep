@@ -259,7 +259,7 @@
 
 <div class="san-container">
     <h2>Danh sách sân bóng nổi bật</h2>
-    <div th:each="san : ${danhSachSan}" class="san-item">
+    <div th:each="san : ${danhSachSan}" th:if="${san.trang_thai != 3}" class="san-item">
 
             <!-- Nếu là ảnh mặc định (ảnh chưa bị sửa đổi) -->
             <img th:if="${#strings.startsWith(san.hinh_anh, 'anh')}"

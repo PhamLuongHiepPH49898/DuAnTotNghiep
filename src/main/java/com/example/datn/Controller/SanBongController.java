@@ -18,11 +18,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -31,6 +29,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 public class SanBongController {
@@ -53,6 +52,7 @@ public class SanBongController {
     public String homeRedirect() {
         return "redirect:/trangchu";
     }
+
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
@@ -60,12 +60,14 @@ public class SanBongController {
         }
         return "Main/Login";
     }
+
     @GetMapping("/logout")
     public String logoutPage(Model model) {
         return "Main/TrangChu";
     }
+
     @GetMapping("/dang-ky")
-    public String dangKy(){
+    public String dangKy() {
         return "Main/DangKi";
     }
 
@@ -76,8 +78,9 @@ public class SanBongController {
 
         return "/Main/TrangChu";
     }
+
     @GetMapping("/user/trang-chu")
-    public String trangChu_nguoiDung(Model model){
+    public String trangChu_nguoiDung(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("Logged-in user: " + auth.getName());
         model.addAttribute("username", auth.getName());
@@ -87,8 +90,9 @@ public class SanBongController {
         System.out.println("Logged-in user: " + auth.getName());
         return "/Main/TrangChu_NguoiDung";
     }
+
     @GetMapping("/admin/trang-chu")
-    public String trangChu_QuanTri(Model model){
+    public String trangChu_QuanTri(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("Logged-in user: " + auth.getName());
         model.addAttribute("username", auth.getName());
@@ -114,6 +118,7 @@ public class SanBongController {
         populateModel(model);
         return "/Main/TimKiem"; // 👉 trang riêng biệt
     }
+
     // ✅ Trang chi tiết riêng
     @GetMapping("/chi-tiet/{id}")
     public String chiTietSan(@PathVariable("id") int id, Model model) {
@@ -131,6 +136,7 @@ public class SanBongController {
         model.addAttribute("danhSachSan", danhSachSan);
         return "/san/QuanLySan";
     }
+
     @GetMapping("form-them-san-bong")
     public String formThem(Model model) {
         model.addAttribute("sanBong", new SanBong());
@@ -191,6 +197,7 @@ public class SanBongController {
         sanBongService.xoa(id);
         return "redirect:/quan-ly-san";
     }
+
     @GetMapping("/sua-san-bong/{id}")
     public String viewSua(@PathVariable("id") int id, Model model) {
         model.addAttribute("sanBong", sanBongService.findById(id));
@@ -199,10 +206,11 @@ public class SanBongController {
         model.addAttribute("dsLoaiMatSan", loaiMatSanRepo.findAll());
         return "/san/SuaSan";
     }
+
     @PostMapping("/sua-san-bong/{id}")
-    public String suaSanBong(@Valid @ModelAttribute SanBong sanBongMoi,
-                             @PathVariable("id") int id,
+    public String suaSanBong(@Valid @ModelAttribute("sanBong") SanBong sanBong,
                              BindingResult bindingResult,
+                             @PathVariable("id") int id,
                              Model model) throws IOException {
 
         SanBong sanBongGoc = sanBongService.findById(id);
@@ -211,23 +219,23 @@ public class SanBongController {
         }
 
         if (bindingResult.hasErrors()) {
+//            model.addAttribute("sanBong", sanBongGoc);
             model.addAttribute("dsLoaiMonTheThao", loaiMonTheThaoRepo.findAll());
             model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
             model.addAttribute("dsLoaiMatSan", loaiMatSanRepo.findAll());
-            model.addAttribute("sanBong", sanBongMoi);
-            return "san/SuaSan";
+            return "/san/SuaSan";
         }
 
         // Cập nhật các trường thông tin khác
-        sanBongGoc.setTen_san_bong(sanBongMoi.getTen_san_bong());
-        sanBongGoc.setGia(sanBongMoi.getGia());
-        sanBongGoc.setMo_ta(sanBongMoi.getMo_ta());
-        sanBongGoc.setTrang_thai(sanBongMoi.getTrang_thai());
-        sanBongGoc.setLoaiMatSan(sanBongMoi.getLoaiMatSan());
-        sanBongGoc.setLoaiMonTheThao(sanBongMoi.getLoaiMonTheThao());
-        sanBongGoc.setLoaiSan(sanBongMoi.getLoaiSan());
+        sanBongGoc.setTen_san_bong(sanBong.getTen_san_bong());
+        sanBongGoc.setGia(sanBong.getGia());
+        sanBongGoc.setMo_ta(sanBong.getMo_ta());
+        sanBongGoc.setTrang_thai(sanBong.getTrang_thai());
+        sanBongGoc.setLoaiMatSan(sanBong.getLoaiMatSan());
+        sanBongGoc.setLoaiMonTheThao(sanBong.getLoaiMonTheThao());
+        sanBongGoc.setLoaiSan(sanBong.getLoaiSan());
 
-        MultipartFile file = sanBongMoi.getFile();
+        MultipartFile file = sanBong.getFile();
         if (file != null && !file.isEmpty()) {
             String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
             Path uploadPath = Paths.get("uploads");
@@ -245,7 +253,6 @@ public class SanBongController {
         }
 
 
-
         sanBongService.sua(sanBongGoc);
         return "redirect:/quan-ly-san";
     }
@@ -254,6 +261,25 @@ public class SanBongController {
     private void populateModel(Model model) {
         model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
         model.addAttribute("dsMonTheThao", loaiMonTheThaoRepo.findAll());
+    }
+
+    // ✅ Trang tìm kiếm riêng
+    @GetMapping("/quan-ly-san/tim-kiem")
+    public String quanLySanTimKiem(Model model,
+                                   @RequestParam(value = "keyword", required = false) String keyword,
+                                   @RequestParam(required = false) Long loaiSan,
+                                   @RequestParam(required = false) Long monTheThao) {
+        if (keyword != null) {
+            keyword = keyword.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
+        }
+        List<SanBong> ketQua = sanBongService.timKiemSan(keyword, loaiSan, monTheThao);
+        List<SanBong> danhSachSanDaLoc = ketQua.stream()
+                .filter(s -> s.getTrang_thai() != 3)
+                .collect(Collectors.toList());
+        model.addAttribute("danhSachSan", danhSachSanDaLoc);
+        model.addAttribute("khongCoKetQua", ketQua.isEmpty());
+        populateModel(model);
+        return "/san/QuanLySan"; // 👉 trang riêng biệt
     }
 
 }

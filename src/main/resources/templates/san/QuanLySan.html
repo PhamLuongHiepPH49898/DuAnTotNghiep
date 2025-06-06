@@ -41,7 +41,7 @@
             z-index: 1040;
         }
 
-        .sidebar-logo  {
+        .sidebar-logo {
             max-height: 60px;
             object-fit: contain;
         }
@@ -156,12 +156,14 @@
 <!-- Sidebar (Desktop) -->
 <nav class="sidebar d-none d-md-block">
     <ul class="nav flex-column mt-3">
-        <li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-house-door"></i> Quản lý sân</a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Đặt sân</a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Người dùng</a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-tag"></i> Khuyến mãi</a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bar-chart"></i> Thống kê</a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bell"></i> Thông báo</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/quan-ly-san"><i class="bi bi-house-door"></i> Quản lý sân</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-dat-san"><i class="bi bi-calendar-event"></i> Quản lý
+            đặt sân</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-tag"></i> Quản lý khuyến mãi</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bar-chart"></i> Quản lý thống kê</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bell"></i> Quản lý thông báo</a></li>
     </ul>
 </nav>
 
@@ -191,21 +193,53 @@
 <div class="offcanvas offcanvas-start white" tabindex="-1" id="mobileSidebar">
     <div class="offcanvas-body">
         <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-house-door"></i> Quản lý sân</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Đặt sân</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Người dùng</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-tag"></i> Khuyến mãi</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bar-chart"></i> Thống kê</a></li>
-            <li class="nav-item"><a class="nav-link " href="#"><i class="bi bi-bell"></i> Thông báo</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-san"><i class="bi bi-house-door"></i> Quản lý
+                sân</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-dat-san"><i class="bi bi-calendar-event"></i> Quản
+                lý đặt sân</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-tag"></i> Quản lý khuyến mãi</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bar-chart"></i> Quản lý thống kê</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bell"></i> Quản lý thông báo</a></li>
         </ul>
     </div>
 </div>
 <!-- Main Content -->
 <main class="main-wrapper">
     <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4>Danh sách sân</h4>
-            <a th:href="@{/form-them-san-bong}" class="btn btn-success"><i class="bi bi-plus-lg"></i> Thêm sân</a>
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+            <h4 class="mb-0">Danh sách sân</h4>
+
+            <form id="searchForm" class="row g-2 align-items-end" method="get" th:action="@{/quan-ly-san/tim-kiem}">
+                <div class="col-12 col-md-auto">
+                    <input type="text" name="keyword" id="keyword" placeholder="Nhập tên sân bóng..."
+                           th:value="${keyword}" class="form-control">
+                </div>
+
+                <div class="col-12 col-md-auto">
+                    <select name="monTheThao" class="form-select">
+                        <option value="">-- Chọn môn thể thao --</option>
+                        <option th:each="mon : ${dsMonTheThao}" th:value="${mon.id}"
+                                th:text="${mon.ten_mon_the_thao}"></option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-md-auto">
+                    <select name="loaiSan" class="form-select">
+                        <option value="">-- Chọn loại sân --</option>
+                        <option th:each="loai : ${dsLoaiSan}" th:value="${loai.id}"
+                                th:text="${loai.ten_loai_san}"></option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-md-auto ms-md-auto">
+                    <button type="submit" class="btn btn-primary w-100 w-md-auto">Tìm kiếm</button>
+                </div>
+            </form>
+
+            <a th:href="@{/form-them-san-bong}" class="btn btn-success">
+                <i class="bi bi-plus-lg"></i> Thêm sân
+            </a>
         </div>
 
         <div class="table-responsive">
@@ -225,7 +259,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="san, stat : ${danhSachSan}">
+                <tr th:each="san, stat : ${danhSachSan}" th:if="${san.trang_thai != 3}">
                     <td th:text="${stat.index + 1}"></td>
                     <td>
                         <!-- Nếu là ảnh mặc định (ảnh chưa bị sửa đổi) -->
@@ -255,13 +289,18 @@
                     </td>
                     <td>
                         <a th:href="@{/sua-san-bong/{id}(id=${san.id_san_bong})}"
-                           class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil-square"></i></a>
-                        <a th:href="@{/xoa-san-bong/{id}(id=${san.id_san_bong})}" class="btn btn-sm btn-outline-danger"
-                           onclick="return confirm('Bạn có chắc muốn xóa?')"><i class="bi bi-trash"></i></a>
+                           class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil-square"> Sửa</i></a>
+                        <a th:href="@{/xoa-san-bong/{id}(id=${san.id_san_bong})}"
+                           class="btn btn-sm btn-outline-danger"
+                           onclick="return confirm('Bạn có chắc muốn xóa?')"><i class="bi bi-trash"> Xóa</i></a>
                     </td>
                 </tr>
                 </tbody>
             </table>
+            <!-- Hiển thị thông báo nếu danh sách đã lọc trống -->
+            <div th:if="${#lists.isEmpty(danhSachSan)}" class="alert alert-warning text-center mt-4">
+                Không tìm thấy sân bóng phù hợp với yêu cầu của bạn.
+            </div>
         </div>
     </div>
 </main>

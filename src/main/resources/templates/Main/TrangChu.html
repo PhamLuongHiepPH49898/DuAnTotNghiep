@@ -260,7 +260,7 @@
 
 <div class="san-container">
     <h2>Danh sách sân bóng nổi bật</h2>
-    <div th:each="san : ${danhSachSan}" class="san-item">
+    <div th:each="san : ${danhSachSan}" th:if="${san.trang_thai != 3}" class="san-item">
         <img th:src="@{'/image/' + ${san.hinh_anh}}" alt="Ảnh sân bóng">
         <div>
             <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" th:text="${san.ten_san_bong}">Tên sân</a>
