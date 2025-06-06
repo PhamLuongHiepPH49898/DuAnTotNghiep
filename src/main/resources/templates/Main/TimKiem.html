@@ -208,7 +208,7 @@
             Không tìm thấy sân bóng phù hợp với yêu cầu của bạn.
         </div>
 
-        <div th:each="san : ${danhSachSan}" class="card mb-3 shadow-sm">
+        <div th:each="san : ${danhSachSan}" th:if="${san.trang_thai != 3}" class="card mb-3 shadow-sm">
             <div class="row g-0">
                 <div class="col-md-4">
                     <td>
