@@ -42,4 +42,8 @@ public class CustomUserDetails implements UserDetails {
         System.out.println("Mật khẩu trả về: " + taiKhoan.getMat_khau());
         return taiKhoan.getMat_khau();
     }
+    public TaiKhoan getTaiKhoan() {
+        return taiKhoan;
+    }
+
 }

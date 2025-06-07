@@ -2,11 +2,9 @@ package com.example.datn.Service;
 
 import com.example.datn.Entity.SanBong;
 import com.example.datn.Repository.SanBongRepo;
-import com.example.datn.Repository.SanBongSpecification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SanBongService {
@@ -17,7 +15,7 @@ public class SanBongService {
     }
 
     public List<SanBong> findAll() {
-        return sanbongRepo.findAll();
+        return sanbongRepo.findByTrangThaiIn(List.of(0,1,2));
     }
 
     public SanBong findById(int id) {
@@ -25,12 +23,12 @@ public class SanBongService {
     }
 
 
+    public List<SanBong> timKiemSan(String keyword, Integer loaiSan, Integer monTheThao) {
 
-
-    public List<SanBong> timKiemSan(String keyword, Long loaiSan, Long monTheThao) {
         return sanbongRepo.timKiemSan(keyword, loaiSan, monTheThao);
 
     }
+
 
     public void them(SanBong sanBong) {
         sanbongRepo.save(sanBong);
@@ -42,6 +40,9 @@ public class SanBongService {
             sanBong.setTrang_thai(3); // Đặt trạng thái là 3 (đã xóa)
             sanbongRepo.save(sanBong); // Lưu lại vào DB
         }
+    }
+    public List<SanBong> timKiemTheoTrangThai(List<Integer> dsTrangThai) {
+        return sanbongRepo.findByTrangThaiIn(List.of(0, 1, 2));
     }
 
     public void sua(SanBong sanBong) {
