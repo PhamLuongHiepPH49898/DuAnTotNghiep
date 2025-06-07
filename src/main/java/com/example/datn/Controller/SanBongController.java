@@ -49,7 +49,7 @@ public class SanBongController {
 
     @GetMapping("/")
     public String homeRedirect() {
-        return "redirect:/trangchu";
+        return "redirect:/trang-chu";
     }
 
     @GetMapping("/login")
@@ -244,7 +244,6 @@ public class SanBongController {
         }
 
         if (bindingResult.hasErrors()) {
-//            model.addAttribute("sanBong", sanBongGoc);
             model.addAttribute("dsLoaiMonTheThao", loaiMonTheThaoRepo.findAll());
             model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
             model.addAttribute("dsLoaiMatSan", loaiMatSanRepo.findAll());
@@ -304,7 +303,7 @@ public class SanBongController {
         model.addAttribute("danhSachSan", danhSachSanDaLoc);
         model.addAttribute("khongCoKetQua", ketQua.isEmpty());
         populateModel(model);
-        return "/san/QuanLySan"; // 👉 trang riêng biệt
+        return "/san/QuanLySan";
     }
 
 
