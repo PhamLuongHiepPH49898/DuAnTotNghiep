@@ -27,7 +27,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/trangchu", "/css/**", "/js/**", "/image/**", "/tim-kiem/**", "/chi-tiet/**", "/ve-trang-chu/**").permitAll() // Cho phép truy cập công cộng
+                        .requestMatchers("/", "/trang-chu", "/css/**", "/js/**", "/image/**", "/tim-kiem/**", "/chi-tiet/**", "/ve-trang-chu/**").permitAll() // Cho phép truy cập công cộng
                         .requestMatchers("/admin/**").hasRole("QUAN_TRI")
                         .requestMatchers("/user/**").hasRole("NGUOI_DUNG")
                         .requestMatchers("/login", "/dang-ky").permitAll() // Trang login và register công khai
