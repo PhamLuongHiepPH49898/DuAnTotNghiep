@@ -46,6 +46,7 @@ public class SanBongService {
     }
 
     public void sua(SanBong sanBong) {
+        System.out.println("Tên sân: " + sanBong.getTen_san_bong());
         sanbongRepo.save(sanBong);
     }
 
