@@ -1,10 +1,12 @@
 package com.example.datn.Controller;
 
 import com.example.datn.Entity.SanBong;
+import com.example.datn.Entity.TaiKhoan;
 import com.example.datn.Repository.LoaiMatSanRepo;
 import com.example.datn.Repository.LoaiMonTheThaoRepo;
 import com.example.datn.Repository.LoaiSanRepo;
 import com.example.datn.Repository.TaiKhoanRepo;
+import com.example.datn.Security.CustomUserDetails;
 import com.example.datn.Service.SanBongService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -69,7 +71,9 @@ public class SanBongController {
     // ✅ Trang chủ chính
     @GetMapping("/trangchu")
     public String trangchu(Model model) {
-
+        List<SanBong> danhSachSan = sanBongService.findAll();
+        model.addAttribute("danhSachSan", danhSachSan);
+        populateModel(model);
         return "/Main/TrangChu";
     }
     @GetMapping("/user/trang-chu")
@@ -94,22 +98,47 @@ public class SanBongController {
         System.out.println("Logged-in user: " + auth.getName());
         return "/Main/TrangChu_QuanTri";
     }
+    @GetMapping("/ve-trang-chu")
+    public String veTrangChuTheoRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()
+                && !authentication.getPrincipal().equals("anonymousUser")) {
+
+            if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_QUAN_TRI"))) {
+                return "redirect:/admin/trang-chu";
+            } else if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_NGUOI_DUNG"))) {
+                return "redirect:/user/trang-chu";
+            }
+        }
+
+        return "redirect:/trangchu"; // Người chưa đăng nhập
+    }
+
 
     // ✅ Trang tìm kiếm riêng
     @GetMapping("/tim-kiem")
     public String timKiem(Model model,
                           @RequestParam(value = "keyword", required = false) String keyword,
-                          @RequestParam(required = false) Long loaiSan,
-                          @RequestParam(required = false) Long monTheThao) {
+                          @RequestParam(required = false) Integer loaiSan,
+                          @RequestParam(required = false) Integer monTheThao,
+                          @RequestParam(required = false) Integer trangThai) {
+
         if (keyword != null) {
             keyword = keyword.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
+            if (keyword.isEmpty()) {
+                keyword = null;
+            }
         }
         List<SanBong> ketQua = sanBongService.timKiemSan(keyword, loaiSan, monTheThao);
+        List<SanBong> sanBongs = sanBongService.findAll();
+        model.addAttribute("sanBongs", sanBongs);
         model.addAttribute("danhSachSan", ketQua);
         model.addAttribute("khongCoKetQua", ketQua.isEmpty());
-        populateModel(model);
-        return "/Main/TimKiem"; // 👉 trang riêng biệt
+        populateModel(model); // Gợi ý: đảm bảo phương thức này nạp các danh sách như danh sách loại sân, môn thể thao v.v.
+        return "/Main/TimKiem";
     }
+
     // ✅ Trang chi tiết riêng
     @GetMapping("/chi-tiet/{id}")
     public String chiTietSan(@PathVariable("id") int id, Model model) {
@@ -137,19 +166,46 @@ public class SanBongController {
     }
 
     @PostMapping("/them-san-bong")
-    public String themSanBong(@Valid @ModelAttribute("sanBong") SanBong sanBong, BindingResult bindingResult, Model model, @RequestParam(value = "hinhAnh", required = false) MultipartFile hinhAnh) throws IOException {
+    public String themSanBong(@Valid @ModelAttribute("sanBong") SanBong sanBong, BindingResult bindingResult, Model model) throws IOException {
 
-        // Nếu có ảnh thì lưu ảnh
-        if (hinhAnh != null && !hinhAnh.isEmpty()) {
-            String tenFile = UUID.randomUUID() + "_" + hinhAnh.getOriginalFilename();
-            String path = "uploads/" + tenFile;
-            File file = new File(path);
-            file.getParentFile().mkdirs();
-            hinhAnh.transferTo(file);
+        MultipartFile file = sanBong.getFile();
 
-            sanBong.setHinh_anh(tenFile);
+        // Validate ảnh bắt buộc chọn
+        if (file == null || file.isEmpty()) {
+            bindingResult.rejectValue("file", "file.empty", "Bạn phải chọn file ảnh");
         }
 
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
+            model.addAttribute("dsLoaiMonTheThao", loaiMonTheThaoRepo.findAll());
+            model.addAttribute("dsLoaiMatSan", loaiMatSanRepo.findAll());
+            return "san/ThemSan";
+        }
+
+        // Lấy tài khoản đang đăng nhập
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+        TaiKhoan taiKhoan = userDetails.getTaiKhoan();
+
+
+        if (file != null && !file.isEmpty()) {
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            Path uploadPath = Paths.get("uploads");
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            sanBong.setHinh_anh(fileName); // Chỉ lưu tên file
+        }
+
+        // Gán tài khoản vào sân bóng
+        sanBong.setTaiKhoan(taiKhoan);
 
         sanBongService.them(sanBong);
         return "redirect:/quan-ly-san";
