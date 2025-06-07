@@ -72,7 +72,7 @@ public class SanBongController {
 
 
     // ✅ Trang chủ chính
-    @GetMapping("/trangchu")
+    @GetMapping("/trang-chu")
     public String trangchu(Model model) {
         List<SanBong> danhSachSan = sanBongService.findAll();
         model.addAttribute("danhSachSan", danhSachSan);
