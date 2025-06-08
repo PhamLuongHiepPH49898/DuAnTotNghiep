@@ -1,9 +1,6 @@
 package com.example.datn.Entity;
+
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 
@@ -14,7 +11,7 @@ public class GiaTheoKhungGio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_gia_theo_khung_gio")
-    private int id;
+    private int idGiaTheoKhungGio;
 
     @Column(name = "gia_thue", nullable = false)
     private BigDecimal giaThue;
@@ -30,12 +27,12 @@ public class GiaTheoKhungGio {
     @JoinColumn(name = "id_khung_gio")
     private KhungGio khungGio;
 
-    public int getId() {
-        return id;
+    public int getIdGiaTheoKhungGio() {
+        return idGiaTheoKhungGio;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdGiaTheoKhungGio(int idGiaTheoKhungGio) {
+        this.idGiaTheoKhungGio = idGiaTheoKhungGio;
     }
 
     public BigDecimal getGiaThue() {
@@ -70,4 +67,5 @@ public class GiaTheoKhungGio {
         this.khungGio = khungGio;
     }
 }
+
 
