@@ -33,6 +33,10 @@ public class DatSanService {
         return khungGioRepository.findAll();
     }
 
+    public List<GiaTheoKhungGio> layDanhGiaTheoKhungGio() {
+        return giaTheoKhungGioRepository.findAll();
+    }
+
     public Map<String, BigDecimal> layBangGia() {
         List<GiaTheoKhungGio> danhSachGia = giaTheoKhungGioRepository.findAll();
         Map<String, BigDecimal> bangGia = new HashMap<>();

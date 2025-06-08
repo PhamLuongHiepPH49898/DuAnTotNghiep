@@ -1,6 +1,8 @@
 package com.example.datn.Controller;
 
+import com.example.datn.DTO.ChiTietDatLichDTO;
 import com.example.datn.DTO.LichDatSanDTO;
+import com.example.datn.DTO.XacNhanDatLichDTO;
 import com.example.datn.Entity.*;
 import com.example.datn.Repository.LoaiMatSanRepo;
 import com.example.datn.Repository.LoaiMonTheThaoRepo;
@@ -17,8 +19,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
+import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class SanBongController {
@@ -29,9 +34,10 @@ public class SanBongController {
     private final TaiKhoanRepo taiKhoanRepo;
     @Autowired
     private SanBongService sanBongService;
-
     @Autowired
     private DatSanService datSanService;
+    @Autowired
+    private XacNhanDatLichService xacNhanDatLichService;
     public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo) {
         this.sanBongService = sanBongService;
         this.loaiMatSanRepo = loaiMatSanRepo;
@@ -98,17 +104,72 @@ public class SanBongController {
     public String hienThiTrangDatSan(Model model) {
         List<SanBong> sanList = datSanService.layDanhSachSan();
         List<KhungGio> khungGioList = datSanService.layDanhSachKhungGio();
-        Map<String, BigDecimal> bangGia = datSanService.layBangGia();
+        List<GiaTheoKhungGio> danhSachGiaTheoKhungGio = datSanService.layDanhGiaTheoKhungGio(); // lấy danh sách giá theo khung giờ
 
-        System.out.println("San: " + sanList.size());
-        System.out.println("KhungGio: " + khungGioList.size());
-        System.out.println("BangGia: " + bangGia.size());
+        // Map key = "idSan_idKhungGio" -> Giá thuê
+        Map<String, BigDecimal> bangGia = new HashMap<>();
+        for (GiaTheoKhungGio gia : danhSachGiaTheoKhungGio) {
+            String key = gia.getSanBong().getId_san_bong() + "_" + gia.getKhungGio().getId();
+            bangGia.put(key, gia.getGiaThue());
+        }
+
+        // Map key = "idSan_idKhungGio" -> ID bảng giá
+        Map<String, Integer> bangGiaId = new HashMap<>();
+        for (GiaTheoKhungGio gia : danhSachGiaTheoKhungGio) {
+            String key = gia.getSanBong().getId_san_bong() + "_" + gia.getKhungGio().getId();
+            bangGiaId.put(key, gia.getIdGiaTheoKhungGio());
+        }
 
         model.addAttribute("danhSachSan", sanList);
         model.addAttribute("danhSachKhungGio", khungGioList);
         model.addAttribute("bangGia", bangGia);
+        model.addAttribute("bangGiaId", bangGiaId);
+
+        System.out.println("San: " + sanList.size());
+        System.out.println("KhungGio: " + khungGioList.size());
+        System.out.println("BangGia: " + bangGia.size());
+        System.out.println("BangGiaId: " + bangGiaId.size());
+
         return "Main/DatLich"; // Tên file HTML
     }
+    @GetMapping("/xacnhan")
+    public String hienThiFormXacNhan(Model model, Principal principal) {
+        String email = principal.getName(); // Lấy email từ người dùng đang đăng nhập
+        Optional<TaiKhoan> taiKhoan = taiKhoanRepo.findByEmail(email);
 
+        if (taiKhoan.isPresent()) {
+            XacNhanDatLichDTO xacNhan = new XacNhanDatLichDTO();
+            xacNhan.setHoTen(taiKhoan.get().getHo_ten());
+            xacNhan.setSoDienThoai(taiKhoan.get().getSo_dien_thoai());
+            xacNhan.setEmail(taiKhoan.get().getEmail());
+
+            // Gán vào model đúng cách
+            model.addAttribute("xacNhan", xacNhan);
+        } else {
+            // Có thể xử lý khi không tìm thấy người dùng
+            return "redirect:/login?error=notfound";
+        }
+        return "Main/XacNhanDatLich";
+    }
+    @GetMapping("/datLichThanhCong")
+    public String hienThiTrangDatLichThanhCong() {
+        return "/Main/Success"; // Trả về file DatLichThanhCong.html nằm trong thư mục templates/Main
+    }
+    @PostMapping("/datLichThanhCong")
+    public String luuDatLich(@ModelAttribute XacNhanDatLichDTO xacNhan, Model model) {
+        List<ChiTietDatLichDTO> danhSachChiTiet = xacNhan.getChiTietDatLichList();
+
+        for (ChiTietDatLichDTO chiTiet : danhSachChiTiet) {
+            System.out.println("Ngày: " + chiTiet.getNgayDat());
+            System.out.println("Giờ: " + chiTiet.getThoiGian());
+            System.out.println("Sân: " + chiTiet.getTenSan());
+            System.out.println("Giá: " + chiTiet.getGia());
+
+            System.out.println("ID Giá Thuê: " + chiTiet.getIdGiaTheoKhungGio());
+
+        }
+        xacNhanDatLichService.luuDatLich(xacNhan);
+        return "Main/Success";
+    }
 
 }
