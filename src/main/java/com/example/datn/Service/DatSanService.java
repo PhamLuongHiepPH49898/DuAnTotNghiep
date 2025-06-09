@@ -2,14 +2,17 @@ package com.example.datn.Service;
 
 import com.example.datn.Entity.GiaTheoKhungGio;
 import com.example.datn.Entity.KhungGio;
+import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Entity.SanBong;
 import com.example.datn.Repository.GiaTheoKhungGioRepo;
 import com.example.datn.Repository.KhungGioRepo;
+import com.example.datn.Repository.LichDatSanRepo;
 import com.example.datn.Repository.SanBongRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +27,9 @@ public class DatSanService {
 
     @Autowired
     private GiaTheoKhungGioRepo giaTheoKhungGioRepository;
+
+    @Autowired
+    private LichDatSanRepo lichDatSanRepository;
 
     public List<SanBong> layDanhSachSan() {
         return sanBongRepository.findAll();
@@ -47,6 +53,22 @@ public class DatSanService {
         }
         return bangGia;
     }
+    public List<String> getAllSlotKeys() {
+        List<LichDatSan> danhSach = lichDatSanRepository.findAll();
+        List<String> keys = new ArrayList<>();
+
+        for (LichDatSan lich : danhSach) {
+            String date = lich.getNgayDat().toString(); // yyyy-MM-dd
+            String court = lich.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
+            String time = lich.getGiaTheoKhungGio().getKhungGio().getGioBatDau() + "-" +
+                    lich.getGiaTheoKhungGio().getKhungGio().getGioKetThuc();
+
+            keys.add(date + "_" + court + "_" + time);
+        }
+
+        return keys;
+    }
+
 
 }
 
