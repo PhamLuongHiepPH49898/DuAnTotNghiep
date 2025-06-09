@@ -2,10 +2,7 @@ package com.example.datn.Controller;
 
 import com.example.datn.Entity.SanBong;
 import com.example.datn.Entity.TaiKhoan;
-import com.example.datn.Repository.LoaiMatSanRepo;
-import com.example.datn.Repository.LoaiMonTheThaoRepo;
-import com.example.datn.Repository.LoaiSanRepo;
-import com.example.datn.Repository.TaiKhoanRepo;
+import com.example.datn.Repository.*;
 import com.example.datn.Security.CustomUserDetails;
 import com.example.datn.Service.SanBongService;
 import jakarta.validation.Valid;
@@ -38,13 +35,15 @@ public class SanBongController {
     private final LoaiSanRepo loaiSanRepo;
     private final LoaiMonTheThaoRepo loaiMonTheThaoRepo;
     private final TaiKhoanRepo taiKhoanRepo;
+    private final SanBongRepo sanBongRepo;
 
-    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo) {
+    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo, SanBongRepo sanBongRepo) {
         this.sanBongService = sanBongService;
         this.loaiMatSanRepo = loaiMatSanRepo;
         this.loaiSanRepo = loaiSanRepo;
         this.loaiMonTheThaoRepo = loaiMonTheThaoRepo;
         this.taiKhoanRepo = taiKhoanRepo;
+        this.sanBongRepo = sanBongRepo;
     }
 
     @GetMapping("/")
@@ -135,7 +134,7 @@ public class SanBongController {
                 keyword = null;
             }
         }
-        List<SanBong> ketQua = sanBongService.timKiemSan(keyword, loaiSan, monTheThao);
+        List<SanBong> ketQua = sanBongRepo.timKiemSan(keyword, loaiSan, monTheThao);
         List<SanBong> sanBongs = sanBongService.findAll();
         model.addAttribute("sanBongs", sanBongs);
         model.addAttribute("danhSachSan", ketQua);
@@ -296,7 +295,7 @@ public class SanBongController {
         if (keyword != null) {
             keyword = keyword.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
         }
-        List<SanBong> ketQua = sanBongService.timKiemSan(keyword, loaiSan, monTheThao);
+        List<SanBong> ketQua = sanBongRepo.timKiemSan(keyword, loaiSan, monTheThao);
         List<SanBong> danhSachSanDaLoc = ketQua.stream()
                 .filter(s -> s.getTrang_thai() != 3)
                 .collect(Collectors.toList());
