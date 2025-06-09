@@ -105,6 +105,7 @@ public class SanBongController {
         List<SanBong> sanList = datSanService.layDanhSachSan();
         List<KhungGio> khungGioList = datSanService.layDanhSachKhungGio();
         List<GiaTheoKhungGio> danhSachGiaTheoKhungGio = datSanService.layDanhGiaTheoKhungGio(); // lấy danh sách giá theo khung giờ
+        List<String> cacSlotDaDat = datSanService.getAllSlotKeys();
 
         // Map key = "idSan_idKhungGio" -> Giá thuê
         Map<String, BigDecimal> bangGia = new HashMap<>();
@@ -124,6 +125,7 @@ public class SanBongController {
         model.addAttribute("danhSachKhungGio", khungGioList);
         model.addAttribute("bangGia", bangGia);
         model.addAttribute("bangGiaId", bangGiaId);
+        model.addAttribute("cacSlotDaDat", cacSlotDaDat);
 
         System.out.println("San: " + sanList.size());
         System.out.println("KhungGio: " + khungGioList.size());

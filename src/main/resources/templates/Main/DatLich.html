@@ -140,9 +140,11 @@
 <p>Tổng tiền: <strong><span id="totalPrice">0</span> đ</strong></p>
 <button onclick="submitBooking()">Đặt lịch</button>
 
-<script>
+<script th:inline="javascript">
   let selectedSlots = [];
   let currentDate = new Date();
+  let slotsDaDat = /*[[${cacSlotDaDat}]]*/ [];
+
 
   function formatDate(date) {
     const day = date.getDate();
@@ -185,21 +187,25 @@
     cells.forEach(cell => {
       const slotId = `${dateKey}_${cell.dataset.court}_${cell.dataset.time}`;
 
-      // Reset style
+      // Reset
       cell.classList.remove("disabled", "selected");
       cell.onclick = null;
       cell.style.cursor = "pointer";
 
-      if (isPast) {
-        cell.textContent = "";
+      const price = Number(cell.dataset.price || 0);
+      const isDaDat = slotsDaDat.includes(slotId);
+
+      // Nếu đã qua hoặc giá = 0 hoặc đã được đặt trước → vô hiệu hóa
+      if (isPast || price <= 0 || isDaDat) {
+        cell.textContent = isDaDat ? "Đã đặt" : (price <= 0 ? "-" : "");
         cell.classList.add("disabled");
         cell.style.cursor = "not-allowed";
       } else {
-        cell.textContent = formatPrice(cell.dataset.price);
+        cell.textContent = formatPrice(price);
         cell.onclick = () => selectSlot(cell, dateKey);
       }
 
-      // Nếu đã chọn thì thêm lại class "selected"
+      // Nếu đã chọn thì tô lại màu
       if (selectedSlots.find(s => s.id === slotId)) {
         cell.classList.add("selected");
       }
