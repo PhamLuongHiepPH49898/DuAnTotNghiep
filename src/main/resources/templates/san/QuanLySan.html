@@ -254,7 +254,6 @@
                     <th>Môn thể thao</th>
                     <th>Loại sân</th>
                     <th>Mặt sân</th>
-                    <th>Giá</th>
                     <th>Trạng thái</th>
                     <th>Hành động</th>
                 </tr>
@@ -279,9 +278,7 @@
                     <td th:text="${san.dia_chi}"></td>
                     <td th:text="${san.loaiMonTheThao.ten_mon_the_thao}"></td>
                     <td th:text="${san.loaiSan.ten_loai_san}"></td>
-                    <td th:text="${san.loaiMatSan.ten_loai_mat_san}"></td>
-                    <td th:text="${san.gia} + 'đ'"></td>
-                    <td>
+                    <td th:text="${san.loaiMatSan.ten_loai_mat_san}"></td><td>
                         <span th:if="${san.trang_thai == 0}" class="badge bg-success">Hoạt động</span>
                         <span th:if="${san.trang_thai == 1}" class="badge bg-danger">Khóa</span>
                         <span th:if="${san.trang_thai == 2}" class="badge bg-warning text-dark">Bảo trì</span>
