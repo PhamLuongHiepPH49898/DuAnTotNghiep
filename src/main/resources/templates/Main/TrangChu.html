@@ -276,7 +276,7 @@
             <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" th:text="${san.ten_san_bong}">Tên sân</a>
             <p ><strong> Loại môn thể thao: </strong> <span th:text="${san.loaiMonTheThao.ten_mon_the_thao}" ></span></p>
             <p><strong>Địa chỉ:</strong> <span th:text="${san.dia_chi}"></span></p>
-            <p><strong>Giá thuê:</strong> <span th:text="${san.gia}">0</span> VNĐ</p>
+
         </div>
     </div>
 </div>
@@ -316,31 +316,6 @@
 </div>
 </footer>
 <script th:inline="javascript">
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     // Giả lập biến isLoggedIn và userName từ backend (cần được render từ backend)
-    //     const isLoggedIn = /*[[${#authentication?.name != null}]]*/ false; // Thay false bằng giá trị thực tế
-    //     const userName = /*[[${#authentication?.name}]]*/ 'Người dùng'; // Thay 'Người dùng' bằng giá trị thực tế
-    //
-    //     const loginLink = document.getElementById('login-link');
-    //     const userMenu = document.querySelector('.user-menu');
-    //     const userNameSpan = document.getElementById('user-name');
-    //
-    //     if (isLoggedIn) {
-    //         loginLink.style.display = 'none'; // Ẩn nút Đăng nhập
-    //         userMenu.style.display = 'flex'; // Hiển thị menu người dùng
-    //         userNameSpan.textContent = userName; // Gắn tên người dùng
-    //     } else {
-    //         loginLink.style.display = 'inline-block'; // Hiển thị nút Đăng nhập
-    //         userMenu.style.display = 'none'; // Ẩn menu người dùng
-    //     }
-    //
-    //     // Gắn sự kiện cho nút Đăng xuất
-    //     const logoutLink = document.getElementById('logout-link');
-    //     logoutLink.addEventListener('click', function (e) {
-    //         e.preventDefault();
-    //         window.location.href = '/logout';
-    //     });
-    // });
     document.addEventListener('DOMContentLoaded', function () {
         const menu = document.querySelector('.menu');
         const header = document.querySelector('header');

@@ -216,11 +216,6 @@
                     <div class="text-danger" th:if="${#fields.hasErrors('ten_san_bong')}" th:errors="*{ten_san_bong}"></div>
                 </div>
 
-                <div class="mb-3 col-md-6">
-                    <label class="form-label">Giá</label>
-                    <input type="number" class="form-control" th:field="*{gia}" min="0"  placeholder="Nhập giá">
-                    <div class="text-danger" th:if="${#fields.hasErrors('gia')}" th:errors="*{gia}"></div>
-                </div>
             </div>
 
             <div class="mb-3">

@@ -251,7 +251,6 @@ public class SanBongController {
 
         // Cập nhật các trường thông tin khác
         sanBongGoc.setTen_san_bong(sanBong.getTen_san_bong());
-        sanBongGoc.setGia(sanBong.getGia());
         sanBongGoc.setMo_ta(sanBong.getMo_ta());
         sanBongGoc.setTrang_thai(sanBong.getTrang_thai());
         sanBongGoc.setLoaiMatSan(sanBong.getLoaiMatSan());
