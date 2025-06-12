@@ -5,6 +5,7 @@ import com.example.datn.Entity.TaiKhoan;
 import com.example.datn.Repository.*;
 import com.example.datn.Security.CustomUserDetails;
 import com.example.datn.Service.SanBongService;
+import com.example.datn.Service.TaiKhoanService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,14 +37,16 @@ public class SanBongController {
     private final LoaiMonTheThaoRepo loaiMonTheThaoRepo;
     private final TaiKhoanRepo taiKhoanRepo;
     private final SanBongRepo sanBongRepo;
+    private final TaiKhoanService taiKhoanService;
 
-    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo, SanBongRepo sanBongRepo) {
+    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo, SanBongRepo sanBongRepo, TaiKhoanService taiKhoanService) {
         this.sanBongService = sanBongService;
         this.loaiMatSanRepo = loaiMatSanRepo;
         this.loaiSanRepo = loaiSanRepo;
         this.loaiMonTheThaoRepo = loaiMonTheThaoRepo;
         this.taiKhoanRepo = taiKhoanRepo;
         this.sanBongRepo = sanBongRepo;
+        this.taiKhoanService = taiKhoanService;
     }
 
     @GetMapping("/")
@@ -86,6 +89,8 @@ public class SanBongController {
         model.addAttribute("username", auth.getName());
         List<SanBong> danhSachSan = sanBongService.findAll();
         model.addAttribute("danhSachSan", danhSachSan);
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("hoTen", hoTen);
         populateModel(model);
         System.out.println("Logged-in user: " + auth.getName());
         return "/Main/TrangChu_NguoiDung";
@@ -98,6 +103,8 @@ public class SanBongController {
         model.addAttribute("username", auth.getName());
         List<SanBong> danhSachSan = sanBongService.findAll();
         model.addAttribute("danhSachSan", danhSachSan);
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("hoTen", hoTen);
         populateModel(model);
         System.out.println("Logged-in user: " + auth.getName());
         return "/Main/TrangChu_QuanTri";
@@ -158,6 +165,8 @@ public class SanBongController {
     public String QuanLySan(Model model) {
         List<SanBong> danhSachSan = sanBongService.getSanBong();
         model.addAttribute("danhSachSan", danhSachSan);
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("hoTen", hoTen);
         return "/san/QuanLySan";
     }
 

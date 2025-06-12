@@ -45,5 +45,7 @@ public class CustomUserDetails implements UserDetails {
     public TaiKhoan getTaiKhoan() {
         return taiKhoan;
     }
-
+    public String getHoTen() {
+        return taiKhoan.getHo_ten();
+    }
 }

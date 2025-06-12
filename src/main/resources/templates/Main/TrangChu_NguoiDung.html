@@ -340,7 +340,7 @@
     <!-- Nếu chưa đăng nhập, hiển thị nút "Đăng nhập" -->
     <a href="/login" th:if="${username == null}">Đăng nhập</a>
     <div class="user-area" th:if="${username != null}">
-      <p>Chào mừng <span th:text="${username}">Người dùng</span>!</p>
+      <p>Chào mừng <span th:text="${hoTen}">Người dùng</span>!</p>
       <form th:action="@{/logout}" method="post">
         <button type="submit">Đăng xuất</button>
       </form>
