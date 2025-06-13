@@ -228,7 +228,6 @@
                 <div class="col-md-8">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${san.ten_san_bong}">Tên sân</h5>
-                        <p class="card-text"><strong>Giá thuê:</strong> <span th:text="${san.gia}">0</span> VNĐ</p>
                         <p class="card-text"><strong>Loại sân:</strong> <span th:text="${san.loaiSan.ten_loai_san}"></span></p>
                         <p class="card-text"><strong>Môn thể thao:</strong>
                             <span th:text="${san.loaiMonTheThao != null} ? ${san.loaiMonTheThao.ten_mon_the_thao} : 'Chưa cập nhật'"></span>

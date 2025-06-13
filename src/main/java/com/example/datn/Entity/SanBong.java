@@ -24,20 +24,16 @@ public class SanBong {
     private int id_san_bong;
 
     @NotBlank(message = "Tên sân bóng không được để trống")
-    @Column(name = "ten_san_bong")
+    @Column(name = "ten_san_bong", columnDefinition = "NVARCHAR(255)")
     private String ten_san_bong;
 
     @NotBlank(message = "Địa chỉ không được để trống")
-    @Column(name = "dia_chi")
+    @Column(name = "dia_chi", columnDefinition = "NVARCHAR(255)")
     private String dia_chi;
 
-    @NotNull(message = "Giá không được để trống")
-    @Positive(message = "Giá phải là số dương")
-    @Column(name = "gia")
-    private Double gia;
 
     @Size(max = 1000, message = "Mô tả không được vượt quá 1000 ký tự")
-    @Column(name = "mo_ta")
+    @Column(name = "mo_ta", columnDefinition = "NVARCHAR(255)")
     private String mo_ta;
 
     @Column(name = "hinh_anh")
@@ -74,7 +70,6 @@ public class SanBong {
                "id_san_bong=" + id_san_bong +
                ", ten_san_bong='" + ten_san_bong + '\'' +
                ", dia_chi='" + dia_chi + '\'' +
-               ", gia=" + gia +
                ", mo_ta='" + mo_ta + '\'' +
                ", hinh_anh='" + hinh_anh + '\'' +
                ", trang_thai=" + trang_thai +

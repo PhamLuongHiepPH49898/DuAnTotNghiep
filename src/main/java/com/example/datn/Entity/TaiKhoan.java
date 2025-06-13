@@ -9,9 +9,9 @@ import java.util.List;
 public class TaiKhoan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_tai_khoan")
+    @Column(name = "id_tai_khoan" )
     private int id;
-    @Column(name = "ho_ten")
+    @Column(name = "ho_ten", columnDefinition = "NVARCHAR(255)")
     private String ho_ten;
     @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;

@@ -8,6 +8,7 @@ import com.example.datn.Repository.LoaiSanRepo;
 import com.example.datn.Repository.TaiKhoanRepo;
 import com.example.datn.Security.CustomUserDetails;
 import com.example.datn.Service.SanBongService;
+import com.example.datn.Service.TaiKhoanService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,18 +39,29 @@ public class SanBongController {
     private final LoaiSanRepo loaiSanRepo;
     private final LoaiMonTheThaoRepo loaiMonTheThaoRepo;
     private final TaiKhoanRepo taiKhoanRepo;
+    private final TaiKhoanService taiKhoanService;
 
-    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo) {
+    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo, TaiKhoanService taiKhoanService) {
         this.sanBongService = sanBongService;
         this.loaiMatSanRepo = loaiMatSanRepo;
         this.loaiSanRepo = loaiSanRepo;
         this.loaiMonTheThaoRepo = loaiMonTheThaoRepo;
         this.taiKhoanRepo = taiKhoanRepo;
+        this.taiKhoanService = taiKhoanService;
     }
 
     @GetMapping("/")
     public String homeRedirect() {
         return "redirect:/trang-chu";
+    }
+
+    // ✅ Trang chủ chính
+    @GetMapping("/trang-chu")
+    public String trangchu(Model model) {
+        List<SanBong> danhSachSan = sanBongService.findAll();
+        model.addAttribute("danhSachSan", danhSachSan);
+        populateModel(model);
+        return "Main/TrangChu";
     }
 
     @GetMapping("/login")
@@ -71,14 +83,7 @@ public class SanBongController {
     }
 
 
-    // ✅ Trang chủ chính
-    @GetMapping("/trang-chu")
-    public String trangchu(Model model) {
-        List<SanBong> danhSachSan = sanBongService.findAll();
-        model.addAttribute("danhSachSan", danhSachSan);
-        populateModel(model);
-        return "/Main/TrangChu";
-    }
+
 
     @GetMapping("/user/trang-chu")
     public String trangChu_nguoiDung(Model model) {
@@ -89,7 +94,9 @@ public class SanBongController {
         model.addAttribute("danhSachSan", danhSachSan);
         populateModel(model);
         System.out.println("Logged-in user: " + auth.getName());
-        return "/Main/TrangChu_NguoiDung";
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("username", hoTen);
+        return "Main/TrangChu_NguoiDung";
     }
 
     @GetMapping("/admin/trang-chu")
@@ -101,7 +108,7 @@ public class SanBongController {
         model.addAttribute("danhSachSan", danhSachSan);
         populateModel(model);
         System.out.println("Logged-in user: " + auth.getName());
-        return "/Main/TrangChu_QuanTri";
+        return "Main/TrangChu_QuanTri";
     }
     @GetMapping("/ve-trang-chu")
     public String veTrangChuTheoRole() {
@@ -117,7 +124,7 @@ public class SanBongController {
             }
         }
 
-        return "redirect:/trangchu"; // Người chưa đăng nhập
+        return "redirect:/trang-chu"; // Người chưa đăng nhập
     }
 
 
@@ -141,7 +148,7 @@ public class SanBongController {
         model.addAttribute("danhSachSan", ketQua);
         model.addAttribute("khongCoKetQua", ketQua.isEmpty());
         populateModel(model); // Gợi ý: đảm bảo phương thức này nạp các danh sách như danh sách loại sân, môn thể thao v.v.
-        return "/Main/TimKiem";
+        return "Main/TimKiem";
     }
 
     // ✅ Trang chi tiết riêng
@@ -149,20 +156,27 @@ public class SanBongController {
     public String chiTietSan(@PathVariable("id") int id, Model model) {
         SanBong san = sanBongService.findById(id);
         if (san == null) {
-            return "redirect:/trangchu"; // Chuyển hướng về trang chủ nếu không tìm thấy
+            return "redirect:/trang-chu"; // Chuyển hướng về trang chủ nếu không tìm thấy
         }
         model.addAttribute("sanBongChiTiet", san);
-        return "/Main/ChiTietSan"; // 👉 trang riêng biệt
+        return "Main/ChiTietSan"; // 👉 trang riêng biệt
     }
 
-    @GetMapping("quan-ly-san")
+    @GetMapping("/quan-ly-san")
     public String QuanLySan(Model model) {
         List<SanBong> danhSachSan = sanBongService.getSanBong();
         model.addAttribute("danhSachSan", danhSachSan);
-        return "/san/QuanLySan";
+        model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
+        model.addAttribute("dsMonTheThao", loaiMonTheThaoRepo.findAll());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("hoTen", hoTen);
+
+        return "san/QuanLySan";
     }
 
-    @GetMapping("form-them-san-bong")
+    @GetMapping("/form-them-san-bong")
     public String formThem(Model model) {
         model.addAttribute("sanBong", new SanBong());
         model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
@@ -188,11 +202,6 @@ public class SanBongController {
             return "san/ThemSan";
         }
 
-        // Lấy tài khoản đang đăng nhập
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-        TaiKhoan taiKhoan = userDetails.getTaiKhoan();
-
 
         if (file != null && !file.isEmpty()) {
             String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -210,6 +219,14 @@ public class SanBongController {
             sanBong.setHinh_anh(fileName); // Chỉ lưu tên file
         }
 
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("hoTen", hoTen);
+
+        // Lấy tài khoản đang đăng nhập
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+        TaiKhoan taiKhoan = userDetails.getTaiKhoan();
+
         // Gán tài khoản vào sân bóng
         sanBong.setTaiKhoan(taiKhoan);
 
@@ -225,11 +242,15 @@ public class SanBongController {
 
     @GetMapping("/sua-san-bong/{id}")
     public String viewSua(@PathVariable("id") int id, Model model) {
+
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("hoTen", hoTen);
+
         model.addAttribute("sanBong", sanBongService.findById(id));
         model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
         model.addAttribute("dsLoaiMonTheThao", loaiMonTheThaoRepo.findAll());
         model.addAttribute("dsLoaiMatSan", loaiMatSanRepo.findAll());
-        return "/san/SuaSan";
+        return "san/SuaSan";
     }
 
     @PostMapping("/sua-san-bong/{id}")
@@ -237,6 +258,9 @@ public class SanBongController {
                              BindingResult bindingResult,
                              @PathVariable("id") int id,
                              Model model) throws IOException {
+
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("hoTen", hoTen);
 
         SanBong sanBongGoc = sanBongService.findById(id);
         if (sanBongGoc == null) {
@@ -247,12 +271,11 @@ public class SanBongController {
             model.addAttribute("dsLoaiMonTheThao", loaiMonTheThaoRepo.findAll());
             model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
             model.addAttribute("dsLoaiMatSan", loaiMatSanRepo.findAll());
-            return "/san/SuaSan";
+            return "san/SuaSan";
         }
 
         // Cập nhật các trường thông tin khác
         sanBongGoc.setTen_san_bong(sanBong.getTen_san_bong());
-        sanBongGoc.setGia(sanBong.getGia());
         sanBongGoc.setMo_ta(sanBong.getMo_ta());
         sanBongGoc.setTrang_thai(sanBong.getTrang_thai());
         sanBongGoc.setLoaiMatSan(sanBong.getLoaiMatSan());
@@ -293,6 +316,10 @@ public class SanBongController {
                                    @RequestParam(value = "keyword", required = false) String keyword,
                                    @RequestParam(required = false) Integer loaiSan,
                                    @RequestParam(required = false) Integer monTheThao) {
+
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("hoTen", hoTen);
+
         if (keyword != null) {
             keyword = keyword.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
         }
@@ -303,7 +330,7 @@ public class SanBongController {
         model.addAttribute("danhSachSan", danhSachSanDaLoc);
         model.addAttribute("khongCoKetQua", ketQua.isEmpty());
         populateModel(model);
-        return "/san/QuanLySan";
+        return "san/QuanLySan";
     }
 
 

@@ -249,7 +249,7 @@
 <header>
     <h1>Hệ thống đặt sân bóng Samba</h1>
     <div class="menu">
-        <a href="/trangchu">Trang Chủ</a>
+        <a th:href="@{/ve-trang-chu}">Trang Chủ</a>
         <a href="/tim-kiem">Tìm kiếm</a>
     </div>
 </header>
@@ -272,10 +272,6 @@
         <span th:text="${sanBongChiTiet.ten_san_bong}"></span>
     </div>
 
-    <div class="field">
-        <label>Giá thuê:</label>
-        <span th:text="${sanBongChiTiet.gia}"></span> VNĐ
-    </div>
 
     <div class="field">
         <label>Loại sân:</label>

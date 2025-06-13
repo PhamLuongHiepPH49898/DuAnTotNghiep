@@ -43,7 +43,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout") // URL đăng xuất
-                        .logoutSuccessUrl("/trangchu") // Chuyển hướng sau khi đăng xuất
+                        .logoutSuccessUrl("/trang-chu") // Chuyển hướng sau khi đăng xuất
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()

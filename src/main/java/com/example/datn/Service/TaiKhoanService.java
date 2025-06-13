@@ -1,6 +1,7 @@
 package com.example.datn.Service;
 
 import com.example.datn.Repository.TaiKhoanRepo;
+import com.example.datn.Security.CustomUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,4 +23,13 @@ public class TaiKhoanService {
         }
         return null;
     }
+    public String getHoTenDangNhap() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails) principal).getHoTen();
+        }
+        return null;
+    }
+
 }
