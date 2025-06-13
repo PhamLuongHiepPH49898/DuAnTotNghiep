@@ -32,7 +32,7 @@ public class DatSanService {
     private LichDatSanRepo lichDatSanRepository;
 
     public List<SanBong> layDanhSachSan() {
-        return sanBongRepository.findAll();
+        return sanBongRepository.findByTrangThaiIn(List.of(0,1,2));
     }
 
     public List<KhungGio> layDanhSachKhungGio() {
@@ -40,7 +40,7 @@ public class DatSanService {
     }
 
     public List<GiaTheoKhungGio> layDanhGiaTheoKhungGio() {
-        return giaTheoKhungGioRepository.findAll();
+        return giaTheoKhungGioRepository.findByTrangThaiIn(List.of(0,1,2));
     }
 
     public Map<String, BigDecimal> layBangGia() {
@@ -68,6 +68,10 @@ public class DatSanService {
 
         return keys;
     }
+    public SanBong laySanTheoId(int id) {
+        return sanBongRepository.findById(id).orElse(null);
+    }
+
 
 
 }

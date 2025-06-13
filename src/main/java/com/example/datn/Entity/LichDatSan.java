@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
@@ -19,6 +21,14 @@ public class LichDatSan {
     @Column(name = "ngay_dat", nullable = false)
     private LocalDate ngayDat;
 
+    @Column(name = "ngay_tao", nullable = false)
+    private LocalDate ngayTao = LocalDate.now();
+
+    @Column(name = "gia_ap_dung", nullable = false)
+    private BigDecimal giaApDung;
+
+    @Column(name = "ghi_chu", nullable = false)
+    private String ghiChu;
     @Column(name = "trang_thai", nullable = false)
     private Integer trangThai;
 
@@ -44,6 +54,30 @@ public class LichDatSan {
 
     public void setNgayDat(LocalDate ngayDat) {
         this.ngayDat = ngayDat;
+    }
+
+    public LocalDate getNgayTao() {
+        return ngayTao;
+    }
+
+    public void setNgayTao(LocalDate ngayTao) {
+        this.ngayTao = ngayTao;
+    }
+
+    public BigDecimal getGiaApDung() {
+        return giaApDung;
+    }
+
+    public void setGiaApDung(BigDecimal giaApDung) {
+        this.giaApDung = giaApDung;
+    }
+
+    public String getGhiChu() {
+        return ghiChu;
+    }
+
+    public void setGhiChu(String ghiChu) {
+        this.ghiChu = ghiChu;
     }
 
     public Integer getTrangThai() {

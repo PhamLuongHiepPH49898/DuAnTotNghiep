@@ -195,7 +195,6 @@
       const price = Number(cell.dataset.price || 0);
       const isDaDat = slotsDaDat.includes(slotId);
 
-      // Nếu đã qua hoặc giá = 0 hoặc đã được đặt trước → vô hiệu hóa
       if (isPast || price <= 0 || isDaDat) {
         cell.textContent = isDaDat ? "Đã đặt" : (price <= 0 ? "-" : "");
         cell.classList.add("disabled");
@@ -205,7 +204,6 @@
         cell.onclick = () => selectSlot(cell, dateKey);
       }
 
-      // Nếu đã chọn thì tô lại màu
       if (selectedSlots.find(s => s.id === slotId)) {
         cell.classList.add("selected");
       }

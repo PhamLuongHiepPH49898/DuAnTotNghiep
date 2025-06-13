@@ -6,7 +6,8 @@ public class XacNhanDatLichDTO {
     private String hoTen;
     private String soDienThoai;
     private String email;
-
+    private String ghiChu;
+    
 
     private List<ChiTietDatLichDTO> chiTietDatLichList;
 
@@ -40,5 +41,13 @@ public class XacNhanDatLichDTO {
 
     public void setChiTietDatLichList(List<ChiTietDatLichDTO> chiTietDatLichList) {
         this.chiTietDatLichList = chiTietDatLichList;
+    }
+
+    public String getGhiChu() {
+        return ghiChu;
+    }
+
+    public void setGhiChu(String ghiChu) {
+        this.ghiChu = ghiChu;
     }
 }

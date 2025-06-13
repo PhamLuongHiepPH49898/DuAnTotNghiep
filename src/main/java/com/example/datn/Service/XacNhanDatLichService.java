@@ -48,6 +48,7 @@ public class XacNhanDatLichService {
             lich.setNgayDat(chiTiet.getNgayDat());
             lich.setTaiKhoan(taiKhoan);
             lich.setGiaTheoKhungGio(gia);
+            lich.setGiaApDung(gia.getGiaThue());
             lich.setTrangThai(0);
             lichDatSanRepository.save(lich);
         }
