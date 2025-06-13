@@ -18,7 +18,7 @@ public class GiaTheoKhungGio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_gia_theo_khung_gio")
-    private int id;
+    private int idGiaTheoKhungGio;
 
     @Column(name = "gia_thue", nullable = false)
     private BigDecimal giaThue;

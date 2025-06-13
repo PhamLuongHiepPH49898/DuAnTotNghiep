@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalTime;
 
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -15,6 +16,7 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "khung_gio")
 public class KhungGio {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_khung_gio")
@@ -28,4 +30,5 @@ public class KhungGio {
 
     @Column(name = "trang_thai", nullable = false)
     private Integer trangThai;
+
 }

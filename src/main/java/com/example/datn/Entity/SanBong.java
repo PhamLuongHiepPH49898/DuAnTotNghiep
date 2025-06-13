@@ -67,18 +67,17 @@ public class SanBong {
     @Override
     public String toString() {
         return "SanBong{" +
-               "id_san_bong=" + id_san_bong +
-               ", ten_san_bong='" + ten_san_bong + '\'' +
-               ", dia_chi='" + dia_chi + '\'' +
-               ", mo_ta='" + mo_ta + '\'' +
-               ", hinh_anh='" + hinh_anh + '\'' +
-               ", trang_thai=" + trang_thai +
-               ", loaiSan=" + loaiSan +
-               ", loaiMatSan=" + loaiMatSan +
-               ", loaiMonTheThao=" + (loaiMonTheThao != null ? loaiMonTheThao.getTen_mon_the_thao() : null) +
-               ", taiKhoan=" + taiKhoan +
-               '}';
+                "id_san_bong=" + id_san_bong +
+                ", ten_san_bong='" + ten_san_bong + '\'' +
+                ", dia_chi='" + dia_chi + '\'' +
+                ", mo_ta='" + mo_ta + '\'' +
+                ", hinh_anh='" + hinh_anh + '\'' +
+                ", trang_thai=" + trang_thai +
+                ", loaiSan=" + loaiSan +
+                ", loaiMatSan=" + loaiMatSan +
+                ", loaiMonTheThao=" + (loaiMonTheThao != null ? loaiMonTheThao.getTen_mon_the_thao() : null) +
+                ", taiKhoan=" + taiKhoan +
+                '}';
     }
-
 
 }
