@@ -12,6 +12,8 @@ import java.util.List;
 
 
 public interface SanBongRepo extends JpaRepository<SanBong, Integer>, JpaSpecificationExecutor<SanBong> {
+    @Query("SELECT s FROM SanBong s WHERE s.trang_thai IN :trangThaiList")
+    List<SanBong> findByTrangThaiIn(@Param("trangThaiList") List<Integer> trangThaiList);
     @Query("SELECT s FROM SanBong s " +
             "WHERE (:keyword IS NULL OR s.ten_san_bong LIKE %:keyword%) " +
             "AND (:loaiSan IS NULL OR s.loaiSan.id = :loaiSan) " +

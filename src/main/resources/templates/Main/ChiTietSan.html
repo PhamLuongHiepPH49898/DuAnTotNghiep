@@ -263,10 +263,6 @@
         <span th:text="${sanBongChiTiet.ten_san_bong}"></span>
     </div>
 
-    <div class="field">
-        <label>Giá thuê:</label>
-        <span th:text="${sanBongChiTiet.gia}"></span> VNĐ
-    </div>
 
     <div class="field">
         <label>Loại sân:</label>
@@ -284,7 +280,7 @@
 
     <div class="back-link">
         <a href="/trangchu">Quay lại trang chủ</a>
-        <a href="/datsan">Đặt lịch ngay</a>
+        <a th:href="@{'/datsan?id=' + ${sanBongChiTiet.id_san_bong}}">Đặt sân</a>
     </div>
 </div>
 

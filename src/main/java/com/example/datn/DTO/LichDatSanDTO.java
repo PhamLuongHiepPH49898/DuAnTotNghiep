@@ -1,3 +1,4 @@
+/*
 package com.example.datn.DTO;
 
 import lombok.Getter;
@@ -63,3 +64,4 @@ public class LichDatSanDTO {
         this.soDienThoai = soDienThoai;
     }
 }
+*/

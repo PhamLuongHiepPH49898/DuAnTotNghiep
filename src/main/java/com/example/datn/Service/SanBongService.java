@@ -35,39 +35,4 @@ public class SanBongService {
     public List<SanBong> timKiemSan(String keyword, Long loaiSan, Long monTheThao) {
         return sanbongRepo.timKiemSan(keyword, loaiSan, monTheThao);
     }
-
-    // Tìm kiếm có phân trang
-    public Page<SanBong> timKiemPhanTrang(String keyword, Long loaiSan, Long monTheThao, Pageable pageable) {
-        return sanbongRepo.timKiemPhanTrang(keyword, loaiSan, monTheThao, pageable);
-    }
-    public List<SanBong> getAll() {
-        return sanbongRepo.findAll();
-    }
-    public Optional<SanBong> getById(int id) {
-        return sanbongRepo.findById(id);
-    }
-
-    public SanBong create(SanBong sanBong) {
-        return sanbongRepo.save(sanBong);
-    }
-
-    public SanBong update(int id, SanBong newSanBong) {
-        return sanbongRepo.findById(id).map(s -> {
-            s.setTen_san_bong(newSanBong.getTen_san_bong());
-            s.setDia_chi(newSanBong.getDia_chi());
-            s.setGia(newSanBong.getGia());
-            s.setMo_ta(newSanBong.getMo_ta());
-            s.setHinh_anh(newSanBong.getHinh_anh());
-            s.setTrang_thai(newSanBong.getTrang_thai());
-            s.setLoaiSan(newSanBong.getLoaiSan());
-            s.setLoaiMatSan(newSanBong.getLoaiMatSan());
-            s.setLoaiMonTheThao(newSanBong.getLoaiMonTheThao());
-            s.setTaiKhoan(newSanBong.getTaiKhoan());
-            return sanbongRepo.save(s);
-        }).orElse(null);
-    }
-
-    public void delete(int id) {
-        sanbongRepo.deleteById(id);
-    }
 }
