@@ -1,12 +1,12 @@
 package com.example.datn.Entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -29,11 +29,10 @@ public class LichDatSan {
     private LocalDateTime ngayTao;
 
     @Column(name = "gia_ap_dung", nullable = false)
-    private Double giaApDung;
+    private BigDecimal giaApDung;
 
     @Column(name = "ghi_chu",columnDefinition = "NVARCHAR(255)", nullable = false)
     private String ghiChu;
-
 
     @Column(name = "trang_thai", nullable = false)
     private Integer trangThai;
@@ -45,4 +44,5 @@ public class LichDatSan {
     @ManyToOne
     @JoinColumn(name = "id_gia_theo_khung_gio")
     private GiaTheoKhungGio giaTheoKhungGio;
+
 }

@@ -39,7 +39,7 @@ public class QuanLyDatSanController {
 
         if (ngayTao == null) {
             // Không truyền ngày → hiển thị tất cả
-            lichDatList = lichDatSanRepo.findAll();
+            lichDatList = lichDatSanService.getLichDatSan();
         } else {
             // Có ngày → lọc theo ngày
             LocalDateTime startDateTime = ngayTao.atStartOfDay();

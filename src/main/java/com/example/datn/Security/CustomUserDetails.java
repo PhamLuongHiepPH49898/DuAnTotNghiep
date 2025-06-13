@@ -14,6 +14,7 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(TaiKhoan taiKhoan) {
         this.taiKhoan = taiKhoan;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_"+taiKhoan.getVai_tro()));
@@ -49,5 +50,4 @@ public class CustomUserDetails implements UserDetails {
     public String getHoTen() {
         return taiKhoan.getHo_ten();
     }
-
 }

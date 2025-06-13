@@ -2,22 +2,28 @@ package com.example.datn.Service;
 
 import com.example.datn.Entity.SanBong;
 import com.example.datn.Repository.SanBongRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
 public class SanBongService {
+
+    @Autowired
     private final SanBongRepo sanbongRepo;
 
     public SanBongService(SanBongRepo sanbongRepo) {
         this.sanbongRepo = sanbongRepo;
     }
 
+
     public List<SanBong> findAll() {
         return sanbongRepo.findByTrangThaiIn(List.of(0,1,2));
     }
 
+    // Lấy theo ID
     public SanBong findById(int id) {
         return sanbongRepo.findById(id).orElse(null);
     }
@@ -57,6 +63,5 @@ public class SanBongService {
     public SanBong getByID(int id) {
         return sanbongRepo.findById(id).orElse(null);
     }
-
 
 }

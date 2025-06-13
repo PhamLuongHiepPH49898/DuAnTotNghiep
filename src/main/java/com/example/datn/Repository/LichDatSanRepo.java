@@ -28,6 +28,4 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
 
     List<LichDatSan> findByNgayTaoBetween(LocalDateTime start, LocalDateTime end);
 
-
-
 }

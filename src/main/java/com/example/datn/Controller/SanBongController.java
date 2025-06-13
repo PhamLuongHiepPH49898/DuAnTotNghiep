@@ -1,7 +1,9 @@
 package com.example.datn.Controller;
 
+
 import com.example.datn.Entity.SanBong;
 import com.example.datn.Entity.TaiKhoan;
+import com.example.datn.Entity.*;
 import com.example.datn.Repository.LoaiMatSanRepo;
 import com.example.datn.Repository.LoaiMonTheThaoRepo;
 import com.example.datn.Repository.LoaiSanRepo;
@@ -20,6 +22,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.example.datn.Service.*;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +36,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+
 @Controller
 public class SanBongController {
 
@@ -38,7 +44,6 @@ public class SanBongController {
     private final LoaiMatSanRepo loaiMatSanRepo;
     private final LoaiSanRepo loaiSanRepo;
     private final LoaiMonTheThaoRepo loaiMonTheThaoRepo;
-    private final TaiKhoanRepo taiKhoanRepo;
     private final TaiKhoanService taiKhoanService;
 
     public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo, TaiKhoanService taiKhoanService) {
@@ -46,7 +51,6 @@ public class SanBongController {
         this.loaiMatSanRepo = loaiMatSanRepo;
         this.loaiSanRepo = loaiSanRepo;
         this.loaiMonTheThaoRepo = loaiMonTheThaoRepo;
-        this.taiKhoanRepo = taiKhoanRepo;
         this.taiKhoanService = taiKhoanService;
     }
 
@@ -81,8 +85,6 @@ public class SanBongController {
     public String dangKy() {
         return "Main/DangKi";
     }
-
-
 
 
     @GetMapping("/user/trang-chu")
@@ -151,7 +153,6 @@ public class SanBongController {
         return "Main/TimKiem";
     }
 
-    // ✅ Trang chi tiết riêng
     @GetMapping("/chi-tiet/{id}")
     public String chiTietSan(@PathVariable("id") int id, Model model) {
         SanBong san = sanBongService.findById(id);
@@ -304,13 +305,6 @@ public class SanBongController {
         return "redirect:/quan-ly-san";
     }
 
-    // Phương thức tiện ích để thêm các thuộc tính chung vào model
-    private void populateModel(Model model) {
-        model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
-        model.addAttribute("dsMonTheThao", loaiMonTheThaoRepo.findAll());
-    }
-
-
     @GetMapping("/quan-ly-san/tim-kiem")
     public String quanLySanTimKiem(Model model,
                                    @RequestParam(value = "keyword", required = false) String keyword,
@@ -333,5 +327,11 @@ public class SanBongController {
         return "san/QuanLySan";
     }
 
+    // Phương thức tiện ích để thêm các thuộc tính chung vào model
+    private void populateModel(Model model) {
+        model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
+        model.addAttribute("dsMonTheThao", loaiMonTheThaoRepo.findAll());
+        model.addAttribute("dsLoaiMatSan", loaiMatSanRepo.findAll());
+    }
 
 }
