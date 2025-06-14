@@ -28,4 +28,8 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
 
     List<LichDatSan> findByNgayTaoBetween(LocalDateTime start, LocalDateTime end);
 
+    @Query("SELECT l FROM LichDatSan l WHERE l.taiKhoan.id = :idTaiKhoan")
+    List<LichDatSan> findByTaiKhoanId(Integer idTaiKhoan);
+    @Query("SELECT l FROM LichDatSan l JOIN FETCH l.sanBong WHERE l.taiKhoan.id = :id")
+    List<LichDatSan> layLichSuDatSan(@Param("id") Long id);
 }

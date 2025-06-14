@@ -39,5 +39,8 @@ public class LichDatSanService {
         return lichDatSanRepo.timKiem(keyword, ngaydat, sanBong, trangThai);
 
     }
+    public List<LichDatSan> getLichSuDatSanByTaiKhoan(int taiKhoanId) {
+        return lichDatSanRepo.findByTaiKhoanId(taiKhoanId);
+    }
 
 }

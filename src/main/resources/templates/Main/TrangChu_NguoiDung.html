@@ -339,11 +339,17 @@
 
     <!-- Nếu chưa đăng nhập, hiển thị nút "Đăng nhập" -->
     <a href="/login" th:if="${username == null}">Đăng nhập</a>
+
     <div class="user-area" th:if="${username != null}">
-      <span class="dropdown-toggle fw-semibold text-dark text-decoration-none"  th:text="${hoTen}" role="button" id="userDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false"></span>
-      <form th:action="@{/logout}" method="post">
-        <button type="submit">Đăng xuất</button>
-      </form>
+      <div class="user-menu" onclick="toggleMenu()">
+        <i class="bi bi-person-circle user-icon" style="font-size: 15px"></i>
+        <span th:text="${hoTen}"></span>
+        <div id="dropdownMenu" class="dropdown-menu" style="display: none; position: absolute; background: white; border: 1px solid #ccc;">
+          <a href="/thong-tin-nguoi-dung">Thông tin cá nhân</a><br>
+          <a href="/nguoidung/doi-mat-khau">Đổi mật khẩu</a><br>
+          <a href="/logout">Đăng xuất</a>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -416,6 +422,19 @@
   </div>
 </footer>
 <script>
+  function toggleMenu() {
+    var menu = document.getElementById("dropdownMenu");
+    menu.style.display = (menu.style.display === "none") ? "block" : "none";
+  }
+
+  // Đóng menu khi click ra ngoài
+  document.addEventListener("click", function(event) {
+    const menu = document.getElementById("dropdownMenu");
+    const userMenu = document.querySelector(".user-menu");
+    if (menu && userMenu && !userMenu.contains(event.target)) {
+      menu.style.display = "none";
+    }
+  });
   document.addEventListener('DOMContentLoaded', function () {
     // Giả lập biến isLoggedIn và userName từ backend (cần được render từ backend)
     const isLoggedIn = /*[[${#authentication?.name != null}]]*/ false; // Thay false bằng giá trị thực tế
