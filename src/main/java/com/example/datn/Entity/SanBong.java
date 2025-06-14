@@ -24,19 +24,16 @@ public class SanBong {
     private int id_san_bong;
 
     @NotBlank(message = "Tên sân bóng không được để trống")
-    @Column(name = "ten_san_bong", columnDefinition = "NVARCHAR(255)"
-    )
+    @Column(name = "ten_san_bong", columnDefinition = "NVARCHAR(255)")
     private String ten_san_bong;
 
     @NotBlank(message = "Địa chỉ không được để trống")
-    @Column(name = "dia_chi", columnDefinition = "NVARCHAR(255)"
-    )
+    @Column(name = "dia_chi", columnDefinition = "NVARCHAR(255)")
     private String dia_chi;
 
 
     @Size(max = 1000, message = "Mô tả không được vượt quá 1000 ký tự")
-    @Column(name = "mo_ta",columnDefinition = "NVARCHAR(255)"
-    )
+    @Column(name = "mo_ta", columnDefinition = "NVARCHAR(255)")
     private String mo_ta;
 
     @Column(name = "hinh_anh")
@@ -70,18 +67,17 @@ public class SanBong {
     @Override
     public String toString() {
         return "SanBong{" +
-               "id_san_bong=" + id_san_bong +
-               ", ten_san_bong='" + ten_san_bong + '\'' +
-               ", dia_chi='" + dia_chi + '\'' +
-               ", mo_ta='" + mo_ta + '\'' +
-               ", hinh_anh='" + hinh_anh + '\'' +
-               ", trang_thai=" + trang_thai +
-               ", loaiSan=" + loaiSan +
-               ", loaiMatSan=" + loaiMatSan +
-               ", loaiMonTheThao=" + (loaiMonTheThao != null ? loaiMonTheThao.getTen_mon_the_thao() : null) +
-               ", taiKhoan=" + taiKhoan +
-               '}';
+                "id_san_bong=" + id_san_bong +
+                ", ten_san_bong='" + ten_san_bong + '\'' +
+                ", dia_chi='" + dia_chi + '\'' +
+                ", mo_ta='" + mo_ta + '\'' +
+                ", hinh_anh='" + hinh_anh + '\'' +
+                ", trang_thai=" + trang_thai +
+                ", loaiSan=" + loaiSan +
+                ", loaiMatSan=" + loaiMatSan +
+                ", loaiMonTheThao=" + (loaiMonTheThao != null ? loaiMonTheThao.getTen_mon_the_thao() : null) +
+                ", taiKhoan=" + taiKhoan +
+                '}';
     }
-
 
 }

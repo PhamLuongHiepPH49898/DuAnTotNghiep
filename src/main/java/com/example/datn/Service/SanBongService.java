@@ -2,15 +2,11 @@ package com.example.datn.Service;
 
 import com.example.datn.Entity.SanBong;
 import com.example.datn.Repository.SanBongRepo;
-import com.example.datn.Repository.SanBongSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class SanBongService {
@@ -22,7 +18,7 @@ public class SanBongService {
         this.sanbongRepo = sanbongRepo;
     }
 
-    // Lấy tất cả
+
     public List<SanBong> findAll() {
         return sanbongRepo.findByTrangThaiIn(List.of(0,1,2));
     }
@@ -32,6 +28,12 @@ public class SanBongService {
         return sanbongRepo.findById(id).orElse(null);
     }
 
+
+    public List<SanBong> timKiemSan(String keyword, Integer loaiSan, Integer monTheThao) {
+
+        return sanbongRepo.timKiemSan(keyword, loaiSan, monTheThao);
+
+    }
 
 
     public void them(SanBong sanBong) {
@@ -61,6 +63,5 @@ public class SanBongService {
     public SanBong getByID(int id) {
         return sanbongRepo.findById(id).orElse(null);
     }
-
 
 }
