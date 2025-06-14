@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class EncodePassword {
     public static void main(String[] args) {
+
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         // Mật khẩu gốc người dùng nhập
@@ -23,3 +24,4 @@ public class EncodePassword {
     }
 
 }
+

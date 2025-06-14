@@ -11,8 +11,7 @@ public class LoaiMatSan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_loai_mat_san")
     private int id;
-    @Column(name = "ten_loai_mat_san",columnDefinition = "NVARCHAR(255)"
-    )
+    @Column(name = "ten_loai_mat_san", columnDefinition = "NVARCHAR(255)")
     private String ten_loai_mat_san;
     @Column(name = "trang_thai")
     private int trang_thai;

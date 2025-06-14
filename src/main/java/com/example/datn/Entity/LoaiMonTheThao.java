@@ -11,8 +11,7 @@ public class LoaiMonTheThao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_mon_the_thao")
     private int id;
-    @Column(name = "ten_mon_the_thao",columnDefinition = "NVARCHAR(255)"
-    )
+    @Column(name = "ten_mon_the_thao", columnDefinition = "NVARCHAR(255)")
     private String ten_mon_the_thao;
     @Column(name = "trang_thai")
     private int trang_thai;
