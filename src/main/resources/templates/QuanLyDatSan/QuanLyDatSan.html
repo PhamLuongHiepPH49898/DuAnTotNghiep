@@ -257,7 +257,7 @@
                     <form method="get" th:action="@{/quan-ly-dat-san}">
                         <label class="form-label fw-bold">Ngày tạo đơn</label>
                         <input type="date" class="form-control" name="ngayTao" th:value="${ngayTao}"
-                               onchange="this.form.submit()" />
+                               onchange="this.form.submit()"/>
                     </form>
                 </div>
 
@@ -269,12 +269,12 @@
                         <div class="col-12 col-md-3">
                             <label class="form-label">Tên khách hàng</label>
                             <input type="text" name="keyword" placeholder="Nhập tên..." class="form-control"
-                                   th:value="${keyword}" />
+                                   th:value="${keyword}"/>
                         </div>
 
                         <div class="col-6 col-md-2">
                             <label class="form-label">Ngày đặt sân</label>
-                            <input type="date" name="ngayDat" class="form-control" th:value="${ngayDat}" />
+                            <input type="date" name="ngayDat" class="form-control" th:value="${ngayDat}"/>
                         </div>
 
                         <div class="col-6 col-md-3">
@@ -333,33 +333,108 @@
                     <td th:text="${danhSachLichDatSan.giaTheoKhungGio.sanBong.ten_san_bong}"></td>
                     <td th:text="${danhSachLichDatSan.taiKhoan.ho_ten}"></td>
                     <td th:text="${#numbers.formatDecimal(danhSachLichDatSan.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
-                    <td th:text="${danhSachLichDatSan.ghiChu}"></td>
+
+                    <td th:if="${danhSachLichDatSan.trangThai == 0}">
+                        <span th:text="${danhSachLichDatSan.ghiChu}"></span>
+                    </td>
+                    <td th:if="${danhSachLichDatSan.trangThai == 1}">
+                        <span th:text="${danhSachLichDatSan.ghiChu}"></span>
+                    </td>
+                    <td th:if="${danhSachLichDatSan.trangThai == 2}">
+                        <strong>Lý do hủy:</strong> <span th:text="${danhSachLichDatSan.ghiChu}"></span>
+                    </td>
+                    <td th:if="${danhSachLichDatSan.trangThai == 3}">
+                        <strong>Lý do từ chối:</strong> <span th:text="${danhSachLichDatSan.ghiChu}"></span>
+                    </td>
+
                     <td>
-                        <span th:if="${danhSachLichDatSan.trangThai == 0}" class="badge bg-success">Chờ duyêt</span>
-                        <span th:if="${danhSachLichDatSan.trangThai == 1}" class="badge bg-danger">Đã duyệt</span>
+                        <span th:if="${danhSachLichDatSan.trangThai == 0}" class="badge bg-info">Chờ duyêt</span>
+                        <span th:if="${danhSachLichDatSan.trangThai == 1}" class="badge bg-success">Đã duyệt</span>
                         <span th:if="${danhSachLichDatSan.trangThai == 2}"
-                              class="badge bg-warning text-dark">Đã hủy</span>
+                              class="badge bg-secondary">Đã hủy</span>
                         <span th:if="${danhSachLichDatSan.trangThai == 3}"
-                              class="badge bg-warning text-dark">Từ chối</span>
+                              class="badge bg-danger ">Từ chối</span>
                         <span th:if="${danhSachLichDatSan.trangThai != 0 and danhSachLichDatSan.trangThai != 1 and danhSachLichDatSan.trangThai != 2 and danhSachLichDatSan.trangThai != 3}"
-                              class="badge bg-secondary">Không xác định</span>
+                              class="badge bg-warning">Không xác định</span>
                     </td>
-                    <td><a th:href="@{/duyet/{id}(id=${danhSachLichDatSan.id})}"
+                    <td>
+                        <!-- Nút duyệt -->
+                        <a th:href="@{/duyet/{id}(id=${danhSachLichDatSan.id})}"
                            th:if="${danhSachLichDatSan.trangThai ==0}"
-                           class="btn btn-sm btn-outline-danger"
+                           class="btn btn-sm btn-outline-success"
                            onclick="return confirm('Bạn có chắc duệt không')"><i class="bi bi-trash"> Duyệt</i></a>
-                        <a th:href="@{/huy/{id}(id=${danhSachLichDatSan.id})}"
-                           class="btn btn-sm btn-outline-danger"
-                           onclick="return confirm('Bạn có chắc hủy không')"><i class="bi bi-trash"> Hủy</i></a>
+
+                        <!-- Nút hủy -->
+                        <button th:if="${danhSachLichDatSan.trangThai == 0 || danhSachLichDatSan.trangThai == 1} " type="button"
+                                class="btn btn-sm  btn-outline-danger"
+                                data-bs-toggle="modal"
+                                th:attr="data-bs-target='#modalHuyLich_' + ${danhSachLichDatSan.id}">
+                            Hủy
+                        </button>
+
+                        <!-- Nút từ chối -->
+                        <button th:if="${danhSachLichDatSan.trangThai == 0} " type="button"
+                                class="btn btn-sm btn-outline-warning"
+                                data-bs-toggle="modal"
+                                th:attr="data-bs-target='#modalTuChoiLich_' + ${danhSachLichDatSan.id}">
+                            Từ chối
+                        </button>
+
                     </td>
-                    <!--                    <td><a th:href="@{/tu-choi/{id}(id=${san.id})}"-->
-                    <!--                           class="btn btn-sm btn-outline-danger"-->
-                    <!--                           onclick="return confirm('Bạn có chắc từ chối không')"><i class="bi bi-trash"> Xóa</i></a>-->
-                    <!--                    </td>-->
+
+                    <!-- Modal nhập lý do hủy-->
+                    <div class="modal fade" th:id="'modalHuyLich_' + ${danhSachLichDatSan.id}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <form th:action="@{/huy}" method="post">
+                                <input type="hidden" name="id" th:value="${danhSachLichDatSan.id}"/>
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Lý do hủy lịch đặt</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea name="ghiChu" rows="4" class="form-control"
+                                                  placeholder="Nhập lý do hủy..." required></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Modal nhập lý do từ chối-->
+                    <div class="modal fade" th:id="'modalTuChoiLich_' + ${danhSachLichDatSan.id}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <form th:action="@{/tu-choi}" method="post">
+                                <input type="hidden" name="id" th:value="${danhSachLichDatSan.id}"/>
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Lý do từ chối lịch đặt</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea name="ghiChu" rows="4" class="form-control"
+                                                  placeholder="Nhập lý do hủy..." required></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-danger">Xác nhận từ chối</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
                 </tr>
 
                 </tbody>
             </table>
+
             <!-- Trường hợp tìm kiếm không ra -->
             <div th:if="${isTimKiem} and ${#lists.isEmpty(danhSachLichDatSan)}" class="alert alert-info">
                 Không tìm thấy kết quả phù hợp với điều kiện tìm kiếm.
@@ -375,7 +450,35 @@
         </div>
     </div>
 </main>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let success = /*[[${success}]]*/ null;
+    let error = /*[[${error}]]*/ null;
+
+    if (success !== null) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: success,
+            timer: 2500,
+            showConfirmButton: false
+        });
+    }
+
+    if (error !== null) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Thất bại!',
+            text: error,
+            timer: 2500,
+            showConfirmButton: false
+        });
+    }
+    /*]]>*/
+</script>
+
 </body>
 </html>
