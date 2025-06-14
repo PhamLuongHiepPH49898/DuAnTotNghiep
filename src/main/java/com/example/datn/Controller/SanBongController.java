@@ -94,10 +94,11 @@ public class SanBongController {
         model.addAttribute("username", auth.getName());
         List<SanBong> danhSachSan = sanBongService.findAll();
         model.addAttribute("danhSachSan", danhSachSan);
+
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("hoTen", hoTen);
         populateModel(model);
         System.out.println("Logged-in user: " + auth.getName());
-        String hoTen = taiKhoanService.getHoTenDangNhap();
-        model.addAttribute("username", hoTen);
         return "Main/TrangChu_NguoiDung";
     }
 
