@@ -1,6 +1,8 @@
 package com.example.datn.Repository;
 
 import com.example.datn.Entity.SanBong;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +22,5 @@ public interface SanBongRepo extends JpaRepository<SanBong, Integer>, JpaSpecifi
     List<SanBong> timKiemSan(@Param("keyword") String keyword,
                              @Param("loaiSan") Integer loaiSan,
                              @Param("monTheThao") Integer monTheThao);
+
 }
