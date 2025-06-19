@@ -2,12 +2,11 @@ package com.example.datn.Controller;
 
 import com.example.datn.DTO.ChiTietDatLichDTO;
 import com.example.datn.DTO.XacNhanDatLichDTO;
-import com.example.datn.Entity.GiaTheoKhungGio;
-import com.example.datn.Entity.KhungGio;
-import com.example.datn.Entity.SanBong;
-import com.example.datn.Entity.TaiKhoan;
+import com.example.datn.Entity.*;
+import com.example.datn.Repository.LichDatSanRepo;
 import com.example.datn.Repository.TaiKhoanRepo;
 import com.example.datn.Service.DatSanService;
+import com.example.datn.Service.LichDatSanService;
 import com.example.datn.Service.XacNhanDatLichService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,14 +22,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 @Controller
 public class DatLichController {
     @Autowired
     private TaiKhoanRepo taiKhoanRepo;
     @Autowired
+    private LichDatSanService lichDatSan;
+    @Autowired
     private DatSanService datSanService;
     @Autowired
     private XacNhanDatLichService xacNhanDatLichService;
+
     @GetMapping("/datsan")
     public String hienThiTrangDatSan(@RequestParam("id") Integer idSan, Model model) {
         SanBong san = datSanService.laySanTheoId(idSan);  // <-- Lấy 1 sân
@@ -68,6 +71,7 @@ public class DatLichController {
 
         return "Main/DatLich";
     }
+
     @GetMapping("/xacnhan")
     public String hienThiFormXacNhan(Model model, Principal principal) {
         String email = principal.getName(); // Lấy email từ người dùng đang đăng nhập
@@ -80,30 +84,41 @@ public class DatLichController {
             xacNhan.setEmail(taiKhoan.get().getEmail());
 
             // Gán vào model đúng cách
+            model.addAttribute("danhSachLichDatSan", lichDatSan.getLichDatSan());
             model.addAttribute("xacNhan", xacNhan);
         } else {
             return "redirect:/login?error=notfound";
         }
         return "Main/XacNhanDatLich";
     }
+
     @GetMapping("/datLichThanhCong")
     public String hienThiTrangDatLichThanhCong() {
         return "/Main/Success";
     }
+
     @PostMapping("/datLichThanhCong")
-    public String luuDatLich(@ModelAttribute XacNhanDatLichDTO xacNhan, Model model) {
+    public String luuDatLich(@ModelAttribute XacNhanDatLichDTO xacNhan, Model model, Principal principal) {
         List<ChiTietDatLichDTO> danhSachChiTiet = xacNhan.getChiTietDatLichList();
 
+        // In log kiểm tra
         for (ChiTietDatLichDTO chiTiet : danhSachChiTiet) {
             System.out.println("Ngày: " + chiTiet.getNgayDat());
             System.out.println("Giờ: " + chiTiet.getThoiGian());
             System.out.println("Sân: " + chiTiet.getTenSan());
             System.out.println("Giá: " + chiTiet.getGia());
-
             System.out.println("ID Giá Thuê: " + chiTiet.getIdGiaTheoKhungGio());
-
         }
-        xacNhanDatLichService.luuDatLich(xacNhan);
-        return "Main/Success";
+
+        // Gọi service để lưu lịch và lấy ra danh sách ID đã lưu
+        List<Integer> idLichDatDuocLuu = xacNhanDatLichService.luuDatLich(xacNhan);
+
+        if (!idLichDatDuocLuu.isEmpty()) {
+            // Chuyển sang trang giả lập thanh toán với lịch đầu tiên
+            return "redirect:/gia-lap-thanh-toan?idLichDatSan=" + idLichDatDuocLuu.get(0);
+        }
+
+        // Fallback nếu không có gì được lưu
+        return "redirect:/datLichThanhCong";
     }
 }
