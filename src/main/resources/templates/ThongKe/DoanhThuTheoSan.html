@@ -262,7 +262,7 @@
         <div class="col-md-2">
             <label for="nam" class="form-label">Chọn năm</label>
             <select name="nam" id="nam" class="form-select">
-                <option th:each="y : ${#numbers.sequence(2023, 2025)}"
+                <option th:each="y : ${#numbers.sequence(2020, 2030)}"
                         th:value="${y}"
                         th:text="${y}"
                         th:selected="${y == namChon}">
