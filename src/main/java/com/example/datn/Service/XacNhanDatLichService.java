@@ -11,15 +11,22 @@ import com.example.datn.Repository.TaiKhoanRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class XacNhanDatLichService {
+
     @Autowired
     private LichDatSanRepo lichDatSanRepository;
+
     @Autowired
     private GiaTheoKhungGioRepo giaTheoKhungGioRepository;
+
     @Autowired
     private TaiKhoanRepo taiKhoanRepository;
-    public void luuDatLich(XacNhanDatLichDTO dto) {
+
+    public List<Integer> luuDatLich(XacNhanDatLichDTO dto) {
         TaiKhoan taiKhoan = taiKhoanRepository.findByEmail(dto.getEmail())
                 .orElseGet(() -> {
                     TaiKhoan newTK = new TaiKhoan();
@@ -34,6 +41,8 @@ public class XacNhanDatLichService {
         if (dto.getChiTietDatLichList() == null || dto.getChiTietDatLichList().isEmpty()) {
             throw new IllegalArgumentException("Danh sách chi tiết đặt lịch không được rỗng");
         }
+
+        List<Integer> danhSachIdDaLuu = new ArrayList<>();
 
         for (ChiTietDatLichDTO chiTiet : dto.getChiTietDatLichList()) {
             Integer idGia = chiTiet.getIdGiaTheoKhungGio();
@@ -50,7 +59,12 @@ public class XacNhanDatLichService {
             lich.setGiaTheoKhungGio(gia);
             lich.setGiaApDung(gia.getGiaThue());
             lich.setTrangThai(0);
-            lichDatSanRepository.save(lich);
+
+            LichDatSan lichDaLuu = lichDatSanRepository.save(lich);
+            danhSachIdDaLuu.add(lichDaLuu.getId()); // đổi thành getIdLichDatSan nếu bạn dùng tên khác
         }
+
+        return danhSachIdDaLuu;
     }
 }
+
