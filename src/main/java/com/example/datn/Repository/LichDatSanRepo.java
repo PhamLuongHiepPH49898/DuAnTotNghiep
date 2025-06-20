@@ -10,10 +10,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
+
+
     @Query("SELECT l FROM LichDatSan l " +
            "JOIN FETCH l.taiKhoan tk " +
            "JOIN FETCH l.giaTheoKhungGio g " +
-           "JOIN FETCH g.khungGio kg")
+           "JOIN FETCH g.khungGio kg " +
+           "ORDER BY l.ngayTao DESC")
     List<LichDatSan> findAllLichDatSan();
 
     @Query("SELECT l FROM LichDatSan l " +
