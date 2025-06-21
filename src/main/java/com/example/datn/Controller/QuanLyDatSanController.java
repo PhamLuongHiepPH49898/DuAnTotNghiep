@@ -50,6 +50,7 @@ public class QuanLyDatSanController {
         }
 
         model.addAttribute("danhSachLichDatSan", lichDatList);
+        model.addAttribute("danhSachSan", sanBongService.findAll());
         model.addAttribute("ngayTao", ngayTao);
         model.addAttribute("isTimKiem", false); // đánh dấu đây không phải tìm kiếm
 
@@ -68,7 +69,6 @@ public class QuanLyDatSanController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Duyệt lịch thất bại!");
         }
-        lichDatSanService.duyet(id);
         return "redirect:/quan-ly-dat-san";
     }
 
@@ -85,18 +85,6 @@ public class QuanLyDatSanController {
         return "redirect:/quan-ly-dat-san";
     }
 
-    @PostMapping("/tu-choi")
-    public String tuChoi(@RequestParam("id") int id,
-                      @RequestParam("ghiChu") String ghiChu,
-                      RedirectAttributes redirectAttributes) {
-        try {
-            lichDatSanService.tuChoi(id, ghiChu);
-            redirectAttributes.addFlashAttribute("success", "Đã từ chối lịch thành công!");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "từ chối lịch thất bại!");
-        }
-        return "redirect:/quan-ly-dat-san";
-    }
 
     @GetMapping("/quan-ly-dat-san/tim-kiem")
     public String quanLyDatSanTimKiem(Model model,
