@@ -217,6 +217,14 @@
             <span class="dropdown-toggle fw-semibold text-dark text-decoration-none" th:text="${hoTen}" role="button"
                   id="userDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false"></span>
 
+
+            <ul class="dropdown-menu" aria-labelledby="userDropdownMobile">
+                <li>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="dropdown-item text-dark">Đăng xuất</button>
+                    </form>
+                </li>
+            </ul>
         </div>
         <button class="btn btn-outline-secondary" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
             <i class="bi bi-list"></i>
@@ -280,7 +288,7 @@
                             <select name="sanBong" class="form-select">
                                 <option value="">-- Tất cả sân --</option>
                                 <option th:each="san : ${danhSachSan}" th:value="${san.id_san_bong}"
-                                        th:text="${san.ten_san_bong}" th:selected="${san.id_san_bong == sanBong}">
+                                        th:text="${san.ten_san_bong}">
                                 </option>
                             </select>
                         </div>
@@ -292,7 +300,6 @@
                                 <option value="0" th:selected="${trangThai == 0}">Chờ duyệt</option>
                                 <option value="1" th:selected="${trangThai == 1}">Đã duyệt</option>
                                 <option value="2" th:selected="${trangThai == 2}">Đã hủy</option>
-                                <option value="3" th:selected="${trangThai == 3}">Từ chối</option>
                             </select>
                         </div>
 
@@ -302,7 +309,6 @@
                     </form>
                 </div>
             </div>
-
 
         </div>
 
@@ -341,17 +347,12 @@
                     <td th:if="${danhSachLichDatSan.trangThai == 2}">
                         <strong>Lý do hủy:</strong> <span th:text="${danhSachLichDatSan.ghiChu}"></span>
                     </td>
-                    <td th:if="${danhSachLichDatSan.trangThai == 3}">
-                        <strong>Lý do từ chối:</strong> <span th:text="${danhSachLichDatSan.ghiChu}"></span>
-                    </td>
 
                     <td>
                         <span th:if="${danhSachLichDatSan.trangThai == 0}" class="badge bg-info">Chờ duyêt</span>
                         <span th:if="${danhSachLichDatSan.trangThai == 1}" class="badge bg-success">Đã duyệt</span>
                         <span th:if="${danhSachLichDatSan.trangThai == 2}"
                               class="badge bg-secondary">Đã hủy</span>
-                        <span th:if="${danhSachLichDatSan.trangThai == 3}"
-                              class="badge bg-danger ">Từ chối</span>
                         <span th:if="${danhSachLichDatSan.trangThai != 0 and danhSachLichDatSan.trangThai != 1 and danhSachLichDatSan.trangThai != 2 and danhSachLichDatSan.trangThai != 3}"
                               class="badge bg-warning">Không xác định</span>
                     </td>
@@ -363,20 +364,14 @@
                            onclick="return confirm('Bạn có chắc duệt không')">Duyệt</a>
 
                         <!-- Nút hủy -->
-                        <button th:if="${danhSachLichDatSan.trangThai == 0 || danhSachLichDatSan.trangThai == 1} " type="button"
+                        <button th:if="${danhSachLichDatSan.trangThai == 0 || danhSachLichDatSan.trangThai == 1} "
+                                type="button"
                                 class="btn btn-sm  btn-outline-danger"
                                 data-bs-toggle="modal"
                                 th:attr="data-bs-target='#modalHuyLich_' + ${danhSachLichDatSan.id}">
                             Hủy
                         </button>
 
-                        <!-- Nút từ chối -->
-                        <button th:if="${danhSachLichDatSan.trangThai == 0} " type="button"
-                                class="btn btn-sm btn-outline-warning"
-                                data-bs-toggle="modal"
-                                th:attr="data-bs-target='#modalTuChoiLich_' + ${danhSachLichDatSan.id}">
-                            Từ chối
-                        </button>
 
                     </td>
 
@@ -403,33 +398,7 @@
                             </form>
                         </div>
                     </div>
-
-                    <!-- Modal nhập lý do từ chối-->
-                    <div class="modal fade" th:id="'modalTuChoiLich_' + ${danhSachLichDatSan.id}" tabindex="-1">
-                        <div class="modal-dialog">
-                            <form th:action="@{/tu-choi}" method="post">
-                                <input type="hidden" name="id" th:value="${danhSachLichDatSan.id}"/>
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Lý do từ chối lịch đặt</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <textarea name="ghiChu" rows="4" class="form-control"
-                                                  placeholder="Nhập lý do hủy..." required></textarea>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-danger">Xác nhận từ chối</button>
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
                 </tr>
-
                 </tbody>
             </table>
 
@@ -448,8 +417,13 @@
         </div>
     </div>
 </main>
+
+<!--thông báo thanh công thất bai-->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- dropdown khi ở dạng mobile-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
 
 <script th:inline="javascript">
     /*<![CDATA[*/

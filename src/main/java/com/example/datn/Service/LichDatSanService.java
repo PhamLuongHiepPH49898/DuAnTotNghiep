@@ -36,14 +36,6 @@ public class LichDatSanService {
         }
     }
 
-    public void tuChoi(int id, String ghiChu) {
-        LichDatSan lichDatSan = lichDatSanRepo.findById(id).orElse(null);
-        if (lichDatSan != null) {
-            lichDatSan.setTrangThai(3);
-            lichDatSan.setGhiChu(ghiChu);
-            lichDatSanRepo.save(lichDatSan);
-        }
-    }
 
     public List<LichDatSan> timKiem(String keyword, LocalDate ngaydat, Integer sanBong, Integer trangThai) {
 
