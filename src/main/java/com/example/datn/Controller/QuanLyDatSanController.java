@@ -11,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,6 +50,7 @@ public class QuanLyDatSanController {
         }
 
         model.addAttribute("danhSachLichDatSan", lichDatList);
+        model.addAttribute("danhSachSan", sanBongService.findAll());
         model.addAttribute("ngayTao", ngayTao);
         model.addAttribute("isTimKiem", false); // đánh dấu đây không phải tìm kiếm
 
@@ -58,16 +61,30 @@ public class QuanLyDatSanController {
     }
 
     @GetMapping("/duyet/{id}")
-    public String duyet(@PathVariable int id) {
-        lichDatSanService.duyet(id);
+    public String duyet(@PathVariable int id, RedirectAttributes redirectAttributes) {
+
+        try {
+            lichDatSanService.duyet(id);
+            redirectAttributes.addFlashAttribute("success", "Đã duyệt lịch thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Duyệt lịch thất bại!");
+        }
         return "redirect:/quan-ly-dat-san";
     }
 
-    @GetMapping("/huy/{id}")
-    public String huy(@PathVariable int id) {
-        lichDatSanService.huy(id);
+    @PostMapping("/huy")
+    public String huy(@RequestParam("id") int id,
+                      @RequestParam("ghiChu") String ghiChu,
+                      RedirectAttributes redirectAttributes) {
+        try {
+            lichDatSanService.huy(id, ghiChu);
+            redirectAttributes.addFlashAttribute("success", "Đã hủy lịch thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Hủy lịch thất bại!");
+        }
         return "redirect:/quan-ly-dat-san";
     }
+
 
     @GetMapping("/quan-ly-dat-san/tim-kiem")
     public String quanLyDatSanTimKiem(Model model,

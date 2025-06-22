@@ -183,9 +183,10 @@
             Quản lý giá theo khung giờ</a></li>
         <li class="nav-item"><a class="nav-link" href="/quan-ly-dat-san"><i class="bi bi-calendar-event"></i> Quản lý
             đặt sân</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Quản lý thanh toán</a></li>
         <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-tag"></i> Quản lý khuyến mãi</a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bar-chart"></i> Quản lý thống kê</a></li>
+        <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
+            thống kê</a></li>
         <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bell"></i> Quản lý thông báo</a></li>
         <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay lại
             Trang chủ</a></li>
@@ -218,6 +219,14 @@
             <span class="dropdown-toggle fw-semibold text-dark text-decoration-none" th:text="${hoTen}" role="button"
                   id="userDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false"></span>
 
+
+            <ul class="dropdown-menu" aria-labelledby="userDropdownMobile">
+                <li>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="dropdown-item text-dark">Đăng xuất</button>
+                    </form>
+                </li>
+            </ul>
         </div>
         <button class="btn btn-outline-secondary" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
             <i class="bi bi-list"></i>
@@ -235,8 +244,8 @@
                 Quản lý giá theo khung giờ</a></li>
             <li class="nav-item"><a class="nav-link" href="/quan-ly-dat-san"><i class="bi bi-calendar-event"></i> Quản
                 lý đặt sân</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Quản lý thanh toán</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-tag"></i> Quản lý khuyến mãi</a></li>
             <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
                 thống kê</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bell"></i> Quản lý thông báo</a></li>
@@ -281,7 +290,7 @@
                             <select name="sanBong" class="form-select">
                                 <option value="">-- Tất cả sân --</option>
                                 <option th:each="san : ${danhSachSan}" th:value="${san.id_san_bong}"
-                                        th:text="${san.ten_san_bong}" th:selected="${san.id_san_bong == sanBong}">
+                                        th:text="${san.ten_san_bong}">
                                 </option>
                             </select>
                         </div>
@@ -293,7 +302,6 @@
                                 <option value="0" th:selected="${trangThai == 0}">Chờ duyệt</option>
                                 <option value="1" th:selected="${trangThai == 1}">Đã duyệt</option>
                                 <option value="2" th:selected="${trangThai == 2}">Đã hủy</option>
-                                <option value="3" th:selected="${trangThai == 3}">Từ chối</option>
                             </select>
                         </div>
 
@@ -303,7 +311,6 @@
                     </form>
                 </div>
             </div>
-
 
         </div>
 
@@ -332,33 +339,71 @@
                     <td th:text="${danhSachLichDatSan.giaTheoKhungGio.sanBong.ten_san_bong}"></td>
                     <td th:text="${danhSachLichDatSan.taiKhoan.ho_ten}"></td>
                     <td th:text="${#numbers.formatDecimal(danhSachLichDatSan.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
-                    <td th:text="${danhSachLichDatSan.ghiChu}"></td>
-                    <td>
-                        <span th:if="${danhSachLichDatSan.trangThai == 0}" class="badge bg-success">Chờ duyêt</span>
-                        <span th:if="${danhSachLichDatSan.trangThai == 1}" class="badge bg-danger">Đã duyệt</span>
-                        <span th:if="${danhSachLichDatSan.trangThai == 2}"
-                              class="badge bg-warning text-dark">Đã hủy</span>
-                        <span th:if="${danhSachLichDatSan.trangThai == 3}"
-                              class="badge bg-warning text-dark">Từ chối</span>
-                        <span th:if="${danhSachLichDatSan.trangThai != 0 and danhSachLichDatSan.trangThai != 1 and danhSachLichDatSan.trangThai != 2 and danhSachLichDatSan.trangThai != 3}"
-                              class="badge bg-secondary">Không xác định</span>
-                    </td>
-                    <td><a th:href="@{/duyet/{id}(id=${danhSachLichDatSan.id})}"
-                           th:if="${danhSachLichDatSan.trangThai ==0}"
-                           class="btn btn-sm btn-outline-danger"
-                           onclick="return confirm('Bạn có chắc duệt không')"><i class="bi bi-trash"> Duyệt</i></a>
-                        <a th:href="@{/huy/{id}(id=${danhSachLichDatSan.id})}"
-                           class="btn btn-sm btn-outline-danger"
-                           onclick="return confirm('Bạn có chắc hủy không')"><i class="bi bi-trash"> Hủy</i></a>
-                    </td>
-                    <!--                    <td><a th:href="@{/tu-choi/{id}(id=${san.id})}"-->
-                    <!--                           class="btn btn-sm btn-outline-danger"-->
-                    <!--                           onclick="return confirm('Bạn có chắc từ chối không')"><i class="bi bi-trash"> Xóa</i></a>-->
-                    <!--                    </td>-->
-                </tr>
 
+                    <td th:if="${danhSachLichDatSan.trangThai == 0}">
+                        <span th:text="${danhSachLichDatSan.ghiChu}"></span>
+                    </td>
+                    <td th:if="${danhSachLichDatSan.trangThai == 1}">
+                        <span th:text="${danhSachLichDatSan.ghiChu}"></span>
+                    </td>
+                    <td th:if="${danhSachLichDatSan.trangThai == 2}">
+                        <strong>Lý do hủy:</strong> <span th:text="${danhSachLichDatSan.ghiChu}"></span>
+                    </td>
+
+                    <td>
+                        <span th:if="${danhSachLichDatSan.trangThai == 0}" class="badge bg-info">Chờ duyêt</span>
+                        <span th:if="${danhSachLichDatSan.trangThai == 1}" class="badge bg-success">Đã duyệt</span>
+                        <span th:if="${danhSachLichDatSan.trangThai == 2}"
+                              class="badge bg-secondary">Đã hủy</span>
+                        <span th:if="${danhSachLichDatSan.trangThai != 0 and danhSachLichDatSan.trangThai != 1 and danhSachLichDatSan.trangThai != 2 and danhSachLichDatSan.trangThai != 3}"
+                              class="badge bg-warning">Không xác định</span>
+                    </td>
+                    <td>
+                        <!-- Nút duyệt -->
+                        <a th:href="@{/duyet/{id}(id=${danhSachLichDatSan.id})}"
+                           th:if="${danhSachLichDatSan.trangThai ==0}"
+                           class="btn btn-sm btn-outline-success"
+                           onclick="return confirm('Bạn có chắc duệt không')">Duyệt</a>
+
+                        <!-- Nút hủy -->
+                        <button th:if="${danhSachLichDatSan.trangThai == 0 || danhSachLichDatSan.trangThai == 1} "
+                                type="button"
+                                class="btn btn-sm  btn-outline-danger"
+                                data-bs-toggle="modal"
+                                th:attr="data-bs-target='#modalHuyLich_' + ${danhSachLichDatSan.id}">
+                            Hủy
+                        </button>
+
+
+                    </td>
+
+                    <!-- Modal nhập lý do hủy-->
+                    <div class="modal fade" th:id="'modalHuyLich_' + ${danhSachLichDatSan.id}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <form th:action="@{/huy}" method="post">
+                                <input type="hidden" name="id" th:value="${danhSachLichDatSan.id}"/>
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Lý do hủy lịch đặt</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea name="ghiChu" rows="4" class="form-control"
+                                                  placeholder="Nhập lý do hủy..." required></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </tr>
                 </tbody>
             </table>
+
             <!-- Trường hợp tìm kiếm không ra -->
             <div th:if="${isTimKiem} and ${#lists.isEmpty(danhSachLichDatSan)}" class="alert alert-info">
                 Không tìm thấy kết quả phù hợp với điều kiện tìm kiếm.
@@ -375,6 +420,39 @@
     </div>
 </main>
 
+<!--thông báo thanh công thất bai-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- dropdown khi ở dạng mobile-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let success = /*[[${success}]]*/ null;
+    let error = /*[[${error}]]*/ null;
+
+    if (success !== null) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: success,
+            timer: 2500,
+            showConfirmButton: false
+        });
+    }
+
+    if (error !== null) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Thất bại!',
+            text: error,
+            timer: 2500,
+            showConfirmButton: false
+        });
+    }
+    /*]]>*/
+</script>
+
 </body>
 </html>

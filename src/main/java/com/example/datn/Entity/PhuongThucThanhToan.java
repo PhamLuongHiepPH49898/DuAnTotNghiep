@@ -16,7 +16,7 @@ public class PhuongThucThanhToan {
     @Column(name = "id_phuong_thuc_thanh_toan")
     private int idPhuongThucThanhToan;
 
-    @Column(name = "ten_phuong_thuc_thanh_toan", nullable = false)
+    @Column(name = "ten_phuong_thuc_thanh_toan", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String tenPhuongThucThanhToan;
 
     @Column(name = "trang_thai", nullable = false)
