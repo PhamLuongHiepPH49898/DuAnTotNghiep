@@ -33,7 +33,7 @@ public class LichDatSan {
     @Column(name = "gia_ap_dung", nullable = false)
     private BigDecimal giaApDung;
 
-    @Column(name = "ghi_chu",columnDefinition = "NVARCHAR(255)", nullable = false)
+    @Column(name = "ghi_chu", columnDefinition = "NVARCHAR(255)", nullable = false)
     private String ghiChu;
 
     @Column(name = "trang_thai", nullable = false)
