@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -25,7 +26,8 @@ public class LichDatSan {
     @Column(name = "ngay_dat", nullable = false)
     private LocalDate ngayDat;
 
-    @Column(name = "ngay_tao", nullable = false)
+    @CreationTimestamp
+    @Column(name = "ngay_tao", nullable = false, updatable = false)
     private LocalDateTime ngayTao;
 
     @Column(name = "gia_ap_dung", nullable = false)
