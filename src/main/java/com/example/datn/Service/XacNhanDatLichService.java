@@ -58,13 +58,15 @@ public class XacNhanDatLichService {
             lich.setTaiKhoan(taiKhoan);
             lich.setGiaTheoKhungGio(gia);
             lich.setGiaApDung(gia.getGiaThue());
-            lich.setTrangThai(0);
+            lich.setTrangThai(0); // chờ xác nhận
+            lich.setSanBong(gia.getSanBong()); // ✅ GÁN THÊM DÒNG NÀY
 
             LichDatSan lichDaLuu = lichDatSanRepository.save(lich);
-            danhSachIdDaLuu.add(lichDaLuu.getId()); // đổi thành getIdLichDatSan nếu bạn dùng tên khác
+            danhSachIdDaLuu.add(lichDaLuu.getId());
         }
 
         return danhSachIdDaLuu;
     }
+
 }
 

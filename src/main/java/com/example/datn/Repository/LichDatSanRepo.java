@@ -1,6 +1,9 @@
 package com.example.datn.Repository;
 
 import com.example.datn.Entity.LichDatSan;
+import com.example.datn.Entity.TaiKhoan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -33,6 +36,6 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
 
     @Query("SELECT l FROM LichDatSan l WHERE l.taiKhoan.id = :idTaiKhoan")
     List<LichDatSan> findByTaiKhoanId(Integer idTaiKhoan);
-    @Query("SELECT l FROM LichDatSan l JOIN FETCH l.sanBong WHERE l.taiKhoan.id = :id")
+    @Query("SELECT l FROM LichDatSan l WHERE l.taiKhoan.id = :id ORDER BY l.ngayTao DESC")
     List<LichDatSan> layLichSuDatSan(@Param("id") Long id);
-}
+    Page<LichDatSan> findByTaiKhoanId(Long idTaiKhoan, Pageable pageable);}
