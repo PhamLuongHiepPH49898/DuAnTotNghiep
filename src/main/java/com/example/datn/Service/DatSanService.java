@@ -43,18 +43,9 @@ public class DatSanService {
         return giaTheoKhungGioRepository.findByTrangThaiIn(List.of(0,1,2));
     }
 
-    public Map<String, BigDecimal> layBangGia() {
-        List<GiaTheoKhungGio> danhSachGia = giaTheoKhungGioRepository.findAll();
-        Map<String, BigDecimal> bangGia = new HashMap<>();
-        for (GiaTheoKhungGio gia : danhSachGia) {
-            String key = gia.getSanBong().getId_san_bong() + "_" + gia.getKhungGio().getId();
-            System.out.println("KEY: " + key + ", Giá: " + gia.getGiaThue());
-            bangGia.put(key, gia.getGiaThue());
-        }
-        return bangGia;
-    }
+
     public List<String> getAllSlotKeys() {
-        List<LichDatSan> danhSach = lichDatSanRepository.findAll();
+        List<LichDatSan> danhSach = lichDatSanRepository.findByTrangThaiIn(List.of(0,1));// fix để khi hủy lịch thì lịch đó có thể đặt tiếp
         List<String> keys = new ArrayList<>();
 
         for (LichDatSan lich : danhSach) {

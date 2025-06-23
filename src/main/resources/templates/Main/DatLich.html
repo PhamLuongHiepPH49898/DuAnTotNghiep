@@ -152,10 +152,13 @@
     const year = date.getFullYear();
     return `${day} tháng ${month} ${year}`;
   }
-
+  //fix để ngày hoạt động đúng
   function formatDateKey(date) {
-    return date.toISOString().split('T')[0]; // yyyy-mm-dd
-  }
+    const localDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;   }
 
   function formatPrice(price) {
     const num = Number(price);
