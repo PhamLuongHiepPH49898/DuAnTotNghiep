@@ -2,11 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <title>Tìm kiếm sân bóng - Samba</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="icon" type="image/png" th:href="@{/image/logo.png}">
-
-    <title>Tìm kiếm sân bóng - Samba</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -41,7 +40,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1100px;
             margin: 40px auto;
             background: white;
             padding: 30px;
@@ -91,35 +90,25 @@
             background: #155eab;
         }
 
-        .card {
-            border: none;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        .card-hover {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
         }
 
-        .card img {
-            height: 100%;
+        .object-fit-cover {
             object-fit: cover;
+            width: 100%;
+            height: 100%;
         }
 
-        .card-body {
-            padding: 20px;
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            color: #1e90ff;
-        }
-
-        .card-text span {
-            color: #155eab;
+        .ratio {
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+            overflow: hidden;
         }
 
         footer {
@@ -179,7 +168,6 @@
             }
         }
     </style>
-
 </head>
 <body>
 <header>
@@ -193,46 +181,43 @@
 <div class="container">
     <h2>Tìm kiếm sân bóng</h2>
     <form id="searchForm" th:action="@{/tim-kiem}" method="get">
-        <input type="text" name="keyword" id="keyword" placeholder="Nhập tên sân bóng..." th:value="${keyword}" class="form-control">
-        <select name="loaiSan" id="loaiSan" class="form-select">
+        <input type="text" name="keyword" id="keyword" placeholder="Nhập tên sân bóng..." th:value="${keyword}">
+        <select name="loaiSan" id="loaiSan">
             <option value="">-- Chọn loại sân --</option>
             <option th:each="loai : ${dsLoaiSan}" th:value="${loai.id}" th:text="${loai.ten_loai_san}"></option>
         </select>
-        <select name="monTheThao" id="monTheThao" class="form-select">
+        <select name="monTheThao" id="monTheThao">
             <option value="">-- Chọn môn thể thao --</option>
             <option th:each="mon : ${dsMonTheThao}" th:value="${mon.id}" th:text="${mon.ten_mon_the_thao}"></option>
         </select>
-        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        <button type="submit">Tìm kiếm</button>
     </form>
 
-    <div th:if="${danhSachSan != null}" >
+    <div th:if="${danhSachSan != null}">
         <div th:if="${#lists.isEmpty(danhSachSan)}" class="alert alert-warning text-center mt-4">
             Không tìm thấy sân bóng phù hợp với yêu cầu của bạn.
         </div>
 
-        <div th:each="san : ${danhSachSan}" th:if="${san.trang_thai != 3}" class="card mb-3 shadow-sm">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <td>
-                        <!-- Nếu là ảnh mặc định (ảnh chưa bị sửa đổi) -->
+        <div class="row mt-4" th:if="${!#lists.isEmpty(danhSachSan)}">
+            <div class="col-md-6 col-lg-4 mb-4" th:each="san : ${danhSachSan}" th:if="${san.trang_thai != 3}">
+                <div class="card h-100 shadow-lg border-0 rounded-4 card-hover">
+                    <div class="ratio ratio-16x9">
                         <img th:if="${#strings.startsWith(san.hinh_anh, 'anh')}"
                              th:src="@{'/image/' + ${san.hinh_anh}}"
-                             alt="Ảnh mặc định" class="img-fluid" width="300px" />
-
-                        <!-- Nếu là ảnh đã upload (có UUID đầu tên) -->
+                             class="card-img-top object-fit-cover"
+                             alt="Ảnh sân bóng">
                         <img th:if="${!#strings.startsWith(san.hinh_anh, 'anh')}"
                              th:src="@{'/uploads/' + ${san.hinh_anh}}"
-                             alt="Ảnh người dùng upload"class="img-fluid "  width="300px"/>
-                    </td>
-                </div>
-                <div class="col-md-8">
+                             class="card-img-top object-fit-cover"
+                             alt="Ảnh người dùng upload">
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${san.ten_san_bong}">Tên sân</h5>
-                        <p class="card-text"><strong>Loại sân:</strong> <span th:text="${san.loaiSan.ten_loai_san}"></span></p>
-                        <p class="card-text"><strong>Môn thể thao:</strong>
+                        <h5 class="card-title text-primary" th:text="${san.ten_san_bong}">Tên sân</h5>
+                        <p class="mb-1"><i class="bi bi-grid"></i> <strong>Loại sân:</strong> <span th:text="${san.loaiSan.ten_loai_san}"></span></p>
+                        <p class="mb-3"><i class="bi bi-dribbble"></i> <strong>Môn thể thao:</strong>
                             <span th:text="${san.loaiMonTheThao != null} ? ${san.loaiMonTheThao.ten_mon_the_thao} : 'Chưa cập nhật'"></span>
                         </p>
-                        <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" class="btn btn-outline-primary">Xem chi tiết</a>
+                        <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" class="btn btn-outline-primary w-100">Xem chi tiết</a>
                     </div>
                 </div>
             </div>
@@ -266,7 +251,6 @@
     <div class="mt-4">
         <p>Email: support@sambabooking.vn | Hotline: 1800-1234</p>
         <p>Địa chỉ: Đâu đó trên thế giới</p>
-
         <div class="social-icons">
             <a href="https://facebook.com"><i class="bi bi-facebook"></i></a>
             <a href="https://twitter.com"><i class="bi bi-twitter"></i></a>
@@ -275,14 +259,13 @@
         <a href="#" class="btn btn-outline-light mt-3">Lên đầu trang</a>
     </div>
 </footer>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Auto-submit filter select
         document.querySelectorAll('select').forEach(select => {
             select.addEventListener('change', () => select.form.submit());
         });
 
-        // Gõ chữ chạy cho placeholder
         const input = document.getElementById("keyword");
         const text = "Nhập tên sân bóng...";
         let index = 0;
@@ -293,7 +276,7 @@
                 index++;
             } else {
                 index = 0;
-                input.setAttribute("placeholder", ""); // clear rồi chạy lại
+                input.setAttribute("placeholder", "");
             }
             setTimeout(typePlaceholder, 150);
         }
@@ -301,6 +284,5 @@
         typePlaceholder();
     });
 </script>
-
 </body>
 </html>

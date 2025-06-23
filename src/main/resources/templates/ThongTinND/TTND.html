@@ -3,64 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <title>Thông tin người dùng</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #f4f7fb;
+            --text: #333;
+            --card: #ffffff;
+            --highlight: #0077cc;
+        }
+
         * {
             box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
             margin: 0;
             padding: 40px;
-            background: #f3f6f9;
-            color: #333;
-        }
-
-        h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
+            background-color: var(--bg);
+            color: var(--text);
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: auto;
-            background: #ffffff;
-            padding: 30px 40px;
-            border-radius: 15px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            padding: 0 15px;
         }
 
-        .info {
-            margin-bottom: 30px;
-            font-size: 16px;
+        .breadcrumb {
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: #888;
+        }
+
+        .breadcrumb span {
+            margin: 0 5px;
+        }
+
+        h2 {
+            color: var(--highlight);
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        section {
+            background-color: var(--card);
+            padding: 25px 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e1e5ea;
+        }
+
+        .info p {
+            line-height: 1.6;
+            margin-bottom: 10px;
         }
 
         .info p span {
             font-weight: bold;
-            color: #0077cc;
+            color: var(--highlight);
         }
 
-        table {
+        .search-filter {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .search-filter input,
+        .search-filter select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .history table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         thead {
-            background-color: #0077cc;
-            color: #ffffff;
+            background: var(--highlight);
+            color: white;
         }
 
         th, td {
-            padding: 14px 16px;
+            padding: 14px 18px;
             text-align: left;
-            font-size: 15px;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid #ddd;
         }
 
         tbody tr:hover {
             background-color: #f1f9ff;
+            transition: 0.3s;
         }
 
         .status {
@@ -69,157 +108,155 @@
             border-radius: 20px;
             font-size: 13px;
             display: inline-block;
+            cursor: default;
         }
 
         .status-cho {
             background-color: #fff3cd;
             color: #856404;
-            border: 1px solid #ffeeba;
         }
 
         .status-da-xn {
             background-color: #d4edda;
             color: #155724;
-            border: 1px solid #c3e6cb;
         }
 
         .status-da-huy {
             background-color: #f8d7da;
             color: #721c24;
-            border: 1px solid #f5c6cb;
         }
 
         .status-khong-ro {
             background-color: #d1ecf1;
             color: #0c5460;
-            border: 1px solid #bee5eb;
         }
 
         .pagination {
-            margin-top: 20px;
+            margin-top: 30px;
             text-align: center;
         }
 
         .pagination a {
-            margin: 0 5px;
-            padding: 5px 10px;
+            margin: 0 6px;
+            padding: 6px 12px;
             text-decoration: none;
-            border: 1px solid #0077cc;
-            color: #0077cc;
-            border-radius: 5px;
+            border: 1px solid var(--highlight);
+            color: var(--highlight);
+            border-radius: 6px;
+            transition: 0.3s;
         }
 
+        .pagination a:hover,
         .pagination a.current-page {
-            background-color: #0077cc;
+            background-color: var(--highlight);
             color: white;
-            font-weight: bold;
         }
 
-        @media screen and (max-width: 768px) {
-            .container {
-                padding: 20px;
+        @media (max-width: 768px) {
+            .history table {
+                display: block;
+                overflow-x: auto;
             }
 
-            table, thead, tbody, th, td, tr {
-                font-size: 13px;
+            th, td {
+                white-space: nowrap;
             }
 
-            .info p {
-                margin-bottom: 10px;
+            .search-filter {
+                flex-direction: column;
             }
         }
-        .home-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            background-color: #4ca1af;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .home-button:hover {
-            background-color: #357e87;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .home-icon {
-            font-size: 18px;
-            transition: transform 0.3s ease;
-        }
-
-        .home-button:hover .home-icon {
-            transform: scale(1.2) rotate(-5deg);
-        }
-
     </style>
 </head>
 <body>
 <div class="container">
-    <a th:href="@{/ve-trang-chu}" class="home-button">
-        <span class="home-icon">🏠</span> Trang chủ
-    </a>
-    <h2>Thông tin tài khoản</h2>
-    <div class="info">
-        <p>Họ tên: <span th:text="${taiKhoan.ho_ten}">Nguyễn Văn A</span></p>
-        <p>Email: <span th:text="${taiKhoan.email}">a@gmail.com</span></p>
-        <p>Số điện thoại: <span th:text="${taiKhoan.so_dien_thoai}">0123456789</span></p>
-        <p>Vai trò: <span th:text="${taiKhoan.vai_tro=='NGUOI_DUNG'?'Người dùng':'Quản trị'}">Người dùng</span></p>
+
+    <div class="breadcrumb">
+        🏠 <a th:href="@{/ve-trang-chu}" style="color: var(--highlight); text-decoration: none;">Trang chủ</a>
+        <span>›</span> Thông tin người dùng
     </div>
 
-    <h2>Lịch sử đặt sân</h2>
-    <div class="history" th:if="${lichSuPage != null and !lichSuPage.empty}">
-        <table>
-            <thead>
-            <tr>
-                <th>STT</th>
-                <th>Tên sân</th>
-                <th>Ngày đặt</th>
-                <th>Khung giờ</th>
-                <th>Giá</th>
-                <th>Ghi chú</th>
-                <th>Trạng thái</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="lich, iterStat : ${lichSuPage.content}">
-                <td th:text="${iterStat.index + 1 + (lichSuPage.number * lichSuPage.size)}">1</td>
-                <td th:text="${lich.sanBong.ten_san_bong}">Sân A</td>
-                <td th:text="${lich.ngayDat.format(dateFormatter)}">01/01/2025</td>
-                <td th:text="${lich.giaTheoKhungGio.khungGio.gioBatDau + ' - ' + lich.giaTheoKhungGio.khungGio.gioKetThuc}">6:00 - 7:00</td>
-                <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'">100.000 đ</td>
-                <td th:text="${lich.ghiChu}">Ghi chú</td>
-                <td th:switch="${lich.trangThai}">
-                    <span th:case="0" class="status status-cho">Chờ xác nhận</span>
-                    <span th:case="1" class="status status-da-xn">Đã xác nhận</span>
-                    <span th:case="2" class="status status-da-huy">Đã hủy</span>
-                    <span th:case="*" class="status status-khong-ro">Không rõ</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <!-- PHÂN TRANG -->
-        <div class="pagination" th:if="${lichSuPage.totalPages > 1}">
-            <a th:if="${lichSuPage.hasPrevious()}" th:href="@{/thong-tin-nguoi-dung(page=${lichSuPage.number - 1})}">&laquo; Trước</a>
-            <span th:each="i : ${#numbers.sequence(0, lichSuPage.totalPages - 1)}">
-                <a th:href="@{/thong-tin-nguoi-dung(page=${i})}"
-                   th:text="${i + 1}"
-                   th:classappend="${i == lichSuPage.number} ? 'current-page' : ''">1</a>
-            </span>
-            <a th:if="${lichSuPage.hasNext()}" th:href="@{/thong-tin-nguoi-dung(page=${lichSuPage.number + 1})}">Sau &raquo;</a>
+    <!-- SECTION: Thông tin tài khoản -->
+    <section>
+        <h2>👤 Thông tin tài khoản</h2>
+        <div class="info">
+            <p>Họ tên: <span th:text="${taiKhoan.ho_ten}">Nguyễn Văn A</span></p>
+            <p>Email: <span th:text="${taiKhoan.email}">a@gmail.com</span></p>
+            <p>SĐT: <span th:text="${taiKhoan.so_dien_thoai}">0123456789</span></p>
+            <p>Vai trò: <span th:text="${taiKhoan.vai_tro=='NGUOI_DUNG'?'Người dùng':'Quản trị'}">Người dùng</span></p>
         </div>
-    </div>
+    </section>
 
-    <div class="history" th:if="${lichSuPage == null or lichSuPage.empty}">
-        <p style="color: #999; font-style: italic;">Bạn chưa có lịch sử đặt sân nào.</p>
-    </div>
+    <!-- SECTION: Lịch sử đặt sân -->
+    <section>
+        <h2>📜 Lịch sử đặt sân</h2>
+
+        <div class="search-filter">
+            <input type="text" placeholder="🔎 Tìm theo tên sân..." oninput="filterTable(this.value)">
+        </div>
+
+        <div class="history" th:if="${lichSuPage != null and !lichSuPage.empty}">
+            <table id="booking-table">
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên sân</th>
+                    <th>Ngày đặt</th>
+                    <th>Khung giờ</th>
+                    <th>Giá</th>
+                    <th>Ghi chú</th>
+                    <th>Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="lich, iterStat : ${lichSuPage.content}">
+                    <td th:text="${iterStat.index + 1 + (lichSuPage.number * lichSuPage.size)}">1</td>
+                    <td th:text="${lich.sanBong.ten_san_bong}">Sân A</td>
+                    <td th:text="${lich.ngayDat.format(dateFormatter)}">01/01/2025</td>
+                    <td th:text="${lich.giaTheoKhungGio.khungGio.gioBatDau + ' - ' + lich.giaTheoKhungGio.khungGio.gioKetThuc}">6:00 - 7:00</td>
+                    <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"><strong>100.000 đ</strong></td>
+                    <td th:text="${lich.ghiChu}">Không có</td>
+                    <td th:switch="${lich.trangThai}">
+                        <span th:case="0" class="status status-cho" title="Chờ xác nhận">⏳</span>
+                        <span th:case="1" class="status status-da-xn" title="Đã xác nhận">✅</span>
+                        <span th:case="2" class="status status-da-huy" title="Đã hủy">❌</span>
+                        <span th:case="*" class="status status-khong-ro" title="Không rõ">❔</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="pagination" th:if="${lichSuPage.totalPages > 1}">
+                <a th:if="${lichSuPage.hasPrevious()}" th:href="@{/thong-tin-nguoi-dung(page=${lichSuPage.number - 1})}">&laquo; Trước</a>
+                <span th:each="i : ${#numbers.sequence(0, lichSuPage.totalPages - 1)}">
+          <a th:href="@{/thong-tin-nguoi-dung(page=${i})}" th:text="${i + 1}" th:classappend="${i == lichSuPage.number} ? 'current-page' : ''">1</a>
+        </span>
+                <a th:if="${lichSuPage.hasNext()}" th:href="@{/thong-tin-nguoi-dung(page=${lichSuPage.number + 1})}">Sau &raquo;</a>
+            </div>
+        </div>
+
+        <div class="history" th:if="${lichSuPage == null or lichSuPage.empty}">
+            <p style="color: #888; font-style: italic;">Bạn chưa có lịch sử đặt sân nào.</p>
+        </div>
+    </section>
 </div>
+
+<script>
+    function filterTable(keyword) {
+        const rows = document.querySelectorAll('#booking-table tbody tr');
+        rows.forEach(row => {
+            const name = row.children[1].textContent.toLowerCase();
+            row.style.display = name.includes(keyword.toLowerCase()) ? '' : 'none';
+        });
+    }
+
+    function filterStatus(status) {
+        const rows = document.querySelectorAll('#booking-table tbody tr');
+        rows.forEach(row => {
+            const statusText = row.children[6].title;
+            row.style.display = !status || statusText === status ? '' : 'none';
+        });
+    }
+</script>
 </body>
 </html>
