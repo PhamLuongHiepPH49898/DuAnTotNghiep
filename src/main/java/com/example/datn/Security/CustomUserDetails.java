@@ -16,11 +16,13 @@ public class CustomUserDetails implements UserDetails {
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_"+taiKhoan.getVai_tro()));
+
+        return List.of(new SimpleGrantedAuthority("ROLE_"+taiKhoan.getVaiTro()));
     }
     @Override
     public String getPassword(){
-        return taiKhoan.getMat_khau();
+        return taiKhoan.getPassword();
+
     }
     @Override
     public String getUsername(){
@@ -36,10 +38,12 @@ public class CustomUserDetails implements UserDetails {
     }
     @Override
     public boolean isEnabled() {
-        return taiKhoan.getTrang_thai() == 0;
+
+        return taiKhoan.getTrangThai() == 0;
     }
     public String getPassword1() {
-        System.out.println("Mật khẩu trả về: " + taiKhoan.getMat_khau());
-        return taiKhoan.getMat_khau();
+        System.out.println("Mật khẩu trả về: " + taiKhoan.getPassword());
+        return taiKhoan.getPassword();
+
     }
 }

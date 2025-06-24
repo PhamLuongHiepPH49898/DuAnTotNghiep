@@ -116,16 +116,20 @@
     <h2>Đăng ký</h2>
     <form action="/dang-ky" method="post">
       <div class="input-field">
-        <input type="text" name="fullname" placeholder="Họ tên" required>
+        <input type="text" name="fullname" placeholder="Họ tên" required th:value="${fullname}">
+        <p style="color: #ff6b6b; margin-top: 5px;" th:if="${errorFullname}" th:text="${errorFullname}"></p>
       </div>
       <div class="input-field">
-        <input type="email" name="email" placeholder="Email" required>
+        <input type="email" name="email" placeholder="Email" required th:value="${email}">
+        <p style="color: #ff6b6b; margin-top: 5px;" th:if="${errorEmail}" th:text="${errorEmail}"></p>
       </div>
       <div class="input-field">
-        <input type="tel" name="phone" placeholder="Số điện thoại" required>
+        <input type="tel" name="phone" placeholder="Số điện thoại" required th:value="${phone}">
+        <p style="color: #ff6b6b; margin-top: 5px;" th:if="${errorPhone}" th:text="${errorPhone}"></p>
       </div>
       <div class="input-field">
         <input type="password" name="password" placeholder="Mật khẩu" required>
+        <p style="color: #ff6b6b; margin-top: 5px;" th:if="${errorPassword}" th:text="${errorPassword}"></p>
       </div>
       <div class="input-field">
         <input type="password" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
@@ -133,6 +137,9 @@
       <button type="submit" class="login">Đăng ký</button>
       <p>Đã có tài khoản? <a href="/dang-nhap" class="sign-up">Đăng nhập</a></p>
     </form>
+
+
+
   </div>
 </div>
 
