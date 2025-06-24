@@ -1,126 +1,178 @@
-
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Đặt Sân Bóng</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
+    :root {
+      --primary: #4ca1af;
+      --primary-dark: #2d6d7a;
+      --light-bg: #f4f9f9;
+      --selected: #6db1bf;
+      --disabled: #e0e0e0;
+      --text: #333;
     }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--light-bg);
+      margin: 0;
+      padding: 30px 20px;
+      color: var(--text);
+    }
+
     .controls {
       display: flex;
-      align-items: center;
       justify-content: center;
-      gap: 20px;
-      font-family: 'Segoe UI', sans-serif;
-      font-size: 1.5rem;
-      margin-top: 20px;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 24px;
     }
 
     .arrow {
-      color: #4ca1af;
+      background: white;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 1.2rem;
+      line-height: 36px;
+      text-align: center;
       cursor: pointer;
-      font-weight: bold;
-      transition: color 0.3s;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     .arrow:hover {
-      color: #0f0f4c;
+      background: var(--primary);
+      color: white;
     }
 
     #dateDisplay {
-      font-weight: 600;
-      color: #75a6b6;
-
-      min-width: 150px;
-      text-align: center;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: var(--primary-dark);
     }
 
-    #bookingTable thead tr {
-      background: linear-gradient(90deg, #4ca1af, #c4e0e5);
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+    }
+
+    thead tr {
+      background: none;
+    }
+
+    th {
+      text-align: center;
+      font-size: 1rem;
+      color: var(--primary-dark);
+      padding: 10px;
+    }
+
+    td {
+      background: white;
+      border-radius: 8px;
+      margin: 6px;
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 1rem;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+    }
+
+    td:hover:not(.disabled):not(.selected) {
+      background: #e8f9fa;
+      transform: scale(1.02);
+    }
+
+    td.selected {
+      background: var(--selected);
       color: white;
       font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
-    /* Responsive - nút xếp dọc trên điện thoại */
-    @media (max-width: 480px) {
+    td.disabled {
+      background: var(--disabled);
+      color: #888;
+      cursor: not-allowed;
+      font-style: italic;
+    }
+
+    .court-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .court-info img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-top: 20px;
+    }
+
+    button {
+      margin-top: 16px;
+      padding: 14px 28px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    @media (max-width: 768px) {
       .controls {
         flex-direction: column;
         gap: 12px;
       }
 
-      #dateDisplay {
-        min-width: unset;
+      td, th {
+        font-size: 0.9rem;
+      }
+
+      button {
+        width: 100%;
       }
     }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-bottom: 20px;
-    }
-    table, th, td {
-      border: 1px solid #ccc;
-    }
-    th, td {
-      padding: 10px;
-      text-align: center;
-      cursor: pointer;
-    }
-    td.selected {
-      background-color: #6db1bf;
-    }
-    td.disabled {
-      background-color: #f0f0f0;
-      color: #999;
-      cursor: not-allowed;
-    }
-    .controls {
-      margin-bottom: 15px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    button {
-      padding: 10px 20px;
-      background-color: #75a6b6;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s;
-    }
-    button:hover {
-      background-color: #75a6b6;
-    }
-    #dateDisplay {
-      font-weight: bold;
-      font-size: 1.2em;
-      margin: 0 10px;
-      user-select: none;
-    }
-    a{
-      text-decoration: none;
-    }
-
   </style>
 </head>
 <body>
 
-
-
 <div class="controls">
-  <span class="arrow" onclick="changeDate(-1)"><</span>
+  <span class="arrow" onclick="changeDate(-1)">&lt;</span>
   <span id="dateDisplay"></span>
-  <span class="arrow" onclick="changeDate(1)">></span>
+  <span class="arrow" onclick="changeDate(1)">&gt;</span>
 </div>
-<table id="bookingTable" aria-label="Bảng đặt sân bóng">
+
+<table id="bookingTable">
   <thead>
   <tr>
     <th>Giờ</th>
-    <th th:each="san : ${danhSachSan}" th:text="${san.ten_san_bong}">Tên sân</th>
+    <th th:each="san : ${danhSachSan}">
+      <div class="court-info">
+        <span th:text="${san.ten_san_bong}">Tên sân</span>
+      </div>
+    </th>
   </tr>
   </thead>
   <tbody>
@@ -137,7 +189,8 @@
   </tr>
   </tbody>
 </table>
-<p>Đã chọn <span id="slotCount">0</span> lịch</p>
+
+<p>Đã chọn: <span id="slotCount">0</span> khung giờ</p>
 <p>Tổng tiền: <strong><span id="totalPrice">0</span> đ</strong></p>
 <button onclick="submitBooking()">Đặt lịch</button>
 
@@ -145,7 +198,6 @@
   let selectedSlots = [];
   let currentDate = new Date();
   let slotsDaDat = /*[[${cacSlotDaDat}]]*/ [];
-
 
   function formatDate(date) {
     const day = date.getDate();
@@ -155,13 +207,12 @@
   }
 
   function formatDateKey(date) {
-    return date.toISOString().split('T')[0]; // yyyy-mm-dd
+    return date.toISOString().split('T')[0];
   }
 
   function formatPrice(price) {
     const num = Number(price);
-    if (isNaN(num)) return "";
-    return num.toLocaleString('vi-VN');
+    return isNaN(num) ? "" : num.toLocaleString('vi-VN');
   }
 
   function getCurrentDateKey() {
@@ -169,14 +220,9 @@
   }
 
   function loadToday() {
-    // Hiển thị ngày
     document.getElementById('dateDisplay').textContent = formatDate(currentDate);
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const checkDate = new Date(currentDate);
-    checkDate.setHours(0, 0, 0, 0);
-
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const checkDate = new Date(currentDate); checkDate.setHours(0, 0, 0, 0);
     const isPast = checkDate < today;
     toggleBookingCells(!isPast, isPast);
   }
@@ -187,17 +233,18 @@
 
     cells.forEach(cell => {
       const slotId = `${dateKey}_${cell.dataset.court}_${cell.dataset.time}`;
+      const price = Number(cell.dataset.price || 0);
+      const isDaDat = slotsDaDat.includes(slotId);
 
       // Reset
       cell.classList.remove("disabled", "selected");
       cell.onclick = null;
       cell.style.cursor = "pointer";
 
-      const price = Number(cell.dataset.price || 0);
-      const isDaDat = slotsDaDat.includes(slotId);
-
       if (isPast || price <= 0 || isDaDat) {
-        cell.textContent = isDaDat ? "Đã đặt" : (price <= 0 ? "-" : "");
+        cell.innerHTML = isDaDat
+                ? '🔒 Đã đặt'
+                : (price <= 0 ? "-" : "");
         cell.classList.add("disabled");
         cell.style.cursor = "not-allowed";
       } else {
@@ -217,10 +264,10 @@
     if (cell.classList.contains("disabled")) return;
 
     const slotId = `${dateKey}_${cell.dataset.court}_${cell.dataset.time}`;
-    const existingIndex = selectedSlots.findIndex(s => s.id === slotId);
+    const index = selectedSlots.findIndex(s => s.id === slotId);
 
-    if (existingIndex !== -1) {
-      selectedSlots.splice(existingIndex, 1);
+    if (index !== -1) {
+      selectedSlots.splice(index, 1);
       cell.classList.remove("selected");
     } else {
       selectedSlots.push({
@@ -229,8 +276,7 @@
         date: dateKey,
         court: cell.dataset.court,
         time: cell.dataset.time,
-        idgia:Number(cell.dataset.idgia || 0)
-
+        idgia: Number(cell.dataset.idgia || 0)
       });
       cell.classList.add("selected");
     }
@@ -245,17 +291,14 @@
   }
 
   function submitBooking() {
-    if(selectedSlots.length === 0) {
-      alert('Vui lòng chọn ít nhất 1 khung giờ đặt sân!');
+    if (selectedSlots.length === 0) {
+      alert("Vui lòng chọn ít nhất 1 khung giờ!");
       return;
     }
-    // Lưu dữ liệu chọn vào localStorage (có thể dùng sessionStorage)
     localStorage.setItem("chiTietDatLichList", JSON.stringify(selectedSlots));
-    // Chuyển sang trang xác nhận đặt lịch
     window.location.href = "/xacnhan";
   }
 
-  // Thêm hàm thay đổi ngày
   function changeDate(days) {
     currentDate.setDate(currentDate.getDate() + days);
     loadToday();
@@ -263,8 +306,6 @@
 
   window.onload = loadToday;
 </script>
-
-
 
 </body>
 </html>
