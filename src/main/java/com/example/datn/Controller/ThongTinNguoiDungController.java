@@ -18,6 +18,7 @@ import java.security.Principal;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class ThongTinNguoiDungController {
@@ -54,6 +55,14 @@ public class ThongTinNguoiDungController {
 
         List<LichDatSan> lichHomNay = thongTinNguoiDungService.timLichDatHomNay((long) taiKhoan.getId());
         boolean coLichHomNay = !lichHomNay.isEmpty();
+        model.addAttribute("lichChoXacNhan", lichSuPage.getContent().stream()
+                .filter(l -> l.getTrangThai() == 0).collect(Collectors.toList()));
+
+        model.addAttribute("lichDaXacNhan", lichSuPage.getContent().stream()
+                .filter(l -> l.getTrangThai() == 1).collect(Collectors.toList()));
+
+        model.addAttribute("lichDaHuy", lichSuPage.getContent().stream()
+                .filter(l -> l.getTrangThai() == 2).collect(Collectors.toList()));
         model.addAttribute("coLichHomNay", coLichHomNay);
         model.addAttribute("taiKhoan", taiKhoan);
         model.addAttribute("lichSuPage", lichSuPage);
