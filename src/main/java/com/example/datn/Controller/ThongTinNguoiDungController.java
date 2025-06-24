@@ -30,8 +30,10 @@ public class ThongTinNguoiDungController {
     private ThongTinNguoiDungService thongTinNguoiDungService;
 
     @GetMapping("/thong-tin-nguoi-dung")
-    public String hienThiThongTinNguoiDung(Model model, Principal principal,
-                                           @RequestParam(defaultValue = "0") int page) {
+    public String hienThiThongTinNguoiDung(Model model,
+                                           Principal principal,
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(required = false) String keyword) {
         String email = principal.getName();
         Optional<TaiKhoan> optionalTaiKhoan = taiKhoanRepo.findByEmail(email);
         if (optionalTaiKhoan.isEmpty()) {
@@ -39,9 +41,18 @@ public class ThongTinNguoiDungController {
         }
 
         TaiKhoan taiKhoan = optionalTaiKhoan.get();
-        Pageable pageable = PageRequest.of(page, 5, Sort.by("ngayDat").descending());
+        Pageable pageable = PageRequest.of(page, 6, Sort.by("ngayDat").descending());
 
-        Page<LichDatSan> lichSuPage = (Page<LichDatSan>) thongTinNguoiDungService.layLichSuDatSan((long) taiKhoan.getId(), pageable);
+        Page<LichDatSan> lichSuPage;
+
+        // Nếu có từ khóa tìm kiếm thì tìm theo tên sân
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            lichSuPage = thongTinNguoiDungService.timKiemLichSuDatSanTheoTenSan(
+                    (long) taiKhoan.getId(), keyword.trim(), pageable);
+            model.addAttribute("keyword", keyword); // để giữ giá trị trong ô tìm kiếm
+        } else {
+            lichSuPage = thongTinNguoiDungService.layLichSuDatSan((long) taiKhoan.getId(), pageable);
+        }
 
         model.addAttribute("taiKhoan", taiKhoan);
         model.addAttribute("lichSuPage", lichSuPage);

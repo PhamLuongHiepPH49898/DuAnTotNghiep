@@ -38,4 +38,12 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
     List<LichDatSan> findByTaiKhoanId(Integer idTaiKhoan);
     @Query("SELECT l FROM LichDatSan l WHERE l.taiKhoan.id = :id ORDER BY l.ngayTao DESC")
     List<LichDatSan> layLichSuDatSan(@Param("id") Long id);
-    Page<LichDatSan> findByTaiKhoanId(Long idTaiKhoan, Pageable pageable);}
+    Page<LichDatSan> findByTaiKhoanId(Long idTaiKhoan, Pageable pageable);
+
+    @Query("SELECT l FROM LichDatSan l " +
+            "WHERE l.taiKhoan.id = :idTaiKhoan " +
+            "AND LOWER(l.sanBong.ten_san_bong) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<LichDatSan> timKiemTheoTenSan(@Param("idTaiKhoan") Long idTaiKhoan,
+                                       @Param("keyword") String keyword,
+                                       Pageable pageable);
+}
