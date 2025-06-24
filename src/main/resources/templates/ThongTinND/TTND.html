@@ -24,7 +24,6 @@
         .container {
             max-width: 1100px;
             margin: auto;
-            padding: 0 15px;
         }
         .breadcrumb {
             font-size: 14px;
@@ -55,30 +54,33 @@
             font-weight: bold;
             color: var(--highlight);
         }
-        .search-filter {
+        .tabs {
             display: flex;
             gap: 10px;
-            margin: 20px 0;
-            flex-wrap: wrap;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
         }
-        .search-filter input,
-        .search-filter button {
-            padding: 8px 12px;
-            font-size: 14px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
-        .search-filter button {
-            background-color: var(--highlight);
-            color: white;
-            border: none;
+        .tab-button {
+            padding: 10px 20px;
             cursor: pointer;
-            transition: background 0.3s;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            color: #555;
+            transition: all 0.3s;
         }
-        .search-filter button:hover {
-            background-color: #005fa3;
+        .tab-button.active {
+            border-bottom: 3px solid var(--highlight);
+            color: var(--highlight);
         }
-        .history table {
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
@@ -88,54 +90,17 @@
             color: white;
         }
         th, td {
-            padding: 14px 18px;
-            text-align: left;
+            padding: 12px 16px;
             border-bottom: 1px solid #ddd;
-        }
-        tbody tr:hover {
-            background-color: #f1f9ff;
-            transition: 0.3s;
-        }
-        .status {
-            font-weight: bold;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            display: inline-block;
-        }
-        .status-cho { background-color: #fff3cd; color: #856404; }
-        .status-da-xn { background-color: #d4edda; color: #155724; }
-        .status-da-huy { background-color: #f8d7da; color: #721c24; }
-        .status-khong-ro { background-color: #d1ecf1; color: #0c5460; }
-
-        .pagination {
-            margin-top: 30px;
-            text-align: center;
-        }
-        .pagination a {
-            margin: 0 6px;
-            padding: 6px 12px;
-            text-decoration: none;
-            border: 1px solid var(--highlight);
-            color: var(--highlight);
-            border-radius: 6px;
-            transition: 0.3s;
-        }
-        .pagination a:hover,
-        .pagination a.current-page {
-            background-color: var(--highlight);
-            color: white;
+            text-align: left;
         }
         @media (max-width: 768px) {
-            .history table {
+            table {
                 display: block;
                 overflow-x: auto;
             }
             th, td {
                 white-space: nowrap;
-            }
-            .search-filter {
-                flex-direction: column;
             }
         }
     </style>
@@ -143,12 +108,13 @@
 <body>
 <div class="container">
 
+    <!-- Breadcrumb -->
     <div class="breadcrumb">
         🏠 <a th:href="@{/ve-trang-chu}" style="color: var(--highlight); text-decoration: none;">Trang chủ</a>
         <span>›</span> Thông tin người dùng
     </div>
 
-    <!-- SECTION: Thông tin tài khoản -->
+    <!-- Thông tin tài khoản -->
     <section>
         <h2>👤 Thông tin tài khoản</h2>
         <div class="info">
@@ -158,24 +124,28 @@
             <p>Vai trò: <span th:text="${taiKhoan.vai_tro=='NGUOI_DUNG'?'Người dùng':'Quản trị'}">Người dùng</span></p>
         </div>
     </section>
+
+    <!-- Thông báo nếu có lịch hôm nay -->
     <div th:if="${coLichHomNay}" style="margin-bottom: 20px;">
         <div style="padding: 12px 20px; background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 10px; color: #856404;">
             📢 Bạn có lịch đặt sân <strong>hôm nay</strong>. Vui lòng đến đúng giờ để tránh bị hủy!
         </div>
     </div>
-    <!-- SECTION: Lịch sử đặt sân -->
+
+    <!-- Lịch sử đặt sân -->
     <section>
         <h2>📜 Lịch sử đặt sân</h2>
 
-        <form th:action="@{/thong-tin-nguoi-dung}" method="get" style="width: 100%;">
-            <div class="search-filter">
-                <input type="text" name="keyword" placeholder="🔎 Tìm theo tên sân..." th:value="${keyword}">
-                <button type="submit">Tìm kiếm</button>
-            </div>
-        </form>
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('tab1', this)">⏳ Chờ xác nhận</button>
+            <button class="tab-button" onclick="showTab('tab2', this)">✅ Đã xác nhận</button>
+            <button class="tab-button" onclick="showTab('tab3', this)">❌ Đã hủy</button>
+        </div>
 
-        <div class="history" th:if="${lichSuPage != null and !lichSuPage.empty}">
-            <table id="booking-table">
+        <!-- Tab nội dung -->
+        <div id="tab1" class="tab-content active">
+            <table>
                 <thead>
                 <tr>
                     <th>STT</th>
@@ -184,45 +154,81 @@
                     <th>Khung giờ</th>
                     <th>Giá</th>
                     <th>Ghi chú</th>
-                    <th>Trạng thái</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="lich, iterStat : ${lichSuPage.content}">
-                    <td th:text="${iterStat.index + 1 + (lichSuPage.number * lichSuPage.size)}">1</td>
-                    <td th:text="${lich.sanBong.ten_san_bong}">Sân A</td>
-                    <td th:text="${lich.ngayDat.format(dateFormatter)}">01/01/2025</td>
-                    <td th:text="${lich.giaTheoKhungGio.khungGio.gioBatDau + ' - ' + lich.giaTheoKhungGio.khungGio.gioKetThuc}">6:00 - 7:00</td>
-                    <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'">100.000 đ</td>
-                    <td th:text="${lich.ghiChu}">Không có</td>
-                    <td th:switch="${lich.trangThai}">
-                        <span th:case="0" class="status status-cho" title="Chờ xác nhận">⏳</span>
-                        <span th:case="1" class="status status-da-xn" title="Đã xác nhận">✅</span>
-                        <span th:case="2" class="status status-da-huy" title="Đã hủy">❌</span>
-                        <span th:case="*" class="status status-khong-ro" title="Không rõ">❔</span>
-                    </td>
+                <tr th:each="lich, iterStat : ${lichChoXacNhan}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${lich.sanBong.ten_san_bong}"></td>
+                    <td th:text="${lich.ngayDat.format(dateFormatter)}"></td>
+                    <td th:text="${lich.giaTheoKhungGio.khungGio.gioBatDau + ' - ' + lich.giaTheoKhungGio.khungGio.gioKetThuc}"></td>
+                    <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
+                    <td th:text="${lich.ghiChu}"></td>
                 </tr>
                 </tbody>
             </table>
-
-            <!-- PHÂN TRANG -->
-            <div class="pagination" th:if="${lichSuPage.totalPages > 1}">
-                <a th:if="${lichSuPage.hasPrevious()}"
-                   th:href="@{/thong-tin-nguoi-dung(page=${lichSuPage.number - 1}, keyword=${keyword})}">&laquo; Trước</a>
-                <span th:each="i : ${#numbers.sequence(0, lichSuPage.totalPages - 1)}">
-                    <a th:href="@{/thong-tin-nguoi-dung(page=${i}, keyword=${keyword})}"
-                       th:classappend="${i == lichSuPage.number} ? 'current-page' : ''"
-                       th:text="${i + 1}">1</a>
-                </span>
-                <a th:if="${lichSuPage.hasNext()}"
-                   th:href="@{/thong-tin-nguoi-dung(page=${lichSuPage.number + 1}, keyword=${keyword})}">Sau &raquo;</a>
-            </div>
         </div>
 
-        <div class="history" th:if="${lichSuPage == null or lichSuPage.empty}">
-            <p style="color: #888; font-style: italic;">Bạn chưa có lịch sử đặt sân nào.</p>
+        <div id="tab2" class="tab-content">
+            <table>
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên sân</th>
+                    <th>Ngày đặt</th>
+                    <th>Khung giờ</th>
+                    <th>Giá</th>
+                    <th>Ghi chú</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="lich, iterStat : ${lichDaXacNhan}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${lich.sanBong.ten_san_bong}"></td>
+                    <td th:text="${lich.ngayDat.format(dateFormatter)}"></td>
+                    <td th:text="${lich.giaTheoKhungGio.khungGio.gioBatDau + ' - ' + lich.giaTheoKhungGio.khungGio.gioKetThuc}"></td>
+                    <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
+                    <td th:text="${lich.ghiChu}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="tab3" class="tab-content">
+            <table>
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên sân</th>
+                    <th>Ngày đặt</th>
+                    <th>Khung giờ</th>
+                    <th>Giá</th>
+                    <th>Ghi chú</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="lich, iterStat : ${lichDaHuy}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${lich.sanBong.ten_san_bong}"></td>
+                    <td th:text="${lich.ngayDat.format(dateFormatter)}"></td>
+                    <td th:text="${lich.giaTheoKhungGio.khungGio.gioBatDau + ' - ' + lich.giaTheoKhungGio.khungGio.gioKetThuc}"></td>
+                    <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
+                    <td th:text="${lich.ghiChu}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </section>
 </div>
+
+<!-- Script điều khiển tab -->
+<script>
+    function showTab(tabId, button) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        button.classList.add('active');
+    }
+</script>
 </body>
 </html>
