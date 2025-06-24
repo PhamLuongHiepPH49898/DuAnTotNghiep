@@ -1,3 +1,4 @@
+
 package com.example.datn.Service;
 
 import com.example.datn.Entity.LichDatSan;
@@ -6,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class ThongTinNguoiDungService {
@@ -22,4 +26,10 @@ public class ThongTinNguoiDungService {
     public Page<LichDatSan> timKiemLichSuDatSanTheoTenSan(Long idTaiKhoan, String keyword, Pageable pageable) {
         return lichDatSanRepo.timKiemTheoTenSan(idTaiKhoan, keyword, pageable);
     }
+    public List<LichDatSan> timLichDatHomNay(Long idTaiKhoan) {
+        LocalDate today = LocalDate.now();
+        return lichDatSanRepo.findByTaiKhoanIdAndNgayDat(idTaiKhoan, today);
+    }
+
+
 }

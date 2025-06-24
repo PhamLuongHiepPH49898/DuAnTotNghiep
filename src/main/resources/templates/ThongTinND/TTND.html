@@ -158,7 +158,11 @@
             <p>Vai trò: <span th:text="${taiKhoan.vai_tro=='NGUOI_DUNG'?'Người dùng':'Quản trị'}">Người dùng</span></p>
         </div>
     </section>
-
+    <div th:if="${coLichHomNay}" style="margin-bottom: 20px;">
+        <div style="padding: 12px 20px; background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 10px; color: #856404;">
+            📢 Bạn có lịch đặt sân <strong>hôm nay</strong>. Vui lòng đến đúng giờ để tránh bị hủy!
+        </div>
+    </div>
     <!-- SECTION: Lịch sử đặt sân -->
     <section>
         <h2>📜 Lịch sử đặt sân</h2>

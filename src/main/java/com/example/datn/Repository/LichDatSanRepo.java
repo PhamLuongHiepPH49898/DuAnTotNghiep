@@ -1,3 +1,4 @@
+
 package com.example.datn.Repository;
 
 import com.example.datn.Entity.LichDatSan;
@@ -16,17 +17,17 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
 
 
     @Query("SELECT l FROM LichDatSan l " +
-           "JOIN FETCH l.taiKhoan tk " +
-           "JOIN FETCH l.giaTheoKhungGio g " +
-           "JOIN FETCH g.khungGio kg " +
-           "ORDER BY l.ngayTao DESC")
+            "JOIN FETCH l.taiKhoan tk " +
+            "JOIN FETCH l.giaTheoKhungGio g " +
+            "JOIN FETCH g.khungGio kg " +
+            "ORDER BY l.ngayTao DESC")
     List<LichDatSan> findAllLichDatSan();
 
     @Query("SELECT l FROM LichDatSan l " +
-           "WHERE (:keyword IS NULL OR :keyword = '' OR LOWER(l.taiKhoan.ho_ten) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
-           "AND (:ngayDat IS NULL OR l.ngayDat = :ngayDat) " +
-           "AND (:sanBong IS NULL OR l.giaTheoKhungGio.sanBong.id_san_bong = :sanBong) " +
-           "AND (:trangThai IS NULL OR l.trangThai = :trangThai)")
+            "WHERE (:keyword IS NULL OR :keyword = '' OR LOWER(l.taiKhoan.ho_ten) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+            "AND (:ngayDat IS NULL OR l.ngayDat = :ngayDat) " +
+            "AND (:sanBong IS NULL OR l.giaTheoKhungGio.sanBong.id_san_bong = :sanBong) " +
+            "AND (:trangThai IS NULL OR l.trangThai = :trangThai)")
     List<LichDatSan> timKiem(@Param("keyword") String keyword,
                              @Param("ngayDat") LocalDate ngayDat,
                              @Param("sanBong") Integer sanBong,
@@ -46,4 +47,7 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
     Page<LichDatSan> timKiemTheoTenSan(@Param("idTaiKhoan") Long idTaiKhoan,
                                        @Param("keyword") String keyword,
                                        Pageable pageable);
+    @Query("SELECT l FROM LichDatSan l WHERE l.taiKhoan.id = :id AND l.ngayDat = :ngayDat")
+    List<LichDatSan> findByTaiKhoanIdAndNgayDat(@Param("id") Long idTaiKhoan, @Param("ngayDat") LocalDate ngayDat);
+
 }

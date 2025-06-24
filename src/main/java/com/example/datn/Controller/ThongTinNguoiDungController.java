@@ -1,21 +1,20 @@
 package com.example.datn.Controller;
 
 import com.example.datn.Entity.LichDatSan;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import com.example.datn.Entity.TaiKhoan;
 import com.example.datn.Repository.TaiKhoanRepo;
 import com.example.datn.Service.ThongTinNguoiDungService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -45,20 +44,21 @@ public class ThongTinNguoiDungController {
 
         Page<LichDatSan> lichSuPage;
 
-        // Nếu có từ khóa tìm kiếm thì tìm theo tên sân
         if (keyword != null && !keyword.trim().isEmpty()) {
             lichSuPage = thongTinNguoiDungService.timKiemLichSuDatSanTheoTenSan(
                     (long) taiKhoan.getId(), keyword.trim(), pageable);
-            model.addAttribute("keyword", keyword); // để giữ giá trị trong ô tìm kiếm
+            model.addAttribute("keyword", keyword);
         } else {
             lichSuPage = thongTinNguoiDungService.layLichSuDatSan((long) taiKhoan.getId(), pageable);
         }
 
+        List<LichDatSan> lichHomNay = thongTinNguoiDungService.timLichDatHomNay((long) taiKhoan.getId());
+        boolean coLichHomNay = !lichHomNay.isEmpty();
+        model.addAttribute("coLichHomNay", coLichHomNay);
         model.addAttribute("taiKhoan", taiKhoan);
         model.addAttribute("lichSuPage", lichSuPage);
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         return "ThongTinND/TTND";
     }
-
 }
