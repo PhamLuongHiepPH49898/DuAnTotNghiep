@@ -102,6 +102,26 @@
       overflow: hidden;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+    .san-item a[href*="/datsan"] {
+      display: block;
+      margin: 10px 15px 15px;
+      padding: 10px 15px;
+      background: linear-gradient(90deg, #00c6ff, #0077cc);
+      color: white;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.3s, transform 0.2s;
+      box-shadow: 0 2px 6px rgba(0, 119, 204, 0.3);
+    }
+
+    .san-item a[href*="/datsan"]:hover {
+      background: linear-gradient(90deg, #0077cc, #005fa3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 119, 204, 0.4);
+    }
+
     .san-item:hover {
       transform: translateY(-5px);
       box-shadow: 0 6px 16px rgba(0,0,0,0.1);
@@ -195,6 +215,8 @@
         <p><strong>Thể thao:</strong> <span th:text="${san.loaiMonTheThao.ten_mon_the_thao}"></span></p>
         <p><strong>Địa chỉ:</strong> <span th:text="${san.dia_chi}"></span></p>
       </div>
+      <a th:href="@{'/datsan?id=' + ${san.id_san_bong}}">⚽ Đặt sân ngay</a>
+
     </div>
   </div>
 </div>
