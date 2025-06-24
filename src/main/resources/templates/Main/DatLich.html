@@ -183,8 +183,7 @@
         th:data-idgia="${bangGiaId[san.id_san_bong + '_' + khungGio.id]}"
         th:data-price="${bangGia[san.id_san_bong + '_' + khungGio.id] != null ? bangGia[san.id_san_bong + '_' + khungGio.id] : 0}"
         th:data-court="${san.ten_san_bong}"
-        th:data-time="${khungGio.gioBatDau + '-' + khungGio.gioKetThuc}">
-      <span th:text="${#numbers.formatDecimal(bangGia[san.id_san_bong + '_' + khungGio.id], 1, 'COMMA', 0, 'POINT')}">0</span>
+        th:data-time="${#temporals.format(khungGio.gioBatDau, 'HH:mm') + '-' + #temporals.format(khungGio.gioKetThuc, 'HH:mm')}">      <span th:text="${#numbers.formatDecimal(bangGia[san.id_san_bong + '_' + khungGio.id], 1, 'COMMA', 0, 'POINT')}">0</span>
     </td>
   </tr>
   </tbody>
