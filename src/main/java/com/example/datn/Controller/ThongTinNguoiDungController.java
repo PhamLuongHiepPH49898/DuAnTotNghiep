@@ -54,7 +54,7 @@ public class ThongTinNguoiDungController {
         }
 
         List<LichDatSan> lichHomNay = thongTinNguoiDungService.timLichDatHomNay((long) taiKhoan.getId());
-        boolean coLichHomNay = !lichHomNay.isEmpty();
+        boolean coLichHomNay = lichHomNay.stream().anyMatch(l -> l.getTrangThai() == 1);
         model.addAttribute("lichChoXacNhan", lichSuPage.getContent().stream()
                 .filter(l -> l.getTrangThai() == 0).collect(Collectors.toList()));
 
