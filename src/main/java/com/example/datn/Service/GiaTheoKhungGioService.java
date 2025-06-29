@@ -35,6 +35,11 @@ public class GiaTheoKhungGioService {
     }
 
     public void sua(int id, BigDecimal giaThueMoi) {
+
+        if (giaThueMoi == null || giaThueMoi.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Giá thuê phải lớn hơn 0");
+        }
+
         GiaTheoKhungGio giaTheoKhungGio = giaTheoKhungGioRepo.findById(id).orElse(null);
         if (giaTheoKhungGio != null) {
             giaTheoKhungGio.setGiaThue(giaThueMoi);
@@ -47,6 +52,10 @@ public class GiaTheoKhungGioService {
         Optional<GiaTheoKhungGio> giaTonTai = giaTheoKhungGioRepo.findBySanBongAndKhungGio(idSanBong, idKhungGio);
         if (giaTonTai.isPresent()) {
             throw new IllegalArgumentException("Giờ này đã được áp dụng cho sân bóng này!");
+        }
+
+        if (giaThue == null || giaThue.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Giá thuê phải lớn hơn 0");
         }
 
         SanBong sanBong = sanBongRepo.findById(idSanBong).orElse(null);
