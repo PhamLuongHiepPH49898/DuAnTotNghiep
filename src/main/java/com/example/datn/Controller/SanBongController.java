@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.datn.Service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -187,7 +188,7 @@ public class SanBongController {
     }
 
     @PostMapping("/them-san-bong")
-    public String themSanBong(@Valid @ModelAttribute("sanBong") SanBong sanBong, BindingResult bindingResult, Model model) throws IOException {
+    public String themSanBong(@Valid @ModelAttribute("sanBong") SanBong sanBong, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) throws IOException {
 
         MultipartFile file = sanBong.getFile();
 
@@ -230,14 +231,24 @@ public class SanBongController {
 
         // Gán tài khoản vào sân bóng
         sanBong.setTaiKhoan(taiKhoan);
+        try {
+            sanBongService.them(sanBong);
+            redirectAttributes.addFlashAttribute("success", "Thêm sân thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Thêm sân thất bại!");
+        }
 
-        sanBongService.them(sanBong);
         return "redirect:/quan-ly-san";
     }
 
     @GetMapping("/xoa-san-bong/{id}")
-    public String xoa(@PathVariable int id) {
-        sanBongService.xoa(id);
+    public String xoa(@PathVariable int id, RedirectAttributes redirectAttributes) {
+        try {
+            sanBongService.xoa(id);
+            redirectAttributes.addFlashAttribute("success", "Xóa sân thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Xóa sân thất bại!");
+        }
         return "redirect:/quan-ly-san";
     }
 
@@ -258,7 +269,7 @@ public class SanBongController {
     public String suaSanBong(@Valid @ModelAttribute("sanBong") SanBong sanBong,
                              BindingResult bindingResult,
                              @PathVariable("id") int id,
-                             Model model) throws IOException {
+                             Model model, RedirectAttributes redirectAttributes) throws IOException {
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);
@@ -300,8 +311,13 @@ public class SanBongController {
             sanBongGoc.setHinh_anh(fileName); // Chỉ lưu tên file
         }
 
+        try {
+            sanBongService.sua(sanBongGoc);
+            redirectAttributes.addFlashAttribute("success", "Sửa sân thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Sửa sân thất bại!");
+        }
 
-        sanBongService.sua(sanBongGoc);
         return "redirect:/quan-ly-san";
     }
 

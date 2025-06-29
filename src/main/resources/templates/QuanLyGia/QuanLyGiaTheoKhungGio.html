@@ -253,7 +253,7 @@
                             <option value="">-- Tất cả khung giờ --</option>
                             <option th:each="kg : ${dsKhungGio}"
                                     th:value="${kg.id}"
-                                    th:text="${kg.gioBatDau + ' - ' + kg.gioKetThuc}"
+                                    th:text="${#temporals.format(kg.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(kg.gioKetThuc, 'HH:mm')}">
                                     th:selected="${idKhungGio == kg.id}">
                             </option>
                         </select>
@@ -362,7 +362,7 @@
                                 <select name="idKhungGio" class="form-control" required>
                                     <option th:each="kg : ${dsKhungGio}"
                                             th:value="${kg.id}"
-                                            th:text="${kg.gioBatDau} + ' - ' + ${kg.gioKetThuc}">
+                                            th:text="${#temporals.format(kg.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(kg.gioKetThuc, 'HH:mm')}">
                                     </option>
                                 </select>
                             </div>

@@ -62,6 +62,8 @@ public class QuanLyGiaTheoKhungGioController {
         try {
             giaTheoKhungGioService.sua(id, giaThue);
             redirectAttributes.addFlashAttribute("success", "Sửa giá thành công!");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Sửa giá thất bại!");
         }
@@ -104,7 +106,6 @@ public class QuanLyGiaTheoKhungGioController {
 
         return "QuanLyGia/QuanLyGiaTheoKhungGio";
     }
-
 
 
 }
