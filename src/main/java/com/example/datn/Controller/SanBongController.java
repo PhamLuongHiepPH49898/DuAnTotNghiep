@@ -1,9 +1,7 @@
 package com.example.datn.Controller;
 
 import com.example.datn.Entity.SanBong;
-
 import com.example.datn.Entity.TaiKhoan;
-
 import com.example.datn.Repository.LoaiMatSanRepo;
 import com.example.datn.Repository.LoaiMonTheThaoRepo;
 import com.example.datn.Repository.LoaiSanRepo;
@@ -13,14 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -32,7 +23,9 @@ public class SanBongController {
     private final LoaiMonTheThaoRepo loaiMonTheThaoRepo;
     private final TaiKhoanRepo taiKhoanRepo;
 
-    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo) {
+    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo,
+                             LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo,
+                             TaiKhoanRepo taiKhoanRepo) {
         this.sanBongService = sanBongService;
         this.loaiMatSanRepo = loaiMatSanRepo;
         this.loaiSanRepo = loaiSanRepo;
@@ -44,12 +37,18 @@ public class SanBongController {
     public String homeRedirect() {
         return "redirect:/trangchu";
     }
+
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
             model.addAttribute("errorMessage", "Email hoặc mật khẩu sai");
         }
         return "Main/Login";
+    }
+
+    @GetMapping("/dang-ky")
+    public String dangKy() {
+        return "Main/DangKi";
     }
 
     @PostMapping("/dang-ky")
@@ -62,13 +61,11 @@ public class SanBongController {
 
         boolean hasErrors = false;
 
-        // Kiểm tra họ tên
         if (fullname == null || fullname.trim().isEmpty() || !fullname.matches("^[a-zA-ZÀ-ỹ\\s]+$")) {
             model.addAttribute("errorFullname", "Họ tên không hợp lệ, chỉ gồm chữ và khoảng trắng.");
             hasErrors = true;
         }
 
-        // Kiểm tra email đúng định dạng
         if (email == null || !email.matches("^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$")) {
             model.addAttribute("errorEmail", "Email không hợp lệ.");
             hasErrors = true;
@@ -77,7 +74,6 @@ public class SanBongController {
             hasErrors = true;
         }
 
-        // Kiểm tra số điện thoại
         if (phone == null || !phone.matches("^0\\d{9,10}$")) {
             model.addAttribute("errorPhone", "Số điện thoại không hợp lệ (bắt đầu bằng 0, 10-11 số).");
             hasErrors = true;
@@ -86,14 +82,12 @@ public class SanBongController {
             hasErrors = true;
         }
 
-        // Kiểm tra mật khẩu và xác nhận mật khẩu
         if (!password.equals(confirmPassword)) {
             model.addAttribute("errorPassword", "Mật khẩu nhập lại không khớp!");
             hasErrors = true;
         }
 
         if (hasErrors) {
-            // Giữ lại dữ liệu đã nhập
             model.addAttribute("fullname", fullname);
             model.addAttribute("email", email);
             model.addAttribute("phone", phone);
@@ -101,75 +95,75 @@ public class SanBongController {
         }
 
         TaiKhoan taiKhoan = new TaiKhoan();
-        taiKhoan.setHoTen(fullname);
+        taiKhoan.setHo_ten(fullname);
         taiKhoan.setEmail(email);
-        taiKhoan.setSdt(phone);
-        taiKhoan.setPassword(password);
-        taiKhoan.setVaiTro("NGUOI_DUNG");
-        taiKhoanRepo.save(taiKhoan);
+        taiKhoan.setSo_dien_thoai(phone);
+        taiKhoan.setMat_khau(password);
+        taiKhoan.setVai_tro("NGUOI_DUNG");
+        taiKhoan.setTrang_thai(0); // Tài khoản hoạt động
 
+        taiKhoanRepo.save(taiKhoan);
         return "redirect:/user/trang-chu";
     }
+
     @GetMapping("/doi-mat-khau")
-    public String showFormDoiMK(){
+    public String showFormDoiMK() {
         return "/Main/DoiPass";
     }
+
     @PostMapping("/doi-mat-khau")
     public String doiMK(@RequestParam("mkCu") String mkCu,
                         @RequestParam("mkMoi") String mkMoi,
                         @RequestParam("xacnhanMK") String xacnhanMK,
-                        Model model){
+                        Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         TaiKhoan taiKhoan = taiKhoanRepo.findByEmail(email).orElse(null);
+
         if (taiKhoan == null) {
             model.addAttribute("error", "Không tìm thấy tài khoản.");
             return "/Main/DoiPass";
         }
-        if (!taiKhoan.getPassword().equals(mkCu)) {
+
+        if (!taiKhoan.getMat_khau().equals(mkCu)) {
             model.addAttribute("error", "Mật khẩu cũ không đúng.");
             return "/Main/DoiPass";
         }
+
         if (!mkMoi.equals(xacnhanMK)) {
             model.addAttribute("error", "Mật khẩu mới và xác nhận không khớp.");
             return "/Main/DoiPass";
         }
+
         if (mkMoi.length() < 6) {
             model.addAttribute("error", "Mật khẩu mới phải có ít nhất 6 ký tự.");
             return "/Main/DoiPass";
         }
-        taiKhoan.setPassword(mkMoi);
+
+        taiKhoan.setMat_khau(mkMoi);
         taiKhoanRepo.save(taiKhoan);
+
         model.addAttribute("message", "Đổi mật khẩu thành công!");
         return "/Main/DoiPass";
     }
-
 
     @GetMapping("/logout")
     public String logoutPage(Model model) {
         return "Main/TrangChu";
     }
-    @GetMapping("/dang-ky")
-    public String dangKy(){
-        return "Main/DangKi";
-    }
 
-
-    // ✅ Trang chủ chính
     @GetMapping("/trangchu")
     public String trangchu(Model model) {
-
         return "/Main/TrangChu";
     }
+
     @GetMapping("/user/trang-chu")
-    public String trangChu_nguoiDung(Model model){
+    public String trangChu_nguoiDung(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Logged-in user: " + auth.getName());
         model.addAttribute("username", auth.getName());
         List<SanBong> danhSachSan = sanBongService.findAll();
         model.addAttribute("danhSachSan", danhSachSan);
         populateModel(model);
-        System.out.println("Logged-in user: " + auth.getName());
         return "/Main/TrangChu_NguoiDung";
     }
 
@@ -177,39 +171,32 @@ public class SanBongController {
     public String thongTinCaNhan(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-
-        var taiKhoanOpt = taiKhoanRepo.findByEmail(email); // Optional<TaiKhoan>
+        var taiKhoanOpt = taiKhoanRepo.findByEmail(email);
         if (taiKhoanOpt.isEmpty()) {
             return "redirect:/login";
         }
-
-        TaiKhoan taiKhoan = taiKhoanOpt.get(); // Lấy đối tượng thực tế ra
+        TaiKhoan taiKhoan = taiKhoanOpt.get();
         model.addAttribute("taiKhoan", taiKhoan);
         return "/Main/ThongTinCaNhan";
     }
 
-
     @GetMapping("/admin/trang-chu")
-    public String trangChu_QuanTri(Model model){
+    public String trangChu_QuanTri(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Logged-in user: " + auth.getName());
         model.addAttribute("username", auth.getName());
         List<SanBong> danhSachSan = sanBongService.findAll();
         model.addAttribute("danhSachSan", danhSachSan);
         populateModel(model);
-        System.out.println("Logged-in user: " + auth.getName());
         return "/Main/TrangChu_QuanTri";
     }
 
     @GetMapping("/danh-sach-user")
-    public String dsUser(Model model){
-        List<TaiKhoan> danhSach=taiKhoanRepo.findByVaiTro("NGUOI_DUNG");
+    public String dsUser(Model model) {
+        List<TaiKhoan> danhSach = taiKhoanRepo.findByVaiTro("NGUOI_DUNG");
         model.addAttribute("danhSachNguoiDung", danhSach);
         return "/Main/DanhSachNguoiDung";
     }
 
-
-    // ✅ Trang tìm kiếm riêng
     @GetMapping("/tim-kiem")
     public String timKiem(Model model,
                           @RequestParam(value = "keyword", required = false) String keyword,
@@ -222,21 +209,19 @@ public class SanBongController {
         model.addAttribute("danhSachSan", ketQua);
         model.addAttribute("khongCoKetQua", ketQua.isEmpty());
         populateModel(model);
-        return "/Main/TimKiem"; // 👉 trang riêng biệt
+        return "/Main/TimKiem";
     }
-
 
     @GetMapping("/chi-tiet/{id}")
     public String chiTietSan(@PathVariable("id") int id, Model model) {
         SanBong san = sanBongService.findById(id);
         if (san == null) {
-            return "redirect:/trangchu"; // Chuyển hướng về trang chủ nếu không tìm thấy
+            return "redirect:/trangchu";
         }
         model.addAttribute("sanBongChiTiet", san);
-        return "/Main/ChiTietSan"; // 👉 trang riêng biệt
+        return "/Main/ChiTietSan";
     }
 
-    // Phương thức tiện ích để thêm các thuộc tính chung vào model
     private void populateModel(Model model) {
         model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
         model.addAttribute("dsMonTheThao", loaiMonTheThaoRepo.findAll());

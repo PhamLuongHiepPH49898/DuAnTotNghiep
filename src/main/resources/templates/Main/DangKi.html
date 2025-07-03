@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -105,6 +106,12 @@
       font-size: 0.95rem;
       color: #eee;
     }
+
+    .error-text {
+      color: #ff6b6b;
+      margin-top: 5px;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
@@ -114,32 +121,29 @@
 <div class="login-container">
   <div class="login-box">
     <h2>Đăng ký</h2>
-    <form action="/dang-ky" method="post">
+    <form th:action="@{/dang-ky}" method="post">
       <div class="input-field">
         <input type="text" name="fullname" placeholder="Họ tên" required th:value="${fullname}">
-        <p style="color: #ff6b6b; margin-top: 5px;" th:if="${errorFullname}" th:text="${errorFullname}"></p>
+        <p class="error-text" th:if="${errorFullname}" th:text="${errorFullname}"></p>
       </div>
       <div class="input-field">
         <input type="email" name="email" placeholder="Email" required th:value="${email}">
-        <p style="color: #ff6b6b; margin-top: 5px;" th:if="${errorEmail}" th:text="${errorEmail}"></p>
+        <p class="error-text" th:if="${errorEmail}" th:text="${errorEmail}"></p>
       </div>
       <div class="input-field">
         <input type="tel" name="phone" placeholder="Số điện thoại" required th:value="${phone}">
-        <p style="color: #ff6b6b; margin-top: 5px;" th:if="${errorPhone}" th:text="${errorPhone}"></p>
+        <p class="error-text" th:if="${errorPhone}" th:text="${errorPhone}"></p>
       </div>
       <div class="input-field">
         <input type="password" name="password" placeholder="Mật khẩu" required>
-        <p style="color: #ff6b6b; margin-top: 5px;" th:if="${errorPassword}" th:text="${errorPassword}"></p>
+        <p class="error-text" th:if="${errorPassword}" th:text="${errorPassword}"></p>
       </div>
       <div class="input-field">
         <input type="password" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
       </div>
       <button type="submit" class="login">Đăng ký</button>
-      <p>Đã có tài khoản? <a href="/dang-nhap" class="sign-up">Đăng nhập</a></p>
+      <p>Đã có tài khoản? <a href="/login" class="sign-up">Đăng nhập</a></p>
     </form>
-
-
-
   </div>
 </div>
 

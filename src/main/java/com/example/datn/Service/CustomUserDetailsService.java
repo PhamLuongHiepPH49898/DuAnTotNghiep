@@ -28,24 +28,16 @@ public class CustomUserDetailsService implements UserDetailsService {
                     return new UsernameNotFoundException("Không tìm thấy tài khoản với email: " + email);
                 });
 
-        // Kiểm tra trạng thái tài khoản (giả sử 1 là ACTIVE)
-
-        if (taiKhoan.getTrangThai() != 0) { // Thay giá trị 1 bằng giá trị tương ứng với trạng thái "ACTIVE" trong DB
-
-            if (taiKhoan.getTrangThai() != 0) { // Thay giá trị 1 bằng giá trị tương ứng với trạng thái "ACTIVE" trong DB
-
-                logger.error("Tài khoản không hoạt động: {}", email);
-                throw new UsernameNotFoundException("Tài khoản không hoạt động: " + email);
-            }
-
-            logger.info("Tài khoản tìm thấy: {}", taiKhoan.getEmail());
-
-            logger.debug("Mật khẩu từ DB: {}", taiKhoan.getPassword());
-            logger.debug("Vai trò: ROLE_{}", taiKhoan.getVaiTro());
-
-
+        // Kiểm tra trạng thái tài khoản (0 = hoạt động, khác 0 là bị chặn hoặc vô hiệu hóa)
+        if (taiKhoan.getTrang_thai() != 0) {
+            logger.error("Tài khoản không hoạt động: {}", email);
+            throw new UsernameNotFoundException("Tài khoản không hoạt động: " + email);
         }
+
+        logger.info("Tài khoản tìm thấy: {}", taiKhoan.getEmail());
+        logger.debug("Mật khẩu từ DB: {}", taiKhoan.getMat_khau());
+        logger.debug("Vai trò: ROLE_{}", taiKhoan.getVai_tro());
+
         return new CustomUserDetails(taiKhoan);
     }
 }
-
