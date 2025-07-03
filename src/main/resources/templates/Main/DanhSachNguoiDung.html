@@ -6,13 +6,13 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
   <style>
+    /* Giữ nguyên toàn bộ phần CSS như bạn đã viết, không thay đổi */
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #f0f2f5;
       margin: 0;
       padding: 0;
     }
-
     header, footer {
       background: linear-gradient(90deg, #4ca1af, #c4e0e5);
       color: white;
@@ -20,19 +20,16 @@
       text-align: center;
       border-bottom: 5px solid #89cff0;
     }
-
     header h1 {
       font-size: 2.5rem;
       font-weight: bold;
     }
-
     .menu {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 20px;
     }
-
     .menu-left a {
       color: white;
       margin-right: 20px;
@@ -40,11 +37,9 @@
       text-decoration: none;
       font-weight: 500;
     }
-
     .menu-left a:hover {
       text-decoration: underline;
     }
-
     .user-menu {
       display: flex;
       align-items: center;
@@ -52,12 +47,10 @@
       position: relative;
       color: white;
     }
-
     .user-menu .user-icon {
       font-size: 2.5rem;
       margin-right: 8px;
     }
-
     .user-menu .dropdown-menu {
       display: none;
       position: absolute;
@@ -70,7 +63,6 @@
       z-index: 1000;
       padding: 10px 0;
     }
-
     .user-menu .dropdown-menu a {
       display: block;
       padding: 10px 20px;
@@ -78,65 +70,53 @@
       text-decoration: none;
       font-weight: 500;
     }
-
     .user-menu .dropdown-menu a:hover {
       background-color: #4ca1af;
       color: white;
     }
-
     .user-menu.active .dropdown-menu {
       display: block;
     }
-
     .table-container {
       background-color: white;
       padding: 30px;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
-
     .table th {
       background-color: #f1f5f9;
       font-weight: 600;
       text-align: center;
       vertical-align: middle;
     }
-
     .table td {
       vertical-align: middle;
     }
-
     .table th, .table td {
       padding: 12px 16px;
     }
-
     footer .features {
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
       gap: 20px;
     }
-
     footer .features div {
       text-align: center;
     }
-
     footer .features i {
       font-size: 2.5rem;
       margin-bottom: 10px;
     }
-
     footer .social-icons a {
       color: white;
       font-size: 1.5rem;
       margin: 0 10px;
       transition: transform 0.3s ease;
     }
-
     footer .social-icons a:hover {
       transform: scale(1.2);
     }
-
     footer .btn {
       margin-top: 20px;
       color: white;
@@ -144,7 +124,6 @@
       padding: 8px 16px;
       border-radius: 20px;
     }
-
     footer .btn:hover {
       background-color: white;
       color: #1e90ff;
@@ -185,9 +164,9 @@
       </thead>
       <tbody>
       <tr th:each="user : ${danhSachNguoiDung}">
-        <td th:text="${user.hoTen}">Tên</td>
+        <td th:text="${user.ho_ten}">Tên</td>
         <td th:text="${user.email}">Email</td>
-        <td th:text="${user.sdt}">SĐT</td>
+        <td th:text="${user.so_dien_thoai}">SĐT</td>
       </tr>
       </tbody>
     </table>

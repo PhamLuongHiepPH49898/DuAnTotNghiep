@@ -14,36 +14,40 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(TaiKhoan taiKhoan) {
         this.taiKhoan = taiKhoan;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        return List.of(new SimpleGrantedAuthority("ROLE_"+taiKhoan.getVaiTro()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + taiKhoan.getVai_tro()));
     }
-    @Override
-    public String getPassword(){
-        return taiKhoan.getPassword();
 
-    }
     @Override
-    public String getUsername(){
+    public String getPassword() {
+        return taiKhoan.getMat_khau();
+    }
+
+    @Override
+    public String getUsername() {
         return taiKhoan.getEmail();
     }
+
     @Override
-    public boolean isAccountNonExpired(){
+    public boolean isAccountNonExpired() {
         return true;
     }
+
     @Override
-    public boolean isCredentialsNonExpired(){
+    public boolean isCredentialsNonExpired() {
         return true;
     }
+
     @Override
     public boolean isEnabled() {
-
-        return taiKhoan.getTrangThai() == 0;
+        // Giả sử: 0 là "đang hoạt động", 1 là "bị chặn"
+        return taiKhoan.getTrang_thai() == 0;
     }
-    public String getPassword1() {
-        System.out.println("Mật khẩu trả về: " + taiKhoan.getPassword());
-        return taiKhoan.getPassword();
 
+    public String getPassword1() {
+        System.out.println("Mật khẩu trả về: " + taiKhoan.getMat_khau());
+        return taiKhoan.getMat_khau();
     }
 }

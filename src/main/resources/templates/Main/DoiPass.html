@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Danh sách người dùng</title>
+  <title>Đổi mật khẩu</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
   <style>
@@ -87,6 +87,7 @@
     .user-menu.active .dropdown-menu {
       display: block;
     }
+
     .form-doiPass {
       max-width: 600px;
       margin: 50px auto;
@@ -102,8 +103,8 @@
       color: #1B1E21;
       font-weight: 700;
       font-size: 2rem;
-      letter-spacing: 1px;
     }
+
     .btn-doiMK {
       display: block;
       margin: 30px auto 0 auto;
@@ -118,7 +119,6 @@
 
     .btn-doiMK:hover {
       background-color: #4296a0;
-      color: white;
     }
 
     footer .features {
@@ -163,6 +163,7 @@
   </style>
 </head>
 <body>
+
 <header class="menu-wrapper">
   <h1>Hệ thống đặt sân bóng Samba</h1>
   <div class="menu">
@@ -180,25 +181,30 @@
     </div>
   </div>
 </header>
-<div th:if="${error}" class="alert alert-danger text-center" th:text="${error}"></div>
-<div th:if="${message}" class="alert alert-success text-center" th:text="${message}"></div>
+
+<!-- Thông báo -->
+<div class="container mt-4">
+  <div th:if="${error}" class="alert alert-danger text-center" th:text="${error}"></div>
+  <div th:if="${message}" class="alert alert-success text-center" th:text="${message}"></div>
+</div>
+
+<!-- Form đổi mật khẩu -->
 <form th:action="@{/doi-mat-khau}" method="post" class="form-doiPass">
   <h2>Đổi mật khẩu</h2>
   <div class="form-group mb-3">
-    <label>Mật khẩu cũ:</label>
-    <input type="password" name="mkCu" class="form-control" required />
+    <label for="mkCu">Mật khẩu cũ:</label>
+    <input type="password" id="mkCu" name="mkCu" class="form-control" required />
   </div>
   <div class="form-group mb-3">
-    <label>Mật khẩu mới:</label>
-    <input type="password" name="mkMoi" class="form-control" required />
+    <label for="mkMoi">Mật khẩu mới:</label>
+    <input type="password" id="mkMoi" name="mkMoi" class="form-control" required />
   </div>
   <div class="form-group mb-4">
-    <label>Xác nhận mật khẩu mới:</label>
-    <input type="password" name="xacnhanMK" class="form-control" required />
+    <label for="xacnhanMK">Xác nhận mật khẩu mới:</label>
+    <input type="password" id="xacnhanMK" name="xacnhanMK" class="form-control" required />
   </div>
   <button type="submit" class="btn-doiMK">Đổi mật khẩu</button>
 </form>
-
 
 <footer class="mt-5">
   <div class="features">
@@ -246,5 +252,6 @@
     userMenu.classList.remove('active');
   });
 </script>
+
 </body>
 </html>
