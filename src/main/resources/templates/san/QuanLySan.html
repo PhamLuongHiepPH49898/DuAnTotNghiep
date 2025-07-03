@@ -289,7 +289,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="san, stat : ${danhSachSan}" th:if="${san.trang_thai != 3}">
-                    <td th:text="${stat.index + 1}"></td>
+                    <td th:text="${currentPage * pageSize + stat.index + 1}"></td>
                     <td>
                         <!-- Nếu là ảnh mặc định (ảnh chưa bị sửa đổi) -->
                         <img th:if="${#strings.startsWith(san.hinh_anh, 'anh')}"
@@ -326,10 +326,63 @@
                 </tbody>
             </table>
             <!-- Hiển thị thông báo nếu danh sách đã lọc trống -->
-            <div th:if="${#lists.isEmpty(danhSachSan)}" class="alert alert-warning text-center mt-4">
+            <div th:if="${khongCoKetQua}" class="alert alert-warning text-center mt-4">
                 Không tìm thấy sân bóng phù hợp với yêu cầu của bạn.
             </div>
         </div>
+
+<!--        phan trang-->
+        <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+            <ul class="pagination justify-content-center">
+                <!-- Nút Trước -->
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link"
+                       th:if="${isTimKiem}"
+                       th:href="@{/quan-ly-san/tim-kiem(page=${currentPage - 1}, size=10,
+                            keyword=${keyword}, monTheThao=${monTheThao}, loaiSan=${loaiSan})}">
+                        Trước
+                    </a>
+                    <a class="page-link"
+                       th:if="${!isTimKiem}"
+                       th:href="@{/quan-ly-san(page=${currentPage - 1}, size=10)}">
+                        Trước
+                    </a>
+                </li>
+
+                <!-- Các số trang -->
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link"
+                       th:if="${isTimKiem}"
+                       th:href="@{/quan-ly-san/tim-kiem(page=${i}, size=10,
+                            keyword=${keyword}, monTheThao=${monTheThao}, loaiSan=${loaiSan})}"
+                       th:text="${i + 1}"></a>
+
+                    <a class="page-link"
+                       th:if="${!isTimKiem}"
+                       th:href="@{/quan-ly-san(page=${i}, size=10)}"
+                       th:text="${i + 1}"></a>
+                </li>
+
+                <!-- Nút Tiếp -->
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link"
+                       th:if="${isTimKiem}"
+                       th:href="@{/quan-ly-san/tim-kiem(page=${currentPage + 1}, size=10,
+                            keyword=${keyword}, monTheThao=${monTheThao}, loaiSan=${loaiSan})}">
+                        Tiếp
+                    </a>
+                    <a class="page-link"
+                       th:if="${!isTimKiem}"
+                       th:href="@{/quan-ly-san(page=${currentPage + 1}, size=10)}">
+                        Tiếp
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+
     </div>
 </main>
 

@@ -3,6 +3,10 @@ package com.example.datn.Service;
 import com.example.datn.Entity.SanBong;
 import com.example.datn.Repository.SanBongRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,11 +48,12 @@ public class SanBongService {
         SanBong sanBong = sanbongRepo.findById(id).orElse(null);
         if (sanBong != null) {
             sanBong.setTrang_thai(3); // Đặt trạng thái là 3 (đã xóa)
-            sanbongRepo.save(sanBong); // Lưu lại vào DB
+            sanbongRepo.save(sanBong);
         }
     }
-    public List<SanBong> timKiemTheoTrangThai(List<Integer> dsTrangThai) {
-        return sanbongRepo.findByTrangThaiIn(List.of(0, 1, 2));
+    public Page<SanBong> timKiemTheoPage( String keyword, Integer loaiSan, Integer monTheThao, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return sanbongRepo.timKiemSanPaging(keyword, loaiSan, monTheThao, pageable);
     }
 
     public void sua(SanBong sanBong) {
@@ -62,6 +67,11 @@ public class SanBongService {
 
     public SanBong getByID(int id) {
         return sanbongRepo.findById(id).orElse(null);
+    }
+
+    public Page<SanBong> getSanBongPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return sanbongRepo.findSanBongsWithTrangThaiPaging(List.of(0,1,2), pageable);
     }
 
 }
