@@ -1,192 +1,194 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Đặt Sân Bóng</title>
-  <style>
-    :root {
-      --primary: #4ca1af;
-      --primary-dark: #2d6d7a;
-      --light-bg: #f4f9f9;
-      --selected: #6db1bf;
-      --disabled: #e0e0e0;
-      --text: #333;
-    }
+    <meta charset="UTF-8">
+    <title>Đặt Sân Bóng</title>
+    <style>
+        :root {
+            --primary: #4ca1af;
+            --primary-dark: #2d6d7a;
+            --light-bg: #f4f9f9;
+            --selected: #6db1bf;
+            --disabled: #e0e0e0;
+            --text: #333;
+        }
 
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--light-bg);
-      margin: 0;
-      padding: 30px 20px;
-      color: var(--text);
-    }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--light-bg);
+            margin: 0;
+            padding: 30px 20px;
+            color: var(--text);
+        }
 
-    .controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 24px;
-      margin-bottom: 24px;
-    }
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
 
-    .arrow {
-      background: white;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      font-size: 1.2rem;
-      line-height: 36px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
+        .arrow {
+            background: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            line-height: 36px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
 
-    .arrow:hover {
-      background: var(--primary);
-      color: white;
-    }
+        .arrow:hover {
+            background: var(--primary);
+            color: white;
+        }
 
-    #dateDisplay {
-      font-size: 1.4rem;
-      font-weight: bold;
-      color: var(--primary-dark);
-    }
+        #dateDisplay {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
 
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 10px;
-    }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
 
-    thead tr {
-      background: none;
-    }
+        thead tr {
+            background: none;
+        }
 
-    th {
-      text-align: center;
-      font-size: 1rem;
-      color: var(--primary-dark);
-      padding: 10px;
-    }
+        th {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--primary-dark);
+            padding: 10px;
+        }
 
-    td {
-      background: white;
-      border-radius: 8px;
-      margin: 6px;
-      padding: 14px 10px;
-      text-align: center;
-      font-size: 1rem;
-      transition: background-color 0.3s, transform 0.2s;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-      cursor: pointer;
-    }
+        td {
+            background: white;
+            border-radius: 8px;
+            margin: 6px;
+            padding: 14px 10px;
+            text-align: center;
+            font-size: 1rem;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+        }
 
-    td:hover:not(.disabled):not(.selected) {
-      background: #e8f9fa;
-      transform: scale(1.02);
-    }
+        td:hover:not(.disabled):not(.selected) {
+            background: #e8f9fa;
+            transform: scale(1.02);
+        }
 
-    td.selected {
-      background: var(--selected);
-      color: white;
-      font-weight: bold;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
+        td.selected {
+            background: var(--selected);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
 
-    td.disabled {
-      background: var(--disabled);
-      color: #888;
-      cursor: not-allowed;
-      font-style: italic;
-    }
+        td.disabled {
+            background: var(--disabled);
+            color: #888;
+            cursor: not-allowed;
+            font-style: italic;
+        }
 
-    .court-info {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
+        .court-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
 
-    .court-info img {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
+        .court-info img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
 
-    p {
-      font-size: 1.1rem;
-      margin-top: 20px;
-    }
+        p {
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
 
-    button {
-      margin-top: 16px;
-      padding: 14px 28px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-    }
+        button {
+            margin-top: 16px;
+            padding: 14px 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+        }
 
-    button:hover {
-      background: var(--primary-dark);
-    }
+        button:hover {
+            background: var(--primary-dark);
+        }
 
-    @media (max-width: 768px) {
-      .controls {
-        flex-direction: column;
-        gap: 12px;
-      }
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                gap: 12px;
+            }
 
-      td, th {
-        font-size: 0.9rem;
-      }
+            td, th {
+                font-size: 0.9rem;
+            }
 
-      button {
-        width: 100%;
-      }
-    }
-  </style>
+            button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
 
 <div class="controls">
-  <span class="arrow" onclick="changeDate(-1)">&lt;</span>
-  <span id="dateDisplay"></span>
-  <span class="arrow" onclick="changeDate(1)">&gt;</span>
+    <span class="arrow" onclick="changeDate(-1)">&lt;</span>
+    <span id="dateDisplay"></span>
+    <span class="arrow" onclick="changeDate(1)">&gt;</span>
 </div>
 
 <table id="bookingTable">
-  <thead>
-  <tr>
-    <th>Giờ</th>
-    <th th:each="san : ${danhSachSan}">
-      <div class="court-info">
-        <span th:text="${san.ten_san_bong}">Tên sân</span>
-      </div>
-    </th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="khungGio : ${danhSachKhungGio}">
-    <td th:text="${khungGio.gioBatDau} + '-' + ${khungGio.gioKetThuc}"></td>
-    <td th:each="san : ${danhSachSan}"
-        th:with="key=${san.id_san_bong + '_' + khungGio.id}, gia=${bangGia[key]}, idgia=${bangGiaId[key]}"
-        th:data-idgia="${bangGiaId[san.id_san_bong + '_' + khungGio.id]}"
-        th:data-price="${bangGia[san.id_san_bong + '_' + khungGio.id] != null ? bangGia[san.id_san_bong + '_' + khungGio.id] : 0}"
-        th:data-court="${san.ten_san_bong}"
-        th:data-time="${#temporals.format(khungGio.gioBatDau, 'HH:mm') + '-' + #temporals.format(khungGio.gioKetThuc, 'HH:mm')}">      <span th:text="${#numbers.formatDecimal(bangGia[san.id_san_bong + '_' + khungGio.id], 1, 'COMMA', 0, 'POINT')}">0</span>
-    </td>
-  </tr>
-  </tbody>
+    <thead>
+    <tr>
+        <th>Giờ</th>
+        <th th:each="san : ${danhSachSan}">
+            <div class="court-info">
+                <span th:text="${san.ten_san_bong}">Tên sân</span>
+            </div>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="khungGio : ${danhSachKhungGio}">
+        <td th:text="${khungGio.gioBatDau} + '-' + ${khungGio.gioKetThuc}"></td>
+        <td th:each="san : ${danhSachSan}"
+            th:with="key=${san.id_san_bong + '_' + khungGio.id}, gia=${bangGia[key]}, idgia=${bangGiaId[key]}"
+            th:data-idgia="${bangGiaId[san.id_san_bong + '_' + khungGio.id]}"
+            th:data-price="${bangGia[san.id_san_bong + '_' + khungGio.id] != null ? bangGia[san.id_san_bong + '_' + khungGio.id] : 0}"
+            th:data-court="${san.ten_san_bong}"
+            th:data-time="${#temporals.format(khungGio.gioBatDau, 'HH:mm') + '-' + #temporals.format(khungGio.gioKetThuc, 'HH:mm')}">
+            <!--ép tg cùng 1 kiểu-->
+            <span th:text="${#numbers.formatDecimal(bangGia[san.id_san_bong + '_' + khungGio.id], 1, 'COMMA', 0, 'POINT')}">0</span>
+        </td>
+    </tr>
+    </tbody>
 </table>
 
 <p>Đã chọn: <span id="slotCount">0</span> khung giờ</p>
@@ -196,118 +198,124 @@
 
 
 <script th:inline="javascript">
-  let selectedSlots = [];
-  let currentDate = new Date();
-  let slotsDaDat = /*[[${cacSlotDaDat}]]*/ [];
+    let selectedSlots = [];
+    let currentDate = new Date();
+    let slotsDaDat = /*[[${cacSlotDaDat}]]*/ [];
 
-  function formatDate(date) {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    return `${day} tháng ${month} ${year}`;
-  }
-
-  function formatDateKey(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;  // Format yyyy-MM-dd
-  }
-  function formatPrice(price) {
-    const num = Number(price);
-    return isNaN(num) ? "" : num.toLocaleString('vi-VN');
-  }
-
-  function getCurrentDateKey() {
-    return formatDateKey(currentDate);
-  }
-
-  function loadToday() {
-    document.getElementById('dateDisplay').textContent = formatDate(currentDate);
-    const today = new Date(); today.setHours(0, 0, 0, 0);
-    const checkDate = new Date(currentDate); checkDate.setHours(0, 0, 0, 0);
-    const isPast = checkDate < today;
-    toggleBookingCells(!isPast, isPast);
-  }
-
-  function toggleBookingCells(enable, isPast) {
-    const cells = document.querySelectorAll("#bookingTable td[data-price]");
-    const dateKey = getCurrentDateKey();
-
-    cells.forEach(cell => {
-      const slotId = `${dateKey}_${cell.dataset.court}_${cell.dataset.time}`;
-      const price = Number(cell.dataset.price || 0);
-      const isDaDat = slotsDaDat.includes(slotId);
-
-      // Reset
-      cell.classList.remove("disabled", "selected");
-      cell.onclick = null;
-      cell.style.cursor = "pointer";
-
-      if (isPast || price <= 0 || isDaDat) {
-        cell.innerHTML = isDaDat
-                ? '🔒 Đã đặt'
-                : (price <= 0 ? "-" : "");
-        cell.classList.add("disabled");
-        cell.style.cursor = "not-allowed";
-      } else {
-        cell.textContent = formatPrice(price);
-        cell.onclick = () => selectSlot(cell, dateKey);
-      }
-
-      if (selectedSlots.find(s => s.id === slotId)) {
-        cell.classList.add("selected");
-      }
-    });
-
-    updateTotal();
-  }
-
-  function selectSlot(cell, dateKey) {
-    if (cell.classList.contains("disabled")) return;
-
-    const slotId = `${dateKey}_${cell.dataset.court}_${cell.dataset.time}`;
-    const index = selectedSlots.findIndex(s => s.id === slotId);
-
-    if (index !== -1) {
-      selectedSlots.splice(index, 1);
-      cell.classList.remove("selected");
-    } else {
-      selectedSlots.push({
-        id: slotId,
-        price: Number(cell.dataset.price || 0),
-        date: dateKey,
-        court: cell.dataset.court,
-        time: cell.dataset.time,
-        idgia: Number(cell.dataset.idgia || 0)
-      });
-      cell.classList.add("selected");
+    function formatDate(date) {
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+        return `${day} tháng ${month} ${year}`;
     }
 
-    updateTotal();
-  }
-
-  function updateTotal() {
-    const total = selectedSlots.reduce((sum, slot) => sum + slot.price, 0);
-    document.getElementById('slotCount').textContent = selectedSlots.length;
-    document.getElementById('totalPrice').textContent = total.toLocaleString('vi-VN');
-  }
-
-  function submitBooking() {
-    if (selectedSlots.length === 0) {
-      alert("Vui lòng chọn ít nhất 1 khung giờ!");
-      return;
+    //fix để ngày hoạt động đúng
+    function formatDateKey(date) {
+        const localDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const year = localDate.getFullYear();
+        const month = String(localDate.getMonth() + 1).padStart(2, '0');
+        const day = String(localDate.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
-    localStorage.setItem("chiTietDatLichList", JSON.stringify(selectedSlots));
-    window.location.href = "/xacnhan";
-  }
 
-  function changeDate(days) {
-    currentDate.setDate(currentDate.getDate() + days);
-    loadToday();
-  }
 
-  window.onload = loadToday;
+    function formatPrice(price) {
+        const num = Number(price);
+        return isNaN(num) ? "" : num.toLocaleString('vi-VN');
+    }
+
+    function getCurrentDateKey() {
+        return formatDateKey(currentDate);
+    }
+
+    function loadToday() {
+        document.getElementById('dateDisplay').textContent = formatDate(currentDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const checkDate = new Date(currentDate);
+        checkDate.setHours(0, 0, 0, 0);
+        const isPast = checkDate < today;
+        toggleBookingCells(!isPast, isPast);
+    }
+
+    function toggleBookingCells(enable, isPast) {
+        const cells = document.querySelectorAll("#bookingTable td[data-price]");
+        const dateKey = getCurrentDateKey();
+
+        cells.forEach(cell => {
+            const slotId = `${dateKey}_${cell.dataset.court}_${cell.dataset.time}`;
+            const price = Number(cell.dataset.price || 0);
+            const isDaDat = slotsDaDat.includes(slotId);
+
+            // Reset
+            cell.classList.remove("disabled", "selected");
+            cell.onclick = null;
+            cell.style.cursor = "pointer";
+
+            if (isPast || price <= 0 || isDaDat) {
+                cell.innerHTML = isDaDat
+                    ? '🔒 Đã đặt'
+                    : (price <= 0 ? "-" : "");
+                cell.classList.add("disabled");
+                cell.style.cursor = "not-allowed";
+            } else {
+                cell.textContent = formatPrice(price);
+                cell.onclick = () => selectSlot(cell, dateKey);
+            }
+
+            if (selectedSlots.find(s => s.id === slotId)) {
+                cell.classList.add("selected");
+            }
+        });
+
+        updateTotal();
+    }
+
+    function selectSlot(cell, dateKey) {
+        if (cell.classList.contains("disabled")) return;
+
+        const slotId = `${dateKey}_${cell.dataset.court}_${cell.dataset.time}`;
+        const index = selectedSlots.findIndex(s => s.id === slotId);
+
+        if (index !== -1) {
+            selectedSlots.splice(index, 1);
+            cell.classList.remove("selected");
+        } else {
+            selectedSlots.push({
+                id: slotId,
+                price: Number(cell.dataset.price || 0),
+                date: dateKey,
+                court: cell.dataset.court,
+                time: cell.dataset.time,
+                idgia: Number(cell.dataset.idgia || 0)
+            });
+            cell.classList.add("selected");
+        }
+
+        updateTotal();
+    }
+
+    function updateTotal() {
+        const total = selectedSlots.reduce((sum, slot) => sum + slot.price, 0);
+        document.getElementById('slotCount').textContent = selectedSlots.length;
+        document.getElementById('totalPrice').textContent = total.toLocaleString('vi-VN');
+    }
+
+    function submitBooking() {
+        if (selectedSlots.length === 0) {
+            alert("Vui lòng chọn ít nhất 1 khung giờ!");
+            return;
+        }
+        localStorage.setItem("chiTietDatLichList", JSON.stringify(selectedSlots));
+        window.location.href = "/xacnhan";
+    }
+
+    function changeDate(days) {
+        currentDate.setDate(currentDate.getDate() + days);
+        loadToday();
+    }
+
+    window.onload = loadToday;
 </script>
 
 </body>

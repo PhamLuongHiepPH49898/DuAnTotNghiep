@@ -38,7 +38,7 @@ public class DatLichController {
     @GetMapping("/datsan")
     public String hienThiTrangDatSan(@RequestParam("id") Integer idSan, Model model) {
         SanBong san = datSanService.laySanTheoId(idSan);  // <-- Lấy 1 sân
-        if (san == null) return "redirect:/trangchu";
+        if (san == null) return "redirect:/trang-chu";
 
         List<SanBong> sanList = datSanService.layDanhSachSan();
         List<KhungGio> khungGioList = datSanService.layDanhSachKhungGio();

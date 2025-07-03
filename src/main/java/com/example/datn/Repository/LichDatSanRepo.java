@@ -2,12 +2,12 @@
 package com.example.datn.Repository;
 
 import com.example.datn.Entity.LichDatSan;
-import com.example.datn.Entity.TaiKhoan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,5 +49,10 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
                                        Pageable pageable);
     @Query("SELECT l FROM LichDatSan l WHERE l.taiKhoan.id = :id AND l.ngayDat = :ngayDat")
     List<LichDatSan> findByTaiKhoanIdAndNgayDat(@Param("id") Long idTaiKhoan, @Param("ngayDat") LocalDate ngayDat);
+
+
+
+    @Query("SELECT s FROM LichDatSan s WHERE s.trangThai IN :trangThaiList")
+    List<LichDatSan> findByTrangThaiIn(@Param("trangThaiList") List<Integer> trangThaiList);// thêm
 
 }
