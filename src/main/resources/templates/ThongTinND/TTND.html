@@ -7,11 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f4f7fb;
-            --text: #333;
+            --bg: #f9fafb;
+            --text: #1f2937;
+            --primary: #3b82f6;
+            --secondary: #f3f4f6;
             --card: #ffffff;
-            --highlight: #0077cc;
-            --tab-bg: #eef3f8;
+            --radius: 1rem;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
         * {
@@ -21,76 +23,47 @@
 
         body {
             margin: 0;
-            padding: 40px;
-            background-color: var(--bg);
+            padding: 2rem;
+            background: var(--bg);
             color: var(--text);
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1080px;
             margin: auto;
         }
 
         .breadcrumb {
-            font-size: 14px;
-            margin-bottom: 20px;
-            color: #888;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
         }
 
-        .breadcrumb span {
-            margin: 0 5px;
-        }
-
-        h2 {
-            color: var(--highlight);
-            font-size: 24px;
-            margin-bottom: 16px;
-        }
-
-        section {
-            background-color: var(--card);
-            padding: 25px 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e1e5ea;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .info p {
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-
-        .info p span {
-            font-weight: bold;
-            color: var(--highlight);
+        .breadcrumb a {
+            text-decoration: none;
+            color: var(--primary);
         }
 
         .tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ddd;
-            background-color: var(--tab-bg);
-            padding: 10px 15px;
-            border-radius: 10px;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
 
         .tab-button {
-            padding: 10px 20px;
-            cursor: pointer;
-            background: none;
+            padding: 0.6rem 1.2rem;
             border: none;
-            border-bottom: 3px solid transparent;
+            border-radius: var(--radius);
+            background: var(--secondary);
+            cursor: pointer;
             font-weight: 600;
-            color: #555;
-            transition: all 0.3s;
+            color: var(--text);
+            transition: background 0.3s, color 0.3s;
         }
 
         .tab-button.active {
-            border-bottom: 3px solid var(--highlight);
-            color: var(--highlight);
+            background: var(--primary);
+            color: #fff;
         }
 
         .tab-content {
@@ -102,42 +75,75 @@
             display: block;
         }
 
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .card h2 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .user-info p {
+            margin: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .user-info span {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            font-size: 0.95rem;
         }
 
         thead {
-            background: var(--highlight);
+            background-color: var(--primary);
             color: white;
         }
 
         th, td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #ddd;
+            padding: 0.8rem 1rem;
             text-align: left;
+            border-bottom: 1px solid #e5e7eb;
         }
 
-        td.highlight-date {
-            background-color: #e7f3ff;
+        .inner-tabs {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-date {
+            background-color: #dbeafe;
+            border-radius: 0.5rem;
             font-weight: bold;
-            color: #0077cc;
-            border-radius: 6px;
         }
 
         @media (max-width: 768px) {
             table {
                 display: block;
                 overflow-x: auto;
-            }
-
-            th, td {
                 white-space: nowrap;
             }
-
-            .tabs {
-                flex-wrap: wrap;
+            .tabs, .inner-tabs {
+                flex-direction: column;
             }
         }
 
@@ -149,65 +155,43 @@
 </head>
 <body>
 <div class="container">
-
-    <!-- Breadcrumb -->
     <div class="breadcrumb">
-        🏠 <a th:href="@{/ve-trang-chu}" style="color: var(--highlight); text-decoration: none;">Trang chủ</a>
-        <span>›</span> Thông tin người dùng
+        🏠 <a th:href="@{/ve-trang-chu}">Trang chủ</a> › Thông tin người dùng
     </div>
 
-    <!-- Tabs -->
-    <div class="tabs main-tabs">
+    <div class="tabs">
         <button class="tab-button active" onclick="showTab('accountTab', this)">👤 Tài khoản</button>
         <button class="tab-button" onclick="showTab('bookingTab', this)">📜 Lịch sử đặt sân</button>
     </div>
 
-    <!-- Tab: Thông tin tài khoản -->
     <div id="accountTab" class="tab-content active">
-        <div th:if="${coLichHomNay}" style="margin-top: -20px; margin-bottom: 30px;">
-            <div style="padding: 12px 20px; background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 10px; color: #856404;">
-                📢 Bạn có lịch đặt sân <strong>hôm nay</strong> đã được <strong>xác nhận</strong>. Vui lòng đến đúng giờ để tránh bị hủy!
+        <div th:if="${coLichHomNay}" class="card" style="background-color: #fff3cd; border-left: 6px solid #facc15;">
+            📢 Bạn có lịch đặt sân <strong>hôm nay</strong> đã được <strong>xác nhận</strong>. Vui lòng đến đúng giờ!
+        </div>
+        <div class="card" style="text-align: center;">
+            <h2>Thông tin tài khoản</h2>
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="user-avatar" alt="Avatar">
+            <div class="user-info">
+                <p><span>Họ tên:</span> <strong th:text="${taiKhoan.ho_ten}">Nguyễn Văn A</strong></p>
+                <p><span>Email:</span> <strong th:text="${taiKhoan.email}">a@gmail.com</strong></p>
+                <p><span>SĐT:</span> <strong th:text="${taiKhoan.so_dien_thoai}">0123456789</strong></p>
+                <p><span>Vai trò:</span> <strong th:text="${taiKhoan.vai_tro=='NGUOI_DUNG'?'Người dùng':'Quản trị'}">Người dùng</strong></p>
             </div>
         </div>
-        <section style="text-align: center; background: #eaf6ff; border: 2px solid #b6e0fe;">
-            <h2>👤 Thông tin tài khoản</h2>
-            <div style="margin-bottom: 20px;">
-                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" width="100" height="100" alt="avatar"
-                     style="border-radius: 50%; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border: 3px solid white;">
-            </div>
-
-            <div class="info" style="display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 1.1rem;">
-                <p><i class="bi bi-person-fill" style="color: #0077cc;"></i> <span>Họ tên:</span> <strong th:text="${taiKhoan.ho_ten}">Nguyễn Văn A</strong></p>
-                <p><i class="bi bi-envelope-fill" style="color: #0077cc;"></i> <span>Email:</span> <strong th:text="${taiKhoan.email}">a@gmail.com</strong></p>
-                <p><i class="bi bi-telephone-fill" style="color: #0077cc;"></i> <span>SĐT:</span> <strong th:text="${taiKhoan.so_dien_thoai}">0123456789</strong></p>
-                <p><i class="bi bi-person-badge-fill" style="color: #0077cc;"></i> <span>Vai trò:</span>
-                    <strong th:text="${taiKhoan.vai_tro=='NGUOI_DUNG'?'Người dùng':'Quản trị'}">Người dùng</strong></p>
-            </div>
-        </section>
     </div>
 
-    <!-- Tab: Lịch sử đặt sân -->
     <div id="bookingTab" class="tab-content">
-        <section>
-            <h2>📜 Lịch sử đặt sân</h2>
-            <div class="tabs inner-tabs">
+        <div class="card">
+            <h2>Lịch sử đặt sân</h2>
+            <div class="inner-tabs">
                 <button class="tab-button active" onclick="showInnerTab('tab1', this)">⏳ Chờ xác nhận</button>
                 <button class="tab-button" onclick="showInnerTab('tab2', this)">✅ Đã xác nhận</button>
                 <button class="tab-button" onclick="showInnerTab('tab3', this)">❌ Đã hủy</button>
             </div>
-
-            <!-- Tab 1 -->
             <div id="tab1" class="tab-content inner-tab active">
                 <table>
                     <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Tên sân</th>
-                        <th>Ngày đặt</th>
-                        <th>Khung giờ</th>
-                        <th>Giá</th>
-                        <th>Ghi chú</th>
-                    </tr>
+                    <tr><th>STT</th><th>Tên sân</th><th>Ngày đặt</th><th>Khung giờ</th><th>Giá</th><th>Ghi chú</th></tr>
                     </thead>
                     <tbody>
                     <tr th:each="lich, iterStat : ${lichChoXacNhan}">
@@ -215,8 +199,7 @@
                         <td th:text="${lich.sanBong.ten_san_bong}"></td>
                         <td th:with="isToday=${lich.ngayDat.equals(T(java.time.LocalDate).now())}"
                             th:classappend="${isToday} ? 'highlight-date' : ''"
-                            th:text="${lich.ngayDat.format(dateFormatter)} + (isToday ? '' : '')">
-                        </td>
+                            th:text="${lich.ngayDat.format(dateFormatter)}"></td>
                         <td th:text="${lich.giaTheoKhungGio.khungGio.gioBatDau + ' - ' + lich.giaTheoKhungGio.khungGio.gioKetThuc}"></td>
                         <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
                         <td th:text="${lich.ghiChu}"></td>
@@ -224,19 +207,10 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Tab 2 -->
             <div id="tab2" class="tab-content inner-tab">
                 <table>
                     <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Tên sân</th>
-                        <th>Ngày đặt</th>
-                        <th>Khung giờ</th>
-                        <th>Giá</th>
-                        <th>Ghi chú</th>
-                    </tr>
+                    <tr><th>STT</th><th>Tên sân</th><th>Ngày đặt</th><th>Khung giờ</th><th>Giá</th><th>Ghi chú</th></tr>
                     </thead>
                     <tbody>
                     <tr th:each="lich, iterStat : ${lichDaXacNhan}">
@@ -244,8 +218,7 @@
                         <td th:text="${lich.sanBong.ten_san_bong}"></td>
                         <td th:with="isToday=${lich.ngayDat.equals(T(java.time.LocalDate).now())}"
                             th:classappend="${isToday} ? 'highlight-date' : ''"
-                            th:text="${lich.ngayDat.format(dateFormatter)} + (isToday ? '' : '')">
-                        </td>
+                            th:text="${lich.ngayDat.format(dateFormatter)}"></td>
                         <td th:text="${lich.giaTheoKhungGio.khungGio.gioBatDau + ' - ' + lich.giaTheoKhungGio.khungGio.gioKetThuc}"></td>
                         <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
                         <td th:text="${lich.ghiChu}"></td>
@@ -253,19 +226,10 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Tab 3 -->
             <div id="tab3" class="tab-content inner-tab">
                 <table>
                     <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Tên sân</th>
-                        <th>Ngày đặt</th>
-                        <th>Khung giờ</th>
-                        <th>Giá</th>
-                        <th>Ghi chú</th>
-                    </tr>
+                    <tr><th>STT</th><th>Tên sân</th><th>Ngày đặt</th><th>Khung giờ</th><th>Giá</th><th>Ghi chú</th></tr>
                     </thead>
                     <tbody>
                     <tr th:each="lich, iterStat : ${lichDaHuy}">
@@ -273,8 +237,7 @@
                         <td th:text="${lich.sanBong.ten_san_bong}"></td>
                         <td th:with="isToday=${lich.ngayDat.equals(T(java.time.LocalDate).now())}"
                             th:classappend="${isToday} ? 'highlight-date' : ''"
-                            th:text="${lich.ngayDat.format(dateFormatter)} + (isToday ? ' ' : '')">
-                        </td>
+                            th:text="${lich.ngayDat.format(dateFormatter)}"></td>
                         <td th:text="${lich.giaTheoKhungGio.khungGio.gioBatDau + ' - ' + lich.giaTheoKhungGio.khungGio.gioKetThuc}"></td>
                         <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
                         <td th:text="${lich.ghiChu}"></td>
@@ -282,19 +245,16 @@
                     </tbody>
                 </table>
             </div>
-        </section>
+        </div>
     </div>
 </div>
-
-<!-- JavaScript Tabs -->
 <script>
     function showTab(tabId, btn) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.main-tabs .tab-button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tabs .tab-button').forEach(b => b.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         btn.classList.add('active');
     }
-
     function showInnerTab(tabId, btn) {
         document.querySelectorAll('.inner-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.inner-tabs .tab-button').forEach(b => b.classList.remove('active'));
