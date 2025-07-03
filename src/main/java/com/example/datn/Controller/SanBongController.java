@@ -12,6 +12,7 @@ import com.example.datn.Security.CustomUserDetails;
 import com.example.datn.Service.SanBongService;
 import com.example.datn.Service.TaiKhoanService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.datn.Service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -113,12 +115,13 @@ public class SanBongController {
         System.out.println("Logged-in user: " + auth.getName());
         return "Main/TrangChu_QuanTri";
     }
+
     @GetMapping("/ve-trang-chu")
     public String veTrangChuTheoRole() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated()
-                && !authentication.getPrincipal().equals("anonymousUser")) {
+            && !authentication.getPrincipal().equals("anonymousUser")) {
 
             if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_QUAN_TRI"))) {
                 return "redirect:/admin/trang-chu";
@@ -165,12 +168,18 @@ public class SanBongController {
     }
 
     @GetMapping("/quan-ly-san")
-    public String QuanLySan(Model model) {
-        List<SanBong> danhSachSan = sanBongService.getSanBong();
+    public String QuanLySan(@RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "10") int size,
+                            Model model) {
+
+        Page<SanBong> danhSachSan = sanBongService.getSanBongPage(page, size);
         model.addAttribute("danhSachSan", danhSachSan);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("totalPages", danhSachSan.getTotalPages());
         model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
         model.addAttribute("dsMonTheThao", loaiMonTheThaoRepo.findAll());
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("isTimKiem", false);
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);
@@ -188,11 +197,11 @@ public class SanBongController {
     }
 
     @PostMapping("/them-san-bong")
-    public String themSanBong(@Valid @ModelAttribute("sanBong") SanBong sanBong, BindingResult bindingResult, Model model) throws IOException {
+    public String themSanBong(@Valid @ModelAttribute("sanBong") SanBong sanBong, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) throws IOException {
 
         MultipartFile file = sanBong.getFile();
 
-        // Validate ảnh bắt buộc chọn
+
         if (file == null || file.isEmpty()) {
             bindingResult.rejectValue("file", "file.empty", "Bạn phải chọn file ảnh");
         }
@@ -231,14 +240,24 @@ public class SanBongController {
 
         // Gán tài khoản vào sân bóng
         sanBong.setTaiKhoan(taiKhoan);
+        try {
+            sanBongService.them(sanBong);
+            redirectAttributes.addFlashAttribute("success", "Thêm sân thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Thêm sân thất bại!");
+        }
 
-        sanBongService.them(sanBong);
         return "redirect:/quan-ly-san";
     }
 
     @GetMapping("/xoa-san-bong/{id}")
-    public String xoa(@PathVariable int id) {
-        sanBongService.xoa(id);
+    public String xoa(@PathVariable int id, RedirectAttributes redirectAttributes) {
+        try {
+            sanBongService.xoa(id);
+            redirectAttributes.addFlashAttribute("success", "Xóa sân thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Xóa sân thất bại!");
+        }
         return "redirect:/quan-ly-san";
     }
 
@@ -259,7 +278,7 @@ public class SanBongController {
     public String suaSanBong(@Valid @ModelAttribute("sanBong") SanBong sanBong,
                              BindingResult bindingResult,
                              @PathVariable("id") int id,
-                             Model model) throws IOException {
+                             Model model, RedirectAttributes redirectAttributes) throws IOException {
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);
@@ -301,8 +320,13 @@ public class SanBongController {
             sanBongGoc.setHinh_anh(fileName); // Chỉ lưu tên file
         }
 
+        try {
+            sanBongService.sua(sanBongGoc);
+            redirectAttributes.addFlashAttribute("success", "Sửa sân thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Sửa sân thất bại!");
+        }
 
-        sanBongService.sua(sanBongGoc);
         return "redirect:/quan-ly-san";
     }
 
@@ -310,7 +334,9 @@ public class SanBongController {
     public String quanLySanTimKiem(Model model,
                                    @RequestParam(value = "keyword", required = false) String keyword,
                                    @RequestParam(required = false) Integer loaiSan,
-                                   @RequestParam(required = false) Integer monTheThao) {
+                                   @RequestParam(required = false) Integer monTheThao,
+                                   @RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "10") int size) {
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);
@@ -318,12 +344,18 @@ public class SanBongController {
         if (keyword != null) {
             keyword = keyword.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
         }
-        List<SanBong> ketQua = sanBongService.timKiemSan(keyword, loaiSan, monTheThao);
-        List<SanBong> danhSachSanDaLoc = ketQua.stream()
-                .filter(s -> s.getTrang_thai() != 3)
-                .collect(Collectors.toList());
-        model.addAttribute("danhSachSan", danhSachSanDaLoc);
+        Page<SanBong> ketQua = sanBongService.timKiemTheoPage(keyword, loaiSan, monTheThao, page, size);
+        model.addAttribute("danhSachSan", ketQua);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("totalPages", ketQua.getTotalPages());
         model.addAttribute("khongCoKetQua", ketQua.isEmpty());
+
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("loaiSan", loaiSan);
+        model.addAttribute("monTheThao", monTheThao);
+
+        model.addAttribute("isTimKiem", true);
         populateModel(model);
         return "san/QuanLySan";
     }

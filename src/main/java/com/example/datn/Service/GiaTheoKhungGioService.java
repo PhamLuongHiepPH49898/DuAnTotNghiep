@@ -7,6 +7,9 @@ import com.example.datn.Repository.GiaTheoKhungGioRepo;
 import com.example.datn.Repository.KhungGioRepo;
 import com.example.datn.Repository.SanBongRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,8 +25,9 @@ public class GiaTheoKhungGioService {
     @Autowired
     private KhungGioRepo khungGioRepo;
 
-    public List<GiaTheoKhungGio> getGiaTheoKhungGio() {
-        return giaTheoKhungGioRepo.findAllByTrangThaiOrderByTenSanBong(List.of(0));
+    public Page<GiaTheoKhungGio> getGiaTheoKhungGio(int page, int size) {
+        Pageable pageable = PageRequest.of(page,size);
+        return giaTheoKhungGioRepo.findAllByTrangThaiOrderByTenSanBong(List.of(0),pageable);
     }
 
     public void xoa(int id) {
@@ -35,6 +39,11 @@ public class GiaTheoKhungGioService {
     }
 
     public void sua(int id, BigDecimal giaThueMoi) {
+
+        if (giaThueMoi == null || giaThueMoi.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Giá thuê phải lớn hơn 0");
+        }
+
         GiaTheoKhungGio giaTheoKhungGio = giaTheoKhungGioRepo.findById(id).orElse(null);
         if (giaTheoKhungGio != null) {
             giaTheoKhungGio.setGiaThue(giaThueMoi);
@@ -47,6 +56,10 @@ public class GiaTheoKhungGioService {
         Optional<GiaTheoKhungGio> giaTonTai = giaTheoKhungGioRepo.findBySanBongAndKhungGio(idSanBong, idKhungGio);
         if (giaTonTai.isPresent()) {
             throw new IllegalArgumentException("Giờ này đã được áp dụng cho sân bóng này!");
+        }
+
+        if (giaThue == null || giaThue.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Giá thuê phải lớn hơn 0");
         }
 
         SanBong sanBong = sanBongRepo.findById(idSanBong).orElse(null);
@@ -63,16 +76,10 @@ public class GiaTheoKhungGioService {
         }
     }
 
-    public List<GiaTheoKhungGio> timKiem(Integer idSanBong, Integer idKhungGio) {
-        if (idSanBong != null && idKhungGio != null) {
-            return giaTheoKhungGioRepo.findBySanAndKhungGio(idSanBong, idKhungGio);
-        } else if (idSanBong != null) {
-            return giaTheoKhungGioRepo.findBySan(idSanBong);
-        } else if (idKhungGio != null) {
-            return giaTheoKhungGioRepo.findByKhungGio(idKhungGio);
-        } else {
-            return giaTheoKhungGioRepo.findAllByTrangThaiOrderByTenSanBong(List.of(0));
-        }
+    public Page<GiaTheoKhungGio> timKiem(Integer sanBong, Integer khungGio, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return giaTheoKhungGioRepo.findBySanAndKhungGio(sanBong, khungGio, pageable);
+
     }
 
 

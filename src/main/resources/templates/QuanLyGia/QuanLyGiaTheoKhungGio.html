@@ -242,7 +242,7 @@
             <div class="col-12 col-md-9">
                 <form method="get" th:action="@{/quan-ly-gia-theo-khung-gio/tim-kiem}" class="row g-2">
                     <div class="col-6 col-md-4">
-                        <select name="idSanBong" class="form-select">
+                        <select name="sanBong" class="form-select">
                             <option value="">-- Tất cả sân --</option>
                             <option th:each="san : ${dsSanBong}"
                                     th:value="${san.id_san_bong}"
@@ -253,11 +253,11 @@
                     </div>
 
                     <div class="col-6 col-md-4">
-                        <select name="idKhungGio" class="form-select">
+                        <select name="khungGio" class="form-select">
                             <option value="">-- Tất cả khung giờ --</option>
                             <option th:each="kg : ${dsKhungGio}"
                                     th:value="${kg.id}"
-                                    th:text="${kg.gioBatDau + ' - ' + kg.gioKetThuc}"
+                                    th:text="${#temporals.format(kg.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(kg.gioKetThuc, 'HH:mm')}">
                                     th:selected="${idKhungGio == kg.id}">
                             </option>
                         </select>
@@ -280,6 +280,7 @@
         <table class="table table-bordered">
             <thead>
             <tr>
+                <th>#</th>
                 <th>Sân</th>
                 <th>Khung giờ</th>
                 <th>Giá thuê (VNĐ)</th>
@@ -288,7 +289,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="gia : ${dsGia}">
+            <tr th:each="gia, stat : ${dsGia}">
+                <td th:text="${currentPage * pageSize + stat.index + 1}"></td>
+
                 <td th:text="${gia.sanBong.ten_san_bong}">Sân</td>
                 <td th:text="${gia.khungGio.gioBatDau} + ' - ' + ${gia.khungGio.gioKetThuc}">
                 </td>
@@ -341,6 +344,12 @@
             </tr>
             </tbody>
         </table>
+
+        <!-- Hiển thị thông báo nếu danh sách đã lọc trống -->
+        <div th:if="${khongCoKetQua}" class="alert alert-warning text-center mt-4">
+            Không tìm thấy giá theo khung giờ phù hợp với yêu cầu của bạn.
+        </div>
+
         <!-- Modal thêm giá -->
         <div class="modal fade" id="modalThemGia" tabindex="-1">
             <div class="modal-dialog">
@@ -353,7 +362,7 @@
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label>Sân bóng:</label>
-                                <select name="idSanBong" class="form-control" required>
+                                <select name="sanBong" class="form-control" required>
                                     <option th:each="san : ${dsSanBong}"
                                             th:value="${san.id_san_bong}"
                                             th:text="${san.ten_san_bong}">
@@ -363,10 +372,10 @@
 
                             <div class="mb-3">
                                 <label>Khung giờ:</label>
-                                <select name="idKhungGio" class="form-control" required>
+                                <select name="khungGio" class="form-control" required>
                                     <option th:each="kg : ${dsKhungGio}"
                                             th:value="${kg.id}"
-                                            th:text="${kg.gioBatDau} + ' - ' + ${kg.gioKetThuc}">
+                                            th:text="${#temporals.format(kg.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(kg.gioKetThuc, 'HH:mm')}">
                                     </option>
                                 </select>
                             </div>
@@ -385,6 +394,58 @@
                 </form>
             </div>
         </div>
+
+<!--        phan trang-->
+        <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+            <ul class="pagination justify-content-center">
+                <!-- Nút Trước -->
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link"
+                       th:if="${isTimKiem}"
+                       th:href="@{/quan-ly-gia-theo-khung-gio/tim-kiem(page=${currentPage - 1}, size=10,
+                             sanBong=${sanBong}, khungGio=${khungGio})}">
+                        Trước
+                    </a>
+                    <a class="page-link"
+                       th:if="${!isTimKiem}"
+                       th:href="@{/quan-ly-gia-theo-khung-gio(page=${currentPage - 1}, size=10)}">
+                        Trước
+                    </a>
+                </li>
+
+                <!-- Các số trang -->
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link"
+                       th:if="${isTimKiem}"
+                       th:href="@{/quan-ly-gia-theo-khung-gio/tim-kiem(page=${i}, size=10,
+                             sanBong=${sanBong}, khungGio=${khungGio})}"
+                       th:text="${i + 1}"></a>
+
+                    <a class="page-link"
+                       th:if="${!isTimKiem}"
+                       th:href="@{/quan-ly-gia-theo-khung-gio(page=${i}, size=10)}"
+                       th:text="${i + 1}"></a>
+                </li>
+
+                <!-- Nút Tiếp -->
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link"
+                       th:if="${isTimKiem}"
+                       th:href="@{/quan-ly-gia-theo-khung-gio/tim-kiem(page=${currentPage + 1}, size=10,
+                             sanBong=${sanBong}, khungGio=${khungGio})}">
+                        Tiếp
+                    </a>
+                    <a class="page-link"
+                       th:if="${!isTimKiem}"
+                       th:href="@{/quan-ly-gia-theo-khung-gio(page=${currentPage + 1}, size=10)}">
+                        Tiếp
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
     </div>
 </main>
 
