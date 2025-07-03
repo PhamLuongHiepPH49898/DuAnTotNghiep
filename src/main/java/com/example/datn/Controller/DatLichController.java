@@ -85,7 +85,6 @@ public class DatLichController {
             xacNhan.setEmail(taiKhoan.get().getEmail());
 
             // Gán vào model đúng cách
-            model.addAttribute("danhSachLichDatSan", lichDatSan.getLichDatSan());
             model.addAttribute("xacNhan", xacNhan);
         } else {
             return "redirect:/login?error=notfound";

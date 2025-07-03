@@ -6,6 +6,7 @@ import com.example.datn.Service.GiaTheoKhungGioService;
 import com.example.datn.Service.SanBongService;
 import com.example.datn.Service.TaiKhoanService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,12 +33,19 @@ public class QuanLyGiaTheoKhungGioController {
 
 
     @GetMapping("/quan-ly-gia-theo-khung-gio")
-    public String quanLyGiaTheoKhungGio(Model model) {
-        List<GiaTheoKhungGio> list = giaTheoKhungGioService.getGiaTheoKhungGio();
+    public String quanLyGiaTheoKhungGio(@RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "10") int size,
+                                        Model model) {
+
+        Page<GiaTheoKhungGio> list = giaTheoKhungGioService.getGiaTheoKhungGio(page, size);
         model.addAttribute("dsGia", list);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("totalPages", list.getTotalPages());
         model.addAttribute("dsSanBong", sanBongService.getSanBong());
         model.addAttribute("dsKhungGio", khungGioRepo.findAll());
         model.addAttribute("gia", new GiaTheoKhungGio());
+        model.addAttribute("isTimKiem", false);
 
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
@@ -62,6 +70,8 @@ public class QuanLyGiaTheoKhungGioController {
         try {
             giaTheoKhungGioService.sua(id, giaThue);
             redirectAttributes.addFlashAttribute("success", "Sửa giá thành công!");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Sửa giá thất bại!");
         }
@@ -85,26 +95,34 @@ public class QuanLyGiaTheoKhungGioController {
     }
 
     @GetMapping("/quan-ly-gia-theo-khung-gio/tim-kiem")
-    public String timKiem(@RequestParam(required = false) Integer idSanBong,
-                          @RequestParam(required = false) Integer idKhungGio,
+    public String timKiem(@RequestParam(required = false) Integer sanBong,
+                          @RequestParam(required = false) Integer khungGio,
+                          @RequestParam(defaultValue = "0") int page,
+                          @RequestParam(defaultValue = "10") int size,
                           Model model) {
 
-        List<GiaTheoKhungGio> dsGia = giaTheoKhungGioService.timKiem(idSanBong, idKhungGio);
-
+        Page<GiaTheoKhungGio> dsGia = giaTheoKhungGioService.timKiem(sanBong, khungGio, page, size);
         model.addAttribute("dsGia", dsGia);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("totalPages", dsGia.getTotalPages());
         model.addAttribute("dsSanBong", sanBongService.getSanBong());
         model.addAttribute("dsKhungGio", khungGioRepo.findAll());
+        model.addAttribute("sanBong", sanBong);
+        model.addAttribute("khungGio", khungGio);
+        model.addAttribute("khongCoKetQua", dsGia.isEmpty());
+
+        model.addAttribute("isTimKiem", true);
 
         // Để giữ lại lựa chọn người dùng
-        model.addAttribute("idSanBong", idSanBong);
-        model.addAttribute("idKhungGio", idKhungGio);
+        model.addAttribute("sanBong", sanBong);
+        model.addAttribute("khungGio", khungGio);
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);
 
         return "QuanLyGia/QuanLyGiaTheoKhungGio";
     }
-
 
 
 }

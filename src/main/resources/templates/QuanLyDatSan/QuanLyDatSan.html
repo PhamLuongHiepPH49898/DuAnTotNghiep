@@ -334,7 +334,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="danhSachLichDatSan, stat : ${danhSachLichDatSan}">
-                    <td th:text="${stat.index +1}"></td>
+                    <td th:text="${currentPage * pageSize + stat.index + 1}"></td>
                     <td th:text="${danhSachLichDatSan.ngayDat}"></td>
                     <td th:text="${danhSachLichDatSan.giaTheoKhungGio.khungGio.gioBatDau} + ' - ' + ${danhSachLichDatSan.giaTheoKhungGio.khungGio.gioKetThuc}"></td>
                     <td th:text="${danhSachLichDatSan.giaTheoKhungGio.sanBong.ten_san_bong}"></td>
@@ -406,18 +406,69 @@
             </table>
 
             <!-- Trường hợp tìm kiếm không ra -->
-            <div th:if="${isTimKiem} and ${#lists.isEmpty(danhSachLichDatSan)}" class="alert alert-info">
+            <div th:if="${isTimKiem} and ${khongCoKetQua}" class="alert alert-info">
                 Không tìm thấy kết quả phù hợp với điều kiện tìm kiếm.
             </div>
 
             <!-- Trường hợp chọn ngày tạo không có dữ liệu -->
-            <div th:if="${!isTimKiem} and ${#lists.isEmpty(danhSachLichDatSan)}" class="alert alert-warning">
-                Không có ngày tạo phiếu nào vào ngày:
+            <div th:if="${!isTimKiem} and ${khongCoKetQua}" class="alert alert-warning">
+                Không tìm thấy có phiếu nào tạo vào ngày:
                 <strong th:text="${#temporals.format(ngayTao, 'dd/MM/yyyy')}"></strong>
 
             </div>
 
         </div>
+
+        <!--        phan trang-->
+        <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+            <ul class="pagination justify-content-center">
+                <!-- Nút Trước -->
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link"
+                       th:if="${isTimKiem}"
+                       th:href="@{/quan-ly-dat-san/tim-kiem(page=${currentPage - 1}, size=10,
+                            keyword=${keyword}, sanBong=${sanBong}, ngayDat=${ngayDat}, trangThai=${trangThai})}">
+                       Trước
+                    </a>
+                    <a class="page-link"
+                       th:if="${!isTimKiem}"
+                       th:href="@{/quan-ly-dat-san(page=${currentPage - 1}, size=10)}">
+                        Trước
+                    </a>
+                </li>
+
+                <!-- Các số trang -->
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link"
+                       th:if="${isTimKiem}"
+                       th:href="@{/quan-ly-dat-san/tim-kiem(page=${i}, size=10,
+                            keyword=${keyword}, sanBong=${sanBong},ngayDat=${ngayDat}, trangThai=${trangThai})}"
+                       th:text="${i + 1}"></a>
+
+                    <a class="page-link"
+                       th:if="${!isTimKiem}"
+                       th:href="@{/quan-ly-dat-san(page=${i}, size=10)}"
+                       th:text="${i + 1}"></a>
+                </li>
+
+                <!-- Nút Tiếp -->
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link"
+                       th:if="${isTimKiem}"
+                       th:href="@{/quan-ly-dat-san/tim-kiem(page=${currentPage + 1}, size=10,
+                            keyword=${keyword}, sanBong=${sanBong},ngayDat=${ngayDat}, trangThai=${trangThai})}">
+                       Tiếp
+                    </a>
+                    <a class="page-link"
+                       th:if="${!isTimKiem}"
+                       th:href="@{/quan-ly-dat-san(page=${currentPage + 1}, size=10)}">
+                        Tiếp
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </main>
 
@@ -425,7 +476,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- dropdown khi ở dạng mobile-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 
 
 <script th:inline="javascript">

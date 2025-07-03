@@ -15,30 +15,33 @@ import java.util.List;
 
 public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
 
+    @Query("SELECT l FROM LichDatSan l " +
+           "JOIN FETCH l.taiKhoan tk " +
+           "JOIN FETCH l.giaTheoKhungGio g " +
+           "JOIN FETCH g.khungGio kg " +
+           "ORDER BY l.ngayTao DESC")
+    Page<LichDatSan> findAllLichDatSan(Pageable pageable);
 
     @Query("SELECT l FROM LichDatSan l " +
-            "JOIN FETCH l.taiKhoan tk " +
-            "JOIN FETCH l.giaTheoKhungGio g " +
-            "JOIN FETCH g.khungGio kg " +
-            "ORDER BY l.ngayTao DESC")
-    List<LichDatSan> findAllLichDatSan();
-
-    @Query("SELECT l FROM LichDatSan l " +
-            "WHERE (:keyword IS NULL OR :keyword = '' OR LOWER(l.taiKhoan.ho_ten) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
-            "AND (:ngayDat IS NULL OR l.ngayDat = :ngayDat) " +
-            "AND (:sanBong IS NULL OR l.giaTheoKhungGio.sanBong.id_san_bong = :sanBong) " +
-            "AND (:trangThai IS NULL OR l.trangThai = :trangThai)")
-    List<LichDatSan> timKiem(@Param("keyword") String keyword,
+           "WHERE (:keyword IS NULL OR :keyword = '' OR LOWER(l.taiKhoan.ho_ten) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+           "AND (:ngayDat IS NULL OR l.ngayDat = :ngayDat) " +
+           "AND (:sanBong IS NULL OR l.giaTheoKhungGio.sanBong.id_san_bong = :sanBong) " +
+           "AND (:trangThai IS NULL OR l.trangThai = :trangThai)" +
+           "ORDER BY l.ngayTao DESC")
+    Page<LichDatSan> timKiem(@Param("keyword") String keyword,
                              @Param("ngayDat") LocalDate ngayDat,
                              @Param("sanBong") Integer sanBong,
-                             @Param("trangThai") Integer trangThai);
-
-    List<LichDatSan> findByNgayTaoBetween(LocalDateTime start, LocalDateTime end);
+                             @Param("trangThai") Integer trangThai,
+                             Pageable pageable);
+    //loc theo ngay tao
+    Page<LichDatSan> findByNgayTaoBetween(LocalDateTime start, LocalDateTime end, Pageable pageable);
 
     @Query("SELECT l FROM LichDatSan l WHERE l.taiKhoan.id = :idTaiKhoan")
     List<LichDatSan> findByTaiKhoanId(Integer idTaiKhoan);
+
     @Query("SELECT l FROM LichDatSan l WHERE l.taiKhoan.id = :id ORDER BY l.ngayTao DESC")
     List<LichDatSan> layLichSuDatSan(@Param("id") Long id);
+
     Page<LichDatSan> findByTaiKhoanId(Long idTaiKhoan, Pageable pageable);
 
     @Query("SELECT l FROM LichDatSan l " +

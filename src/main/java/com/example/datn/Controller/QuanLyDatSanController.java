@@ -6,7 +6,9 @@ import com.example.datn.Service.LichDatSanService;
 import com.example.datn.Service.SanBongService;
 import com.example.datn.Service.TaiKhoanService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,31 +30,35 @@ public class QuanLyDatSanController {
     private SanBongService sanBongService;
     @Autowired
     private TaiKhoanService taiKhoanService;
-    @Autowired
-    private LichDatSanRepo lichDatSanRepo;
 
     @GetMapping("/quan-ly-dat-san")
     public String quanLyDatSan(
             @RequestParam(name = "ngayTao", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayTao,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             Model model) {
 
-        List<LichDatSan> lichDatList;
+        Page<LichDatSan> lichDatList;
 
         if (ngayTao == null) {
-            // Không truyền ngày → hiển thị tất cả
-            lichDatList = lichDatSanService.getLichDatSan();
+            //hiển thị tất cả
+            lichDatList = lichDatSanService.getLichDatSan(page, size);
         } else {
-            // Có ngày → lọc theo ngày
+            // lọc theo ngày
             LocalDateTime startDateTime = ngayTao.atStartOfDay();
             LocalDateTime endDateTime = ngayTao.plusDays(1).atStartOfDay();
-            lichDatList = lichDatSanRepo.findByNgayTaoBetween(startDateTime, endDateTime);
+            lichDatList = lichDatSanService.timKiemTheoNgayTao(startDateTime, endDateTime, page, size);
         }
 
         model.addAttribute("danhSachLichDatSan", lichDatList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("totalPages", lichDatList.getTotalPages());
         model.addAttribute("danhSachSan", sanBongService.findAll());
         model.addAttribute("ngayTao", ngayTao);
-        model.addAttribute("isTimKiem", false); // đánh dấu đây không phải tìm kiếm
+        model.addAttribute("khongCoKetQua", lichDatList.isEmpty());
+        model.addAttribute("isTimKiem", false);
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);
@@ -91,7 +97,9 @@ public class QuanLyDatSanController {
                                       @RequestParam(required = false) String keyword,
                                       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayDat,
                                       @RequestParam(required = false) Integer sanBong,
-                                      @RequestParam(required = false) Integer trangThai) {
+                                      @RequestParam(required = false) Integer trangThai,
+                                      @RequestParam(defaultValue = "0") int page,
+                                      @RequestParam(defaultValue = "10") int size) {
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);
@@ -101,11 +109,18 @@ public class QuanLyDatSanController {
         }
 
 
-        List<LichDatSan> danhSachLichDatSan = lichDatSanService.timKiem(keyword, ngayDat, sanBong, trangThai);
+        Page<LichDatSan> danhSachLichDatSan = lichDatSanService.timKiem(keyword, ngayDat, sanBong, trangThai, page, size);
         model.addAttribute("danhSachLichDatSan", danhSachLichDatSan);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("totalPages", danhSachLichDatSan.getTotalPages());
         model.addAttribute("khongCoKetQua", danhSachLichDatSan.isEmpty());
         model.addAttribute("danhSachSan", sanBongService.findAll());
-        model.addAttribute("isTimKiem", true); //  đánh dấu đây là tìm kiếm
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("sanBong", sanBong);
+        model.addAttribute("trangThai", trangThai);
+        model.addAttribute("khongCoKetQua", danhSachLichDatSan.isEmpty());
+        model.addAttribute("isTimKiem", true);
 
         return "QuanLyDatSan/QuanLyDatSan";
     }
