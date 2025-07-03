@@ -16,7 +16,6 @@ class DatnApplicationTests {
         public static void main(String[] args) {
             String rawPassword = "123";
             String encodedFromDB = "$2a$10$G4LrWl00vjFcLycSEJ1vqeNg62GEYLNhRHY6PuUXC/.CA9dsc7wi2";
-
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             boolean result = encoder.matches(rawPassword, encodedFromDB);
 

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Sửa lịch đặt</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container mt-4">
+  <h3>Sửa lịch đặt</h3>
+  <form th:action="@{'/user/lich-dat/' + ${booking.id} + '/sua'}"
+        th:object="${lichDatSanForm}" method="post">
+    <div class="mb-3">
+      <label>Ngày</label>
+      <input type="date" th:field="*{ngayDat}" class="form-control"/>
+    </div>
+    <!-- TODO: drop‑down chọn khung giờ/giá -->
+    <button class="btn btn-success">Lưu</button>
+    <a th:href="@{/user/lich-dat}" class="btn btn-secondary">Huỷ</a>
+  </form>
+</div>
+</body>
+</html>
