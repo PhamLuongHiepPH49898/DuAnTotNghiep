@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Lịch đặt của tôi</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container mt-4">
+  <h3>Lịch đặt của tôi</h3>
+  <table class="table table-bordered" th:if="${!#lists.isEmpty(books)}">
+    <thead><tr><th>Sân</th><th>Ngày</th><th>Khung giờ</th><th>#</th></tr></thead>
+    <tbody>
+    <tr th:each="b : ${books}">
+      <td th:text="${b.gia.sanBong.ten}">Sân A</td>
+      <td th:text="${#dates.format(b.ngayDat,'dd/MM/yyyy')}">12/07/2025</td>
+      <td th:text="${b.gia.khungGio.gioBatDau} + ' - ' + ${b.gia.khungGio.gioKetThuc}">06:00-07:00</td>
+      <td>
+        <a th:href="@{'/user/lich-dat/' + ${b.id} + '/sua'}" class="btn btn-primary btn-sm">Sửa</a>
+        <form th:action="@{'/user/lich-dat/' + ${b.id} + '/huy'}" method="post" style="display:inline;">
+          <button class="btn btn-danger btn-sm"
+                  onclick="return confirm('Hủy lịch này?')">Hủy</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div th:if="${#lists.isEmpty(books)}">Bạn chưa đặt sân nào.</div>
+</div>
+</body>
+</html>
