@@ -52,7 +52,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // ✅ Dùng đúng encoder như khi lưu DB
+        return new BCryptPasswordEncoder(); // Dùng encoder như khi lưu DB
     }
 
     @Bean
