@@ -196,7 +196,7 @@
                     <tbody>
                     <tr th:each="lich, iterStat : ${lichChoXacNhan}">
                         <td th:text="${iterStat.index + 1}"></td>
-                        <td th:text="${lich.sanBong.ten_san_bong}"></td>
+                        <td th:text="${lich.getGiaTheoKhungGio().sanBong.ten_san_bong}"></td>
                         <td th:with="isToday=${lich.ngayDat.equals(T(java.time.LocalDate).now())}"
                             th:classappend="${isToday} ? 'highlight-date' : ''"
                             th:text="${lich.ngayDat.format(dateFormatter)}"></td>
