@@ -42,9 +42,7 @@ public class LichDatSan {
     @ManyToOne
     @JoinColumn(name = "id_tai_khoan")
     private TaiKhoan taiKhoan;
-    @ManyToOne
-    @JoinColumn(name = "id_san_bong")
-    private SanBong sanBong;
+
     @ManyToOne
     @JoinColumn(name = "id_gia_theo_khung_gio")
     private GiaTheoKhungGio giaTheoKhungGio;

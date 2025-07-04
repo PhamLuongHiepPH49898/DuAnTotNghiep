@@ -23,9 +23,6 @@ public class ThongTinNguoiDungService {
     }
 
     // Tìm kiếm theo tên sân (có phân trang)
-    public Page<LichDatSan> timKiemLichSuDatSanTheoTenSan(Long idTaiKhoan, String keyword, Pageable pageable) {
-        return lichDatSanRepo.timKiemTheoTenSan(idTaiKhoan, keyword, pageable);
-    }
     public List<LichDatSan> timLichDatHomNay(Long idTaiKhoan) {
         LocalDate today = LocalDate.now();
         return lichDatSanRepo.findByTaiKhoanIdAndNgayDat(idTaiKhoan, today);

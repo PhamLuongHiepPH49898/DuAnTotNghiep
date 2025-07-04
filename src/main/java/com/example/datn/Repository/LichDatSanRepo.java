@@ -44,12 +44,7 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
 
     Page<LichDatSan> findByTaiKhoanId(Long idTaiKhoan, Pageable pageable);
 
-    @Query("SELECT l FROM LichDatSan l " +
-            "WHERE l.taiKhoan.id = :idTaiKhoan " +
-            "AND LOWER(l.sanBong.ten_san_bong) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    Page<LichDatSan> timKiemTheoTenSan(@Param("idTaiKhoan") Long idTaiKhoan,
-                                       @Param("keyword") String keyword,
-                                       Pageable pageable);
+
     @Query("SELECT l FROM LichDatSan l WHERE l.taiKhoan.id = :id AND l.ngayDat = :ngayDat")
     List<LichDatSan> findByTaiKhoanIdAndNgayDat(@Param("id") Long idTaiKhoan, @Param("ngayDat") LocalDate ngayDat);
 
