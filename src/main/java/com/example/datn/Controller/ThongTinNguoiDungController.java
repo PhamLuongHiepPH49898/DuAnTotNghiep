@@ -42,16 +42,10 @@ public class ThongTinNguoiDungController {
 
         TaiKhoan taiKhoan = optionalTaiKhoan.get();
         Pageable pageable = PageRequest.of(page, 6, Sort.by("ngayDat").descending());
+        Page<LichDatSan> lichSuPage = thongTinNguoiDungService.layLichSuDatSan((long) taiKhoan.getId(), pageable);
 
-        Page<LichDatSan> lichSuPage;
 
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            lichSuPage = thongTinNguoiDungService.timKiemLichSuDatSanTheoTenSan(
-                    (long) taiKhoan.getId(), keyword.trim(), pageable);
-            model.addAttribute("keyword", keyword);
-        } else {
-            lichSuPage = thongTinNguoiDungService.layLichSuDatSan((long) taiKhoan.getId(), pageable);
-        }
+
 
         List<LichDatSan> lichHomNay = thongTinNguoiDungService.timLichDatHomNay((long) taiKhoan.getId());
         boolean coLichHomNay = lichHomNay.stream().anyMatch(l -> l.getTrangThai() == 1);
