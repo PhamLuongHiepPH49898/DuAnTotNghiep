@@ -358,7 +358,7 @@
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label>Sân bóng:</label>
-                                <select name="sanBong" class="form-control" required>
+                                <select name="idSanBong" class="form-control" required>
                                     <option th:each="san : ${dsSanBong}"
                                             th:value="${san.id_san_bong}"
                                             th:text="${san.ten_san_bong}">
@@ -368,7 +368,7 @@
 
                             <div class="mb-3">
                                 <label>Khung giờ:</label>
-                                <select name="khungGio" class="form-control" required>
+                                <select name="idKhungGio" class="form-control" required>
                                     <option th:each="kg : ${dsKhungGio}"
                                             th:value="${kg.id}"
                                             th:text="${#temporals.format(kg.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(kg.gioKetThuc, 'HH:mm')}">
