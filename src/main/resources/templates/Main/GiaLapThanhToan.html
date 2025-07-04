@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Thanh toán</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
         body {
             background-color: #f4f8fb;
@@ -90,14 +89,14 @@
             <select id="phuongThucSelect" name="idPhuongThucThanhToan" class="form-select" required>
                 <option th:each="pt : ${dsPhuongThuc}"
                         th:value="${pt.idPhuongThucThanhToan}"
-                        th:text="${pt.tenPhuongThucThanhToan}">
-                </option>
+                        th:text="${pt.tenPhuongThucThanhToan}"
+                        th:data-logo="${pt.qrCode}"></option>
             </select>
         </div>
 
         <div id="qrCodeSection" class="qr-container" style="display: none;">
             <p><strong>Quét mã QR để thanh toán:</strong></p>
-            <img src="/image/QRThanhToan.jpg" alt="QR thanh toán">
+            <img id="qrImage" src="" alt="QR thanh toán">
         </div>
 
         <button type="submit" class="btn btn-success mt-4 w-100">Xác nhận thanh toán</button>
@@ -108,13 +107,22 @@
     document.addEventListener("DOMContentLoaded", function () {
         const select = document.getElementById("phuongThucSelect");
         const qrDiv = document.getElementById("qrCodeSection");
+        const qrImage = document.getElementById("qrImage");
 
-        select.addEventListener("change", function () {
-            const selectedId = select.value;
-            qrDiv.style.display = (selectedId && selectedId !== "1") ? "block" : "none";
-        });
+        function updateQR() {
+            const selectedOption = select.options[select.selectedIndex];
+            const logo = selectedOption.getAttribute("data-logo");
 
-        select.dispatchEvent(new Event("change"));
+            if (logo && select.value !== "1") {  // ví dụ '1' là Tiền mặt
+                qrImage.src = '/qrcode/' + logo;
+                qrDiv.style.display = "block";
+            } else {
+                qrDiv.style.display = "none";
+            }
+        }
+
+        select.addEventListener("change", updateQR);
+        updateQR(); // Load sẵn khi vào
     });
 </script>
 
