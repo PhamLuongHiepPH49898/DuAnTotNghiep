@@ -13,8 +13,6 @@ public class SanBong {
     private String ten_san_bong;
     @Column(name = "dia_chi")
     private String dia_chi;
-    @Column(name = "gia")
-    private Double gia;
     @Column(name = "mo_ta")
     private String mo_ta;
     @Column(name = "hinh_anh")
@@ -44,7 +42,6 @@ public class SanBong {
         this.id_san_bong = id_san_bong;
         this.ten_san_bong = ten_san_bong;
         this.dia_chi = dia_chi;
-        this.gia = gia;
         this.mo_ta = mo_ta;
         this.hinh_anh = hinh_anh;
         this.trang_thai = trang_thai;
@@ -78,13 +75,6 @@ public class SanBong {
         this.dia_chi = dia_chi;
     }
 
-    public Double getGia() {
-        return gia;
-    }
-
-    public void setGia(Double gia) {
-        this.gia = gia;
-    }
 
     public String getMo_ta() {
         return mo_ta;
@@ -148,7 +138,6 @@ public class SanBong {
                 "id_san_bong=" + id_san_bong +
                 ", ten_san_bong='" + ten_san_bong + '\'' +
                 ", dia_chi='" + dia_chi + '\'' +
-                ", gia=" + gia +
                 ", mo_ta='" + mo_ta + '\'' +
                 ", hinh_anh='" + hinh_anh + '\'' +
                 ", trang_thai=" + trang_thai +

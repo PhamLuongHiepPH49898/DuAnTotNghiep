@@ -9,6 +9,7 @@ import com.example.datn.Repository.TaiKhoanRepo;
 import com.example.datn.Service.SanBongService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,15 +23,18 @@ public class SanBongController {
     private final LoaiSanRepo loaiSanRepo;
     private final LoaiMonTheThaoRepo loaiMonTheThaoRepo;
     private final TaiKhoanRepo taiKhoanRepo;
+    private final PasswordEncoder passwordEncoder;
 
     public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo,
                              LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo,
-                             TaiKhoanRepo taiKhoanRepo) {
+                             TaiKhoanRepo taiKhoanRepo,PasswordEncoder passwordEncoder) {
         this.sanBongService = sanBongService;
         this.loaiMatSanRepo = loaiMatSanRepo;
         this.loaiSanRepo = loaiSanRepo;
         this.loaiMonTheThaoRepo = loaiMonTheThaoRepo;
         this.taiKhoanRepo = taiKhoanRepo;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
     @GetMapping("/")
@@ -98,7 +102,7 @@ public class SanBongController {
         taiKhoan.setHo_ten(fullname);
         taiKhoan.setEmail(email);
         taiKhoan.setSo_dien_thoai(phone);
-        taiKhoan.setMat_khau(password);
+        taiKhoan.setMat_khau(passwordEncoder.encode(password));
         taiKhoan.setVai_tro("NGUOI_DUNG");
         taiKhoan.setTrang_thai(0); // Tài khoản hoạt động
 
@@ -116,6 +120,7 @@ public class SanBongController {
                         @RequestParam("mkMoi") String mkMoi,
                         @RequestParam("xacnhanMK") String xacnhanMK,
                         Model model) {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         TaiKhoan taiKhoan = taiKhoanRepo.findByEmail(email).orElse(null);
@@ -125,7 +130,7 @@ public class SanBongController {
             return "/Main/DoiPass";
         }
 
-        if (!taiKhoan.getMat_khau().equals(mkCu)) {
+        if (!passwordEncoder.matches(mkCu, taiKhoan.getMat_khau())) {
             model.addAttribute("error", "Mật khẩu cũ không đúng.");
             return "/Main/DoiPass";
         }
@@ -135,17 +140,15 @@ public class SanBongController {
             return "/Main/DoiPass";
         }
 
-        if (mkMoi.length() < 6) {
-            model.addAttribute("error", "Mật khẩu mới phải có ít nhất 6 ký tự.");
-            return "/Main/DoiPass";
-        }
 
-        taiKhoan.setMat_khau(mkMoi);
+        // Lưu mật khẩu mới sau khi mã hóa
+        taiKhoan.setMat_khau(passwordEncoder.encode(mkMoi));
         taiKhoanRepo.save(taiKhoan);
 
         model.addAttribute("message", "Đổi mật khẩu thành công!");
         return "/Main/DoiPass";
     }
+
 
     @GetMapping("/logout")
     public String logoutPage(Model model) {
