@@ -11,6 +11,12 @@ import com.example.datn.Repository.TaiKhoanRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class XacNhanDatLichService {
     @Autowired
@@ -19,38 +25,50 @@ public class XacNhanDatLichService {
     private GiaTheoKhungGioRepo giaTheoKhungGioRepository;
     @Autowired
     private TaiKhoanRepo taiKhoanRepository;
-    public void luuDatLich(XacNhanDatLichDTO dto) {
-        TaiKhoan taiKhoan = taiKhoanRepository.findByEmail(dto.getEmail())
-                .orElseGet(() -> {
-                    TaiKhoan newTK = new TaiKhoan();
-                    newTK.setEmail(dto.getEmail());
-                    newTK.setHo_ten(dto.getHoTen());
-                    newTK.setSo_dien_thoai(dto.getSoDienThoai());
-                    newTK.setMat_khau("123");
-                    newTK.setVai_tro("NGUOI_DUNG");
-                    return taiKhoanRepository.save(newTK);
-                });
 
-        if (dto.getChiTietDatLichList() == null || dto.getChiTietDatLichList().isEmpty()) {
-            throw new IllegalArgumentException("Danh sách chi tiết đặt lịch không được rỗng");
+    public List<Integer> luuDatLich(XacNhanDatLichDTO xacNhan) {
+        List<Integer> idLichCapNhat = new ArrayList<>();
+        List<ChiTietDatLichDTO> danhSach = xacNhan.getChiTietDatLichList();
+
+        Optional<TaiKhoan> optionalTaiKhoan = taiKhoanRepository.findByEmail(xacNhan.getEmail());
+        if (optionalTaiKhoan.isEmpty()) {
+            System.err.println("❌ Không tìm thấy tài khoản với email: " + xacNhan.getEmail());
+            return idLichCapNhat;
         }
+        TaiKhoan taiKhoan = optionalTaiKhoan.get();
 
-        for (ChiTietDatLichDTO chiTiet : dto.getChiTietDatLichList()) {
-            Integer idGia = chiTiet.getIdGiaTheoKhungGio();
-            if (idGia == null) {
-                throw new IllegalArgumentException("ID giá theo khung giờ không được rỗng");
+        for (ChiTietDatLichDTO chiTiet : danhSach) {
+            System.out.println("🔍 Đang tìm lịch cho: Ngày = " + chiTiet.getNgayDat()
+                    + ", ID Giá = " + chiTiet.getIdGiaTheoKhungGio());
+
+            LichDatSan lichSan = lichDatSanRepository.findByNgaySanKhungGio(
+                    chiTiet.getNgayDat(), chiTiet.getIdGiaTheoKhungGio()
+            );
+
+            if (lichSan == null) {
+                System.err.println("⚠️ Không tìm thấy lịch trống phù hợp.");
+                continue;
             }
 
-            GiaTheoKhungGio gia = giaTheoKhungGioRepository.findById(idGia)
-                    .orElseThrow(() -> new RuntimeException("Giá theo khung giờ không tồn tại: " + idGia));
+            if (lichSan.getTrangThai() != 3 || lichSan.getTaiKhoan() != null) {
+                System.err.println("🚫 Lịch đã được đặt bởi người khác hoặc không còn trống.");
+                continue;
+            }
 
-            LichDatSan lich = new LichDatSan();
-            lich.setNgayDat(chiTiet.getNgayDat());
-            lich.setTaiKhoan(taiKhoan);
-            lich.setGiaTheoKhungGio(gia);
-            lich.setGiaApDung(gia.getGiaThue());
-            lich.setTrangThai(0);
-            lichDatSanRepository.save(lich);
+            // Gán thông tin đặt lịch
+            lichSan.setTrangThai(0); // Đã đặt
+            lichSan.setGiaApDung(chiTiet.getGia());
+            lichSan.setGhiChu("");
+            lichSan.setTaiKhoan(taiKhoan);
+            lichSan.setSanBong(lichSan.getGiaTheoKhungGio().getSanBong());
+
+            lichDatSanRepository.save(lichSan);
+            idLichCapNhat.add(lichSan.getId());
+
+            System.out.println("✅ Đã cập nhật lịch ID: " + lichSan.getId());
         }
+
+        return idLichCapNhat;
     }
+
 }

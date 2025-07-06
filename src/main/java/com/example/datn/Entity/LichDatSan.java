@@ -39,6 +39,9 @@ public class LichDatSan {
     @ManyToOne
     @JoinColumn(name = "id_gia_theo_khung_gio")
     private GiaTheoKhungGio giaTheoKhungGio;
+    @ManyToOne
+    @JoinColumn(name = "id_san_bong")
+    private SanBong sanBong;
 
     public int getId() {
         return id;
@@ -102,5 +105,13 @@ public class LichDatSan {
 
     public void setGiaTheoKhungGio(GiaTheoKhungGio giaTheoKhungGio) {
         this.giaTheoKhungGio = giaTheoKhungGio;
+    }
+
+    public SanBong getSanBong() {
+        return sanBong;
+    }
+
+    public void setSanBong(SanBong sanBong) {
+        this.sanBong = sanBong;
     }
 }
