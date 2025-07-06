@@ -144,6 +144,8 @@
   let selectedSlots = [];
   let currentDate = new Date();
   let slotsDaDat = /*[[${cacSlotDaDat}]]*/ [];
+  let slotsTonTai = /*[[${cacSlotTonTai}]]*/ [];
+
 
 
   function formatDate(date) {
@@ -197,9 +199,10 @@
 
       const price = Number(cell.dataset.price || 0);
       const isDaDat = slotsDaDat.includes(slotId);
+      const isTonTai = slotsTonTai.includes(slotId);
 
-      if (isPast || price <= 0 || isDaDat) {
-        cell.textContent = isDaDat ? "Đã đặt" : (price <= 0 ? "-" : "");
+      if (!isTonTai || isPast || price <= 0 || isDaDat) {
+        cell.textContent = !isTonTai ? "Chưa có lịch" : (isDaDat ? "Đã đặt" : (price <= 0 ? "-" : ""));
         cell.classList.add("disabled");
         cell.style.cursor = "not-allowed";
       } else {

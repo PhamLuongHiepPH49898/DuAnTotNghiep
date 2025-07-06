@@ -18,13 +18,14 @@ public class SheduledDatSan {
     @Autowired
     private GiaTheoKhungGioRepo giaTheoKhungGioRepo;
 
-    @Scheduled(cron = "*/50 * * * * ?") // chạy mỗi 30 giây // chạy 1h sáng mỗi ngày
+    // @Scheduled(cron = "0 0 0 * * ?") // chạy lúc 00:00 mỗi ngày
+    @Scheduled(cron = "*/30 * * * * ?") // Tạm thời chạy mỗi 30 giây để test
     public void taoLichDatSanTruoc() {
         LocalDate ngay = LocalDate.now();
 
         List<GiaTheoKhungGio> danhSachGiaTheoKhungGio = giaTheoKhungGioRepo.findAll();
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 30; i++) {
             LocalDate targetDate = ngay.plusDays(i);
             for (GiaTheoKhungGio gia : danhSachGiaTheoKhungGio) {
                 if (lichDatSanRepo.findByNgaySanKhungGio(targetDate, gia.getIdGiaTheoKhungGio()) == null) {

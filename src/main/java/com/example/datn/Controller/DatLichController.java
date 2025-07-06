@@ -40,7 +40,8 @@ public class DatLichController {
         List<KhungGio> khungGioList = datSanService.layDanhSachKhungGio();
         List<GiaTheoKhungGio> danhSachGiaTheoKhungGio = datSanService.layDanhGiaTheoKhungGio(); // lấy danh sách giá theo khung giờ
         List<String> cacSlotDaDat = datSanService.getAllSlotKeys();
-
+        List<String> cacSlotTonTai = datSanService.getAllSlotKeysTonTai(); // dạng: "2025-07-07_Sân A_08:00-09:00"
+        model.addAttribute("cacSlotTonTai", cacSlotTonTai);
         // Map key = "idSan_idKhungGio" -> Giá thuê
         Map<String, BigDecimal> bangGia = new HashMap<>();
         for (GiaTheoKhungGio gia : danhSachGiaTheoKhungGio) {
@@ -88,7 +89,7 @@ public class DatLichController {
     }
     @GetMapping("/datLichThanhCong")
     public String hienThiTrangDatLichThanhCong() {
-        return "/Main/Success";
+        return "Main/Success";
     }
 
     @PostMapping("/datLichThanhCong")
@@ -104,6 +105,7 @@ public class DatLichController {
             System.out.println("ID Giá Thuê: " + chiTiet.getIdGiaTheoKhungGio());
 
         }
+
         xacNhanDatLichService.luuDatLich(xacNhan);
         return "Main/Success";
     }
