@@ -42,6 +42,23 @@ public class DatSanService {
     public List<GiaTheoKhungGio> layDanhGiaTheoKhungGio() {
         return giaTheoKhungGioRepository.findByTrangThaiIn(List.of(0,1,2));
     }
+    //check lich chua đc tao
+    public List<String> getAllSlotKeysTonTai() {
+        List<LichDatSan> lichTonTai = lichDatSanRepository.findAll();
+        List<String> slotKeys = new ArrayList<>();
+
+        for (LichDatSan lich : lichTonTai) {
+            String ngay = lich.getNgayDat().toString(); // yyyy-MM-dd
+            String tenSan = lich.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
+            String thoiGian = lich.getGiaTheoKhungGio().getKhungGio().getGioBatDau() + "-" +
+                    lich.getGiaTheoKhungGio().getKhungGio().getGioKetThuc();
+
+            String key = ngay + "_" + tenSan + "_" + thoiGian;
+            slotKeys.add(key);
+        }
+
+        return slotKeys;
+    }
 
 
     public List<String> getAllSlotKeys() {

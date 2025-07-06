@@ -44,7 +44,8 @@ public class DatLichController {
         List<KhungGio> khungGioList = datSanService.layDanhSachKhungGio();
         List<GiaTheoKhungGio> danhSachGiaTheoKhungGio = datSanService.layDanhGiaTheoKhungGio(); // lấy danh sách giá theo khung giờ
         List<String> cacSlotDaDat = datSanService.getAllSlotKeys();
-
+        List<String> cacSlotTonTai = datSanService.getAllSlotKeysTonTai(); // dạng: "2025-07-07_Sân A_08:00-09:00"
+        model.addAttribute("cacSlotTonTai", cacSlotTonTai);
         // Map key = "idSan_idKhungGio" -> Giá thuê
         Map<String, BigDecimal> bangGia = new HashMap<>();
         for (GiaTheoKhungGio gia : danhSachGiaTheoKhungGio) {
@@ -94,7 +95,7 @@ public class DatLichController {
 
     @GetMapping("/datLichThanhCong")
     public String hienThiTrangDatLichThanhCong() {
-        return "/Main/Success";
+        return "Main/Success";
     }
 
     @PostMapping("/datLichThanhCong")
@@ -110,15 +111,7 @@ public class DatLichController {
             System.out.println("ID Giá Thuê: " + chiTiet.getIdGiaTheoKhungGio());
         }
 
-        // Gọi service để lưu lịch và lấy ra danh sách ID đã lưu
-        List<Integer> idLichDatDuocLuu = xacNhanDatLichService.luuDatLich(xacNhan);
-
-        if (!idLichDatDuocLuu.isEmpty()) {
-            // Chuyển sang trang giả lập thanh toán với lịch đầu tiên
-            return "redirect:/gia-lap-thanh-toan?idLichDatSan=" + idLichDatDuocLuu.get(0);
-        }
-
-        // Fallback nếu không có gì được lưu
-        return "redirect:/datLichThanhCong";
+        xacNhanDatLichService.luuDatLich(xacNhan);
+        return "Main/Success";
     }
 }
