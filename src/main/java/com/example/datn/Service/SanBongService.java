@@ -74,4 +74,9 @@ public class SanBongService {
         return sanbongRepo.findSanBongsWithTrangThaiPaging(List.of(0,1,2), pageable);
     }
 
+    public List<SanBong> timKiemSan(String tenSan, Integer loaiSanId, Integer matSanId, Integer monTheThaoId) {
+        return sanbongRepo.findByDieuKien(tenSan, loaiSanId, matSanId, monTheThaoId);
+    }
+
+
 }

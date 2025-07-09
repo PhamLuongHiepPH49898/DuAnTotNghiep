@@ -35,4 +35,13 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
     //loc theo ngay tao
     Page<LichDatSan> findByNgayTaoBetween(LocalDateTime start, LocalDateTime end, Pageable pageable);
 
+
+        @Query("SELECT l FROM LichDatSan l " +
+               "JOIN FETCH l.giaTheoKhungGio g " +
+               "JOIN FETCH g.khungGio " +
+               "JOIN FETCH g.sanBong s " +
+               "WHERE l.ngayDat = :ngay")
+        List<LichDatSan> findByNgay(@Param("ngay") LocalDate ngay);
+
+
 }
