@@ -45,9 +45,9 @@
 <div class="main-content">
   <h2>Lịch đặt sân</h2>
 
-  <form method="get" action="/quan-ly-dat-san" class="row g-2">
+  <form method="get" action="/view-lich-dat" class="row g-2">
     <div class="col-md-2">
-      <input type="date" name="ngay" th:value="${ngayDuocChon}" class="form-control"/>
+      <input type="date" name="ngay" th:value="${ngayDuocChon}" class="form-control" onchange="this.form.submit()"/>
     </div>
     <div class="col-md-2">
       <input type="text" name="tenSan" placeholder="Tên sân" class="form-control"/>

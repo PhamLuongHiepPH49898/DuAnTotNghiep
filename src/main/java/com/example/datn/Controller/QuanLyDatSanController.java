@@ -1,25 +1,22 @@
 package com.example.datn.Controller;
 
-import com.example.datn.Entity.LichDatSan;
-import com.example.datn.Repository.LichDatSanRepo;
+import com.example.datn.Entity.*;
+import com.example.datn.Repository.*;
 import com.example.datn.Service.LichDatSanService;
 import com.example.datn.Service.SanBongService;
 import com.example.datn.Service.TaiKhoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class QuanLyDatSanController {
@@ -29,7 +26,20 @@ public class QuanLyDatSanController {
     @Autowired
     private SanBongService sanBongService;
     @Autowired
+    private LichDatSanRepo lichDatSanRepo;
+    @Autowired
+    private SanBongRepo sanBongRepo;
+    @Autowired
+    private KhungGioRepo khungGioRepo;
+    @Autowired
+    private LoaiSanRepo loaiSanRepo;
+    @Autowired
+    private LoaiMatSanRepo loaiMatSanRepo;
+    @Autowired
+    private LoaiMonTheThaoRepo loaiMonTheThaoRepo;
+    @Autowired
     private TaiKhoanService taiKhoanService;
+
 
     @GetMapping("/quan-ly-dat-san")
     public String quanLyDatSan(
@@ -64,6 +74,38 @@ public class QuanLyDatSanController {
         model.addAttribute("hoTen", hoTen);
 
         return "QuanLyDatSan/QuanLyDatSan";
+    }
+
+    @GetMapping("/view-lich-dat")
+    public String hienThiLich(
+            Model model,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngay,
+            @RequestParam(required = false) String tenSan,
+            @RequestParam(required = false) Integer loaiSanId,
+            @RequestParam(required = false) Integer matSanId,
+            @RequestParam(required = false) Integer monTheThaoId
+    ) {
+        if (ngay == null) {
+            ngay = LocalDate.now();
+        }
+
+        List<SanBong> danhSachSanLoc = sanBongService.timKiemSan(tenSan, loaiSanId, matSanId, monTheThaoId);
+        Map<SanBong, List<LichDatSan>> lichDatMap = lichDatSanService.getLichDatSanTheoNgay(ngay, danhSachSanLoc);
+        List<KhungGio> khungGios = lichDatSanService.getAllKhungGio();
+
+        model.addAttribute("ngayDuocChon", ngay);
+        model.addAttribute("lichDatMap", lichDatMap);
+        model.addAttribute("dsKhungGio", khungGios);
+
+        model.addAttribute("tenSan", tenSan);
+        model.addAttribute("loaiSanId", loaiSanId);
+        model.addAttribute("matSanId", matSanId);
+        model.addAttribute("monTheThaoId", monTheThaoId);
+
+        model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
+        model.addAttribute("dsMatSan", loaiMatSanRepo.findAll());
+        model.addAttribute("dsMonTheThao", loaiMonTheThaoRepo.findAll());
+        return "QuanLyDatSan/ViewLichDatSan";
     }
 
     @GetMapping("/duyet/{id}")
@@ -124,6 +166,5 @@ public class QuanLyDatSanController {
 
         return "QuanLyDatSan/QuanLyDatSan";
     }
-
 
 }
