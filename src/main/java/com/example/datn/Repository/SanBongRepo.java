@@ -40,7 +40,7 @@ public interface SanBongRepo extends JpaRepository<SanBong, Integer>, JpaSpecifi
     @Query("SELECT s FROM SanBong s WHERE s.trang_thai = 0") // chỉ lấy sân đang hoạt động
     List<SanBong> findAllHoatDong();
 
-    @Query("SELECT s FROM SanBong s  WHERE " +
+    @Query("SELECT s FROM SanBong s where s.trang_thai <> 3  AND " +
             "(:tenSan IS NULL OR :tenSan = '' OR LOWER(s.ten_san_bong) LIKE LOWER(CONCAT('%', :tenSan, '%'))) AND "+
            "(:loaiSanId IS NULL OR s.loaiSan.id = :loaiSanId) AND " +
            "(:matSanId IS NULL OR s.loaiMatSan.id = :matSanId) AND " +

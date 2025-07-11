@@ -72,7 +72,7 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
-        
+
         iframe {
             margin-top: 20px;
             border-radius: 8px;
@@ -84,6 +84,7 @@
 <h2>Đặt lịch</h2>
 <form action="/datLichThanhCong" method="post" th:object="${xacNhan}">
 <!--    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
+
     <div class="info-container">
         <div class="section personal-info">
             <h3>THÔNG TIN CÁ NHÂN</h3>
@@ -129,78 +130,78 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-    let bookingList = JSON.parse(localStorage.getItem("chiTietDatLichList")) || [];
-    const tbody = document.getElementById("bookingDetailsBody");
-    const hiddenInputsDiv = document.getElementById("hiddenInputs");
-    const totalPriceSpan = document.getElementById("totalPrice");
+        let bookingList = JSON.parse(localStorage.getItem("chiTietDatLichList")) || [];
+        const tbody = document.getElementById("bookingDetailsBody");
+        const hiddenInputsDiv = document.getElementById("hiddenInputs");
+        const totalPriceSpan = document.getElementById("totalPrice");
 
-    function renderTable() {
-        tbody.innerHTML = "";
-        hiddenInputsDiv.innerHTML = "";
-        let total = 0;
+        function renderTable() {
+            tbody.innerHTML = "";
+            hiddenInputsDiv.innerHTML = "";
+            let total = 0;
 
-        bookingList.forEach((item, index) => {
-            const row = document.createElement("tr");
+            bookingList.forEach((item, index) => {
+                const row = document.createElement("tr");
 
-            // Ngày đặt
-            const ngayTd = document.createElement("td");
-            ngayTd.innerText = item.date || "";
-            row.appendChild(ngayTd);
+                // Ngày đặt
+                const ngayTd = document.createElement("td");
+                ngayTd.innerText = item.date || "";
+                row.appendChild(ngayTd);
 
-            // Thời gian
-            const timeTd = document.createElement("td");
-            timeTd.innerText = item.time || "";
-            row.appendChild(timeTd);
+                // Thời gian
+                const timeTd = document.createElement("td");
+                timeTd.innerText = item.time || "";
+                row.appendChild(timeTd);
 
-            // Tên sân
-            const courtTd = document.createElement("td");
-            courtTd.innerText = item.court || "";
-            row.appendChild(courtTd);
+                // Tên sân
+                const courtTd = document.createElement("td");
+                courtTd.innerText = item.court || "";
+                row.appendChild(courtTd);
 
-            // Giá
-            const priceTd = document.createElement("td");
-            priceTd.innerText = item.price ? Number(item.price).toLocaleString('vi-VN') : "0";
-            row.appendChild(priceTd);
+                // Giá
+                const priceTd = document.createElement("td");
+                priceTd.innerText = item.price ? Number(item.price).toLocaleString('vi-VN') : "0";
+                row.appendChild(priceTd);
 
-            // Nút xóa
-            const deleteTd = document.createElement("td");
-            const deleteBtn = document.createElement("button");
-            deleteBtn.textContent = "Xóa";
-            // Nếu chỉ còn 1 phần tử thì disable nút xóa
-            if (bookingList.length <= 1) {
-                deleteBtn.disabled = true;
-                deleteBtn.style.opacity = "0.5";
-                deleteBtn.style.cursor = "not-allowed";
-            } else {
-                deleteBtn.onclick = () => {
-                    bookingList.splice(index, 1);
-                    localStorage.setItem("chiTietDatLichList", JSON.stringify(bookingList));
-                    renderTable();
-                };
-            }
-            deleteTd.appendChild(deleteBtn);
-            row.appendChild(deleteTd);
+                // Nút xóa
+                const deleteTd = document.createElement("td");
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "Xóa";
+                // Nếu chỉ còn 1 phần tử thì disable nút xóa
+                if (bookingList.length <= 1) {
+                    deleteBtn.disabled = true;
+                    deleteBtn.style.opacity = "0.5";
+                    deleteBtn.style.cursor = "not-allowed";
+                } else {
+                    deleteBtn.onclick = () => {
+                        bookingList.splice(index, 1);
+                        localStorage.setItem("chiTietDatLichList", JSON.stringify(bookingList));
+                        renderTable();
+                    };
+                }
+                deleteTd.appendChild(deleteBtn);
+                row.appendChild(deleteTd);
 
-            tbody.appendChild(row);
+                tbody.appendChild(row);
 
-            total += Number(item.price) || 0;
+                total += Number(item.price) || 0;
 
-            // input ẩn gửi lên server
-            const prefix = `chiTietDatLichList[${index}]`;
-            hiddenInputsDiv.innerHTML += `
+                // input ẩn gửi lên server
+                const prefix = `chiTietDatLichList[${index}]`;
+                hiddenInputsDiv.innerHTML += `
                 <input type="hidden" name="${prefix}.ngayDat" value="${item.date || ''}" />
                 <input type="hidden" name="${prefix}.thoiGian" value="${item.time || ''}" />
                 <input type="hidden" name="${prefix}.tenSan" value="${item.court || ''}" />
                 <input type="hidden" name="${prefix}.gia" value="${item.price || 0}" />
                 <input type="hidden" name="${prefix}.idGiaTheoKhungGio" value="${item.idgia || ''}" />
             `;
-        });
+            });
 
-        totalPriceSpan.innerText = total.toLocaleString('vi-VN');
-    }
+            totalPriceSpan.innerText = total.toLocaleString('vi-VN');
+        }
 
-    renderTable();
-});
+        renderTable();
+    });
 
 </script>
 
