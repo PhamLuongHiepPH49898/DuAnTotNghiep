@@ -70,6 +70,8 @@ public class DatLichController {
         System.out.println("KhungGio: " + khungGioList.size());
         System.out.println("BangGia: " + bangGia.size());
         System.out.println("BangGiaId: " + bangGiaId.size());
+        System.out.println("slotsDaDat: ");
+        cacSlotDaDat.forEach(System.out::println);
 
         return "Main/DatLich";
     }

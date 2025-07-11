@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
 
@@ -71,7 +72,5 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
     @Query("SELECT l FROM LichDatSan l WHERE l.ngayDat = :ngayDat AND l.giaTheoKhungGio.idGiaTheoKhungGio = :idGiaTheoKhungGio AND l.trangThai = 3 ")
     LichDatSan findListLichTrongByNgaySanKhungGio(@Param("ngayDat") LocalDate ngayDat,
                                      @Param("idGiaTheoKhungGio") Integer idGiaTheoKhungGio);
-
-
 
 }
