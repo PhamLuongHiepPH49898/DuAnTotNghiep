@@ -26,14 +26,13 @@ public class LichDatSan {
     @Column(name = "ngay_dat", nullable = false)
     private LocalDate ngayDat;
 
-    @CreationTimestamp
-    @Column(name = "ngay_tao", nullable = false, updatable = false)
-    private LocalDateTime ngayTao;
+    @Column(name = "ngay_tao", nullable = false)
+    private LocalDate ngayTao = LocalDate.now();
 
     @Column(name = "gia_ap_dung", nullable = false)
     private BigDecimal giaApDung;
 
-    @Column(name = "ghi_chu",columnDefinition = "NVARCHAR(255)", nullable = false)
+    @Column(name = "ghi_chu", columnDefinition = "NVARCHAR(255)", nullable = false)
     private String ghiChu;
 
     @Column(name = "trang_thai", nullable = false)
@@ -46,5 +45,7 @@ public class LichDatSan {
     @ManyToOne
     @JoinColumn(name = "id_gia_theo_khung_gio")
     private GiaTheoKhungGio giaTheoKhungGio;
-
+    @ManyToOne
+    @JoinColumn(name = "id_san_bong")
+    private SanBong sanBong;
 }

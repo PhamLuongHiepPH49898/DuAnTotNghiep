@@ -27,15 +27,11 @@ public class LichDatSanService {
     @Autowired
     private KhungGioRepo khungGioRepo;
 
-    public Page<LichDatSan> getLichDatSan(int page, int size) {
+    public Page<LichDatSan> getLichDatSan(LocalDate ngayDat, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return lichDatSanRepo.findAllLichDatSan(pageable);
+        return lichDatSanRepo.findAllLichDatSan(ngayDat, pageable);
     }
 
-    public Page<LichDatSan> timKiemTheoNgayTao(LocalDateTime start, LocalDateTime end, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return lichDatSanRepo.findByNgayTaoBetween(start, end, pageable);
-    }
 
     public void duyet(int id) {
         LichDatSan lichDatSan = lichDatSanRepo.findById(id).orElse(null);
@@ -48,9 +44,20 @@ public class LichDatSanService {
     public void huy(int id, String ghiChu) {
         LichDatSan lichDatSan = lichDatSanRepo.findById(id).orElse(null);
         if (lichDatSan != null) {
+
             lichDatSan.setTrangThai(2);
             lichDatSan.setGhiChu(ghiChu);
             lichDatSanRepo.save(lichDatSan);
+
+            LichDatSan lichMoi = new LichDatSan();
+            lichMoi.setNgayDat(lichDatSan.getNgayDat());
+            lichMoi.setGiaTheoKhungGio(lichDatSan.getGiaTheoKhungGio());
+            lichMoi.setTrangThai(3); // trống
+            lichMoi.setGhiChu("Tạo lại sau khi hủy");
+            lichMoi.setNgayTao(LocalDate.now());
+            lichMoi.setGiaApDung(null);
+            lichMoi.setTaiKhoan(null);
+            lichDatSanRepo.save(lichMoi);
         }
     }
 
@@ -60,9 +67,12 @@ public class LichDatSanService {
         return lichDatSanRepo.timKiem(keyword, ngaydat, sanBong, trangThai, pageable);
 
     }
+    public List<LichDatSan> getLichSuDatSanByTaiKhoan(int taiKhoanId) {
+        return lichDatSanRepo.findByTaiKhoanId(taiKhoanId);
+    }
 
-    public Map<SanBong, List<LichDatSan>> getLichDatSanTheoNgay(LocalDate ngay, List<SanBong> danhSachSanLoc) {
-        List<LichDatSan> lichDatList = lichDatSanRepo.findByNgay(ngay);
+    public Map<SanBong, List<LichDatSan>> getLichDatSanTheoNgay(LocalDate ngayDat, List<SanBong> danhSachSanLoc) {
+        List<LichDatSan> lichDatList = lichDatSanRepo.findByNgay(ngayDat);
         Map<SanBong, List<LichDatSan>> result = new LinkedHashMap<>();
 
         for (SanBong san : danhSachSanLoc) {

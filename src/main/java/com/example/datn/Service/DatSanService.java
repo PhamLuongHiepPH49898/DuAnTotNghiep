@@ -42,19 +42,27 @@ public class DatSanService {
     public List<GiaTheoKhungGio> layDanhGiaTheoKhungGio() {
         return giaTheoKhungGioRepository.findByTrangThaiIn(List.of(0,1,2));
     }
+    //check lich chua đc tao
+    public List<String> getAllSlotKeysTonTai() {
+        List<LichDatSan> lichTonTai = lichDatSanRepository.findAll();
+        List<String> slotKeys = new ArrayList<>();
 
-    public Map<String, BigDecimal> layBangGia() {
-        List<GiaTheoKhungGio> danhSachGia = giaTheoKhungGioRepository.findAll();
-        Map<String, BigDecimal> bangGia = new HashMap<>();
-        for (GiaTheoKhungGio gia : danhSachGia) {
-            String key = gia.getSanBong().getId_san_bong() + "_" + gia.getKhungGio().getId();
-            System.out.println("KEY: " + key + ", Giá: " + gia.getGiaThue());
-            bangGia.put(key, gia.getGiaThue());
+        for (LichDatSan lich : lichTonTai) {
+            String ngay = lich.getNgayDat().toString(); // yyyy-MM-dd
+            String tenSan = lich.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
+            String thoiGian = lich.getGiaTheoKhungGio().getKhungGio().getGioBatDau() + "-" +
+                    lich.getGiaTheoKhungGio().getKhungGio().getGioKetThuc();
+
+            String key = ngay + "_" + tenSan + "_" + thoiGian;
+            slotKeys.add(key);
         }
-        return bangGia;
+
+        return slotKeys;
     }
+
+
     public List<String> getAllSlotKeys() {
-        List<LichDatSan> danhSach = lichDatSanRepository.findAll();
+        List<LichDatSan> danhSach = lichDatSanRepository.findByTrangThaiIn(List.of(0,1));// fix để khi hủy lịch thì lịch đó có thể đặt tiếp
         List<String> keys = new ArrayList<>();
 
         for (LichDatSan lich : danhSach) {

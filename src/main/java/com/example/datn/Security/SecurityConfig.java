@@ -26,7 +26,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/trang-chu", "/css/**", "/js/**", "/image/**", "/tim-kiem/**", "/chi-tiet/**", "/ve-trang-chu/**").permitAll() // Cho phép truy cập công cộng
+                        .requestMatchers("/", "/trang-chu","/uploads/**", "/css/**", "/js/**", "/image/**", "/tim-kiem/**", "/chi-tiet/**", "/ve-trang-chu/**").permitAll() // Cho phép truy cập công cộng
                         .requestMatchers("/admin/**").hasRole("QUAN_TRI")
                         .requestMatchers("/user/**").hasRole("NGUOI_DUNG")
                         .requestMatchers("/login", "/dang-ky").permitAll() // Trang login và register công khai
@@ -52,7 +52,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // ✅ Dùng đúng encoder như khi lưu DB
+        return new BCryptPasswordEncoder(); // Dùng encoder như khi lưu DB
     }
 
     @Bean
