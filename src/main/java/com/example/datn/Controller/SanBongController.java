@@ -10,6 +10,8 @@ import com.example.datn.Repository.TaiKhoanRepo;
 import com.example.datn.Security.CustomUserDetails;
 import com.example.datn.Service.SanBongService;
 import com.example.datn.Service.TaiKhoanService;
+import com.example.datn.Service.ThongBaoService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -43,15 +45,17 @@ public class SanBongController {
     private final LoaiMonTheThaoRepo loaiMonTheThaoRepo;
     private final TaiKhoanService taiKhoanService;
     private final TaiKhoanRepo taiKhoanRepo;
+    private final ThongBaoService thongBaoService;
 
 
-    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo, TaiKhoanService taiKhoanService, TaiKhoanRepo taiKhoanRepo1) {
+    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo, TaiKhoanService taiKhoanService, TaiKhoanRepo taiKhoanRepo1, ThongBaoService thongBaoService) {
         this.sanBongService = sanBongService;
         this.loaiMatSanRepo = loaiMatSanRepo;
         this.loaiSanRepo = loaiSanRepo;
         this.loaiMonTheThaoRepo = loaiMonTheThaoRepo;
         this.taiKhoanService = taiKhoanService;
         this.taiKhoanRepo = taiKhoanRepo1;
+        this.thongBaoService = thongBaoService;
     }
 
     @GetMapping("/")
@@ -184,11 +188,22 @@ public class SanBongController {
     }
 
     @GetMapping("/user/trang-chu")
-    public String trangChu_nguoiDung(Model model) {
+    public String trangChu_nguoiDung(Model model, HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("username", auth.getName());
         List<SanBong> danhSachSan = sanBongService.findAll();
         model.addAttribute("danhSachSan", danhSachSan);
+        // Lấy thông tin tài khoản từ SecurityContext
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+        TaiKhoan taiKhoan = userDetails.getTaiKhoan();
+
+        //  Set idTaiKhoan vào session để sử dụng cho thông báo
+        request.getSession().setAttribute("idTaiKhoan", taiKhoan.getId());
+         danhSachSan = sanBongService.findAll();
+        model.addAttribute("danhSachSan", danhSachSan);
+        //
+        int soLuongThongBaoMoi = thongBaoService.demThongBaoChuaDoc(taiKhoan.getId());
+        model.addAttribute("soLuongThongBaoMoi", soLuongThongBaoMoi);
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);

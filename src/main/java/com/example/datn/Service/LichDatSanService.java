@@ -26,6 +26,8 @@ public class LichDatSanService {
     private SanBongRepo sanBongRepo;
     @Autowired
     private KhungGioRepo khungGioRepo;
+    @Autowired
+    private ThongBaoService thongBaoService;
 
     public Page<LichDatSan> getLichDatSan(LocalDate ngayDat, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -38,6 +40,13 @@ public class LichDatSanService {
         if (lichDatSan != null) {
             lichDatSan.setTrangThai(1);
             lichDatSanRepo.save(lichDatSan);
+            //duyet -> gui thongbao
+            try {
+                KhungGio khungGio = lichDatSan.getGiaTheoKhungGio().getKhungGio();
+                thongBaoService.taoThongBaoXacNhan(khungGio, lichDatSan);
+            } catch (Exception e) {
+                System.err.println("[WARN] Gửi thông báo thất bại" + e.getMessage());
+            }
         }
     }
 
@@ -58,6 +67,11 @@ public class LichDatSanService {
             lichMoi.setGiaApDung(null);
             lichMoi.setTaiKhoan(null);
             lichDatSanRepo.save(lichMoi);
+        }try {
+            KhungGio khungGio = lichDatSan.getGiaTheoKhungGio().getKhungGio();
+            thongBaoService.taoThongBaoHuy(lichDatSan, khungGio);
+        } catch (Exception e) {
+            System.err.println("[WARN] Gửi thông báo HUỶ thất bại: " + e.getMessage());
         }
     }
 
