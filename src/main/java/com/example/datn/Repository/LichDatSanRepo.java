@@ -72,5 +72,8 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
     @Query("SELECT l FROM LichDatSan l WHERE l.ngayDat = :ngayDat AND l.giaTheoKhungGio.idGiaTheoKhungGio = :idGiaTheoKhungGio AND l.trangThai = 3 ")
     LichDatSan findListLichTrongByNgaySanKhungGio(@Param("ngayDat") LocalDate ngayDat,
                                      @Param("idGiaTheoKhungGio") Integer idGiaTheoKhungGio);
+    // Dùng cho thông báo
+    List<LichDatSan> findByNgayDatAndTaiKhoanIsNotNullAndTrangThai(LocalDate ngayDat, int trangThai);
+
 
 }

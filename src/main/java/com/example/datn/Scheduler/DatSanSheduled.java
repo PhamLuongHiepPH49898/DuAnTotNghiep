@@ -1,4 +1,4 @@
-package com.example.datn.Service;
+package com.example.datn.Scheduler;
 import com.example.datn.Entity.GiaTheoKhungGio;
 import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Repository.GiaTheoKhungGioRepo;
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class SheduledDatSan {
+public class DatSanSheduled {
     @Autowired
     private LichDatSanRepo lichDatSanRepo;
 

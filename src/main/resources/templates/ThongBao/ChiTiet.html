@@ -85,13 +85,13 @@
     <input type="text" th:value="${thongBao.tieuDe}" readonly>
 
     <label>Nội dung:</label>
-    <textarea readonly th:text="${thongBao.noiDung}"></textarea>
+    <div style="white-space: pre-line; padding: 10px 12px; border: 1px solid #ccc; border-radius: 8px;
+            background-color: #f7f9fc; font-size: 15px; color: #333;"
+         th:utext="${#strings.replace(thongBao.noiDung, '\n', '<br/>')}"></div>
 
     <label>Ngày tạo:</label>
     <input type="text" th:value="${#temporals.format(thongBao.ngayTao, 'dd/MM/yyyy HH:mm')}" readonly>
 
-    <label>Trạng thái:</label>
-    <input type="text" th:value="${thongBao.trangThai == 1 ? 'Đã đọc' : 'Chưa đọc'}" readonly>
   </form>
 
   <a th:href="@{/thong-bao/xem-thong-bao}" class="btn-back">Quay lại danh sách</a>
