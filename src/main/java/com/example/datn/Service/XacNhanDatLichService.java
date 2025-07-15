@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class XacNhanDatLichService {
@@ -25,6 +26,20 @@ public class XacNhanDatLichService {
 
     @Autowired
     private TaiKhoanRepo taiKhoanRepository;
+
+    @Autowired
+    private LichDatSanRepo lichDatSanRepo;  // Nhớ import repo này
+
+    public void capNhatTrangThaiThanhToan(int idLichDatSan, boolean daThanhToan) {
+        Optional<LichDatSan> optional = lichDatSanRepo.findById(idLichDatSan);
+        if (optional.isPresent()) {
+            LichDatSan lich = optional.get();
+            lich.setTrangThai(daThanhToan ? 1 : 0); // 1: đã thanh toán, 0: chưa thanh toán
+            lichDatSanRepo.save(lich);
+        } else {
+            throw new RuntimeException("Không tìm thấy lịch đặt sân với ID: " + idLichDatSan);
+        }
+    }
 
     public List<Integer> luuDatLich(XacNhanDatLichDTO dto) {
         TaiKhoan taiKhoan = taiKhoanRepository.findByEmail(dto.getEmail())

@@ -99,27 +99,12 @@ public class DatLichController {
     }
 
     @PostMapping("/datLichThanhCong")
-    public String luuDatLich(@ModelAttribute XacNhanDatLichDTO xacNhan, Model model, Principal principal) {
-        List<ChiTietDatLichDTO> danhSachChiTiet = xacNhan.getChiTietDatLichList();
-
-        // In log kiểm tra
-        for (ChiTietDatLichDTO chiTiet : danhSachChiTiet) {
-            System.out.println("Ngày: " + chiTiet.getNgayDat());
-            System.out.println("Giờ: " + chiTiet.getThoiGian());
-            System.out.println("Sân: " + chiTiet.getTenSan());
-            System.out.println("Giá: " + chiTiet.getGia());
-            System.out.println("ID Giá Thuê: " + chiTiet.getIdGiaTheoKhungGio());
-        }
-
-        // Gọi service để lưu lịch và lấy ra danh sách ID đã lưu
+    public String chuyenSangTrangThanhToan(@ModelAttribute XacNhanDatLichDTO xacNhan, Model model) {
         List<Integer> idLichDatDuocLuu = xacNhanDatLichService.luuDatLich(xacNhan);
-
-        if (!idLichDatDuocLuu.isEmpty()) {
-            // Chuyển sang trang giả lập thanh toán với lịch đầu tiên
-            return "redirect:/gia-lap-thanh-toan?idLichDatSan=" + idLichDatDuocLuu.get(0);
+        if (idLichDatDuocLuu.isEmpty()) {
+            return "redirect:/xacnhan"; // nếu không có đơn nào
         }
-
-        // Fallback nếu không có gì được lưu
-        return "redirect:/datLichThanhCong";
+        // redirect sang trang thanh toán, truyền idLichDatSan
+        return "redirect:/gia-lap-thanh-toan?idLichDatSan=" + idLichDatDuocLuu.get(0);
     }
 }

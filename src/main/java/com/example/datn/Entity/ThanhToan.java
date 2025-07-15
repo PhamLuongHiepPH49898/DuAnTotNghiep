@@ -33,7 +33,7 @@ public class ThanhToan {
     private TaiKhoan taiKhoan;
 
     @ManyToOne
-    @JoinColumn(name = "id_phuong_thuc_thanh_toan", nullable = false)
+    @JoinColumn(name = "id_phuong_thuc_thanh_toan")
     private PhuongThucThanhToan phuongThucThanhToan;
 
     @ManyToOne

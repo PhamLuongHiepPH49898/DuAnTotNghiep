@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sửa Tài Khoản Ngân Hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container py-5">
+    <h3 class="mb-4">Sửa Tài Khoản Ngân Hàng</h3>
+
+    <form th:action="@{/quan-ly-thanh-toan/cap-nhat}" method="post">
+        <input type="hidden" name="id" th:value="${taiKhoan.id}"/>
+
+        <!-- Chọn phương thức thanh toán -->
+        <div class="mb-3">
+            <label>Phương thức thanh toán</label>
+            <select name="phuongThuc.idPhuongThucThanhToan" class="form-select" required>
+                <option th:each="pt : ${dsPhuongThuc}"
+                        th:value="${pt.idPhuongThucThanhToan}"
+                        th:text="${pt.tenPhuongThucThanhToan}"
+                        th:selected="${pt.idPhuongThucThanhToan == taiKhoan.phuongThuc.idPhuongThucThanhToan}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Chọn ngân hàng -->
+        <div class="mb-3">
+            <label>Ngân hàng</label>
+            <select id="bankSelect" name="bankCode" class="form-select" required>
+                <option value="">Chọn ngân hàng</option>
+                <option value="vietcombank" data-name="Vietcombank"
+                        th:selected="${taiKhoan.bankCode == 'vietcombank'}">Vietcombank</option>
+                <option value="techcombank" data-name="Techcombank"
+                        th:selected="${taiKhoan.bankCode == 'techcombank'}">Techcombank</option>
+                <option value="vietinbank" data-name="VietinBank"
+                        th:selected="${taiKhoan.bankCode == 'vietinbank'}">VietinBank</option>
+                <option value="bidv" data-name="BIDV"
+                        th:selected="${taiKhoan.bankCode == 'bidv'}">BIDV</option>
+                <option value="mbbank" data-name="MBBank"
+                        th:selected="${taiKhoan.bankCode == 'mbbank'}">MBBank</option>
+            </select>
+        </div>
+
+        <!-- Hidden field để lưu tên ngân hàng -->
+        <input type="hidden" id="tenNganHangInput" name="tenNganHang" th:value="${taiKhoan.tenNganHang}" required>
+
+        <!-- Số tài khoản -->
+        <div class="mb-3">
+            <label>Số tài khoản</label>
+            <input type="text" name="soTaiKhoan" class="form-control" th:value="${taiKhoan.soTaiKhoan}" required>
+        </div>
+
+        <!-- Chủ tài khoản -->
+        <div class="mb-3">
+            <label>Tên chủ tài khoản</label>
+            <input type="text" name="chuTaiKhoan" class="form-control" th:value="${taiKhoan.chuTaiKhoan}" required>
+        </div>
+
+        <!-- Nút submit -->
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Cập nhật
+            </button>
+            <a th:href="@{/quan-ly-thanh-toan}" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('bankSelect').addEventListener('change', function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const bankName = selectedOption.getAttribute('data-name');
+        document.getElementById('tenNganHangInput').value = bankName;
+    });
+</script>
+
+</body>
+</html>

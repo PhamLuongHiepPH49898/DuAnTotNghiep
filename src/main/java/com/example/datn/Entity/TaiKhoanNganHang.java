@@ -17,19 +17,19 @@ public class TaiKhoanNganHang {
     @Column(name = "id_tai_khoan_ngan_hang")
     private Integer id;
 
-    @Column(name = "so_tai_khoan", nullable = false, columnDefinition = "NVARCHAR(100)")
+    @Column(name = "so_tai_khoan", nullable = false)
     private String soTaiKhoan;
 
-    @Column(name = "ten_ngan_hang", nullable = false, columnDefinition = "NVARCHAR(100)")
+    @Column(name = "ten_ngan_hang", nullable = false)
     private String tenNganHang;
 
-    @Column(name = "chu_tai_khoan", nullable = false, columnDefinition = "NVARCHAR(100)")
+    @Column(name = "chu_tai_khoan", nullable = false)
     private String chuTaiKhoan;
 
-    @Column(name = "logo_ngan_hang", columnDefinition = "NVARCHAR(255)")
-    private String logoNganHang;
+    @Column(name = "bank_code", length = 50)
+    private String bankCode;
 
     @ManyToOne
-    @JoinColumn(name = "id_phuong_thuc")
+    @JoinColumn(name = "id_phuong_thuc_thanh_toan")
     private PhuongThucThanhToan phuongThuc;
 }
