@@ -27,6 +27,10 @@ public class ThongBao {
     @ManyToOne
     @JoinColumn(name = "id_tai_khoan", nullable = false)
     private TaiKhoan taiKhoan;
+    //them để schedulerNhacLichHen tb (ràng buộc từng thông báo với 1 lịch)
+    @ManyToOne
+    @JoinColumn(name = "id_lich_dat_san")
+    private LichDatSan lichDatSan;
 
     public int getIdThongBao() {
         return idThongBao;
@@ -74,5 +78,13 @@ public class ThongBao {
 
     public void setTaiKhoan(TaiKhoan taiKhoan) {
         this.taiKhoan = taiKhoan;
+    }
+
+    public LichDatSan getLichDatSan() {
+        return lichDatSan;
+    }
+
+    public void setLichDatSan(LichDatSan lichDatSan) {
+        this.lichDatSan = lichDatSan;
     }
 }

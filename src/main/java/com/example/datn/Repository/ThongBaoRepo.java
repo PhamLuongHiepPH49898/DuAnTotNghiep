@@ -18,5 +18,7 @@ public interface ThongBaoRepo extends JpaRepository<ThongBao, Integer> {
     // Đếm thông báo theo tài khoản & trạng thái
     int countByTaiKhoanIdAndTrangThai(Integer taiKhoanId, int trangThai);
 
+    boolean existsByLichDatSan_IdAndTieuDe(Integer idLichDatSan, String tieuDe);
+
 
 }
