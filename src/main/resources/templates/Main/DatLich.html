@@ -184,25 +184,40 @@
     const isPast = checkDate < today;
     toggleBookingCells(!isPast, isPast);
   }
-
+  //fix lại để check ko đặt đc h đã qua
   function toggleBookingCells(enable, isPast) {
     const cells = document.querySelectorAll("#bookingTable td[data-price]");
     const dateKey = getCurrentDateKey();
 
+    const now = new Date();
+    const isToday = currentDate.toDateString() === now.toDateString();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes(); // Tổng số phút hiện tại
+
     cells.forEach(cell => {
       const slotId = `${dateKey}_${cell.dataset.court}_${cell.dataset.time}`;
-
-      // Reset
-      cell.classList.remove("disabled", "selected");
-      cell.onclick = null;
-      cell.style.cursor = "pointer";
-
       const price = Number(cell.dataset.price || 0);
       const isDaDat = slotsDaDat.includes(slotId);
       const isTonTai = slotsTonTai.includes(slotId);
 
-      if (!isTonTai || isPast || price <= 0 || isDaDat) {
-        cell.textContent = !isTonTai ? "Chưa có lịch" : (isDaDat ? "Đã đặt" : (price <= 0 ? "-" : ""));
+      cell.classList.remove("disabled", "selected");
+      cell.onclick = null;
+      cell.style.cursor = "pointer";
+
+      // Tách giờ bắt đầu + kết thúc
+      const [startStr, endStr] = cell.dataset.time.split('-');
+      const [endHour, endMinute] = endStr.split(':').map(Number);
+      const endMinutes = endHour * 60 + endMinute;
+
+      const isExpired = isToday && endMinutes <= currentMinutes;
+
+      if (!isTonTai || isPast || price <= 0 || isDaDat || isExpired) {
+        cell.textContent =
+                !isTonTai ? "Chưa có lịch"
+                        : isDaDat ? "Đã đặt"
+                                : isPast ? "Đã qua"
+                                : isExpired ? "Đã qua"
+                                        : (price <= 0 ? "-" : "");
+
         cell.classList.add("disabled");
         cell.style.cursor = "not-allowed";
       } else {
@@ -217,6 +232,7 @@
 
     updateTotal();
   }
+
 
   function selectSlot(cell, dateKey) {
     if (cell.classList.contains("disabled")) return;

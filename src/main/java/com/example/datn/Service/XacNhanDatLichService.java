@@ -41,7 +41,7 @@ public class XacNhanDatLichService {
             System.out.println("🔍 Đang tìm lịch cho: Ngày = " + chiTiet.getNgayDat()
                     + ", ID Giá = " + chiTiet.getIdGiaTheoKhungGio());
 
-            LichDatSan lichSan = lichDatSanRepository.findByNgaySanKhungGio(
+            LichDatSan lichSan = lichDatSanRepository.findListLichTrongByNgaySanKhungGio(
                     chiTiet.getNgayDat(), chiTiet.getIdGiaTheoKhungGio()
             );
 

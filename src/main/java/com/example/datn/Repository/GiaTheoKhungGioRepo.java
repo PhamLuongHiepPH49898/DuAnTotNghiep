@@ -10,4 +10,7 @@ import java.util.List;
 public interface GiaTheoKhungGioRepo extends JpaRepository<GiaTheoKhungGio, Integer> {
     @Query("SELECT s FROM GiaTheoKhungGio s WHERE s.trangThai IN :trangThaiList")
     List<GiaTheoKhungGio> findByTrangThaiIn(@Param("trangThaiList") List<Integer> trangThaiList);
+    @Query("SELECT g FROM GiaTheoKhungGio g WHERE g.trangThai IN (:trangThaiList) AND g.sanBong.trang_thai = 0")
+    List<GiaTheoKhungGio> findGiaTheoKhungGioByTrangThaiAndSanHoatDong(@Param("trangThaiList") List<Integer> trangThaiList);
+
 }
