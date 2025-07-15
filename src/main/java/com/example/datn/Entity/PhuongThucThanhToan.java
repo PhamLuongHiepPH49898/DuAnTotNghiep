@@ -14,7 +14,7 @@ public class PhuongThucThanhToan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_phuong_thuc_thanh_toan")
-    private int idPhuongThucThanhToan;
+    private Long idPhuongThucThanhToan;
 
     @Column(name = "ten_phuong_thuc_thanh_toan", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String tenPhuongThucThanhToan;

@@ -300,8 +300,8 @@
                             <label class="form-label">Trạng thái</label>
                             <select name="trangThai" class="form-select">
                                 <option value="">-- Tất cả --</option>
-                                <option value="0" th:selected="${trangThai == 0}">Chờ duyệt</option>
-                                <option value="1" th:selected="${trangThai == 1}">Đã duyệt</option>
+                                <option value="0" th:selected="${trangThai == 0}">Chờ thanh toán</option>
+                                <option value="1" th:selected="${trangThai == 1}">Đã thanh toán</option>
                                 <option value="2" th:selected="${trangThai == 2}">Đã hủy</option>
                             </select>
                         </div>
@@ -352,8 +352,8 @@
                     </td>
 
                     <td>
-                        <span th:if="${danhSachLichDatSan.trangThai == 0}" class="badge bg-info">Chờ duyêt</span>
-                        <span th:if="${danhSachLichDatSan.trangThai == 1}" class="badge bg-success">Đã duyệt</span>
+                        <span th:if="${danhSachLichDatSan.trangThai == 0}" class="badge bg-info">Chờ thanh toán</span>
+                        <span th:if="${danhSachLichDatSan.trangThai == 1}" class="badge bg-success">Đã thanh toán</span>
                         <span th:if="${danhSachLichDatSan.trangThai == 2}"
                               class="badge bg-secondary">Đã hủy</span>
                         <span th:if="${danhSachLichDatSan.trangThai != 0 and danhSachLichDatSan.trangThai != 1 and danhSachLichDatSan.trangThai != 2 and danhSachLichDatSan.trangThai != 3}"
@@ -364,7 +364,7 @@
                         <a th:href="@{/duyet/{id}(id=${danhSachLichDatSan.id})}"
                            th:if="${danhSachLichDatSan.trangThai ==0}"
                            class="btn btn-sm btn-outline-success"
-                           onclick="return confirm('Bạn có chắc duệt không')">Duyệt</a>
+                           onclick="return confirm('Bạn có chắc duyệt không')">Duyệt</a>
 
                         <!-- Nút hủy -->
                         <button th:if="${danhSachLichDatSan.trangThai == 0 || danhSachLichDatSan.trangThai == 1} "
