@@ -38,10 +38,11 @@ public class DatSanSheduled {
                     lichMoi.setGiaTheoKhungGio(gia);
                     lichMoi.setTrangThai(3); // lịch trống
                     lichMoi.setGhiChu("Tạo tự động");
-                    lichMoi.setGiaApDung(gia.getGiaThue());
+                    lichMoi.setGiaApDung(null);
                     lichMoi.setNgayTao(LocalDate.now());
                     lichDatSanRepo.save(lichMoi);
                     System.out.println(" Đã tạo lịch ngày " + targetDate + " - ID Giá: " + gia.getIdGiaTheoKhungGio());
+
 
                 } else {
                     System.out.println(" Đã có lịch cho ngày " + targetDate + " - ID Giá " + gia.getIdGiaTheoKhungGio() + " → Bỏ qua tạo mới.");

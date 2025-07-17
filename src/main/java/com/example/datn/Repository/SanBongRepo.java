@@ -14,19 +14,37 @@ import java.util.List;
 public interface SanBongRepo extends JpaRepository<SanBong, Integer>, JpaSpecificationExecutor<SanBong> {
     @Query("SELECT s FROM SanBong s WHERE s.trang_thai IN :trangThaiList")
     List<SanBong> findByTrangThaiIn(@Param("trangThaiList") List<Integer> trangThaiList);
-    @Query("SELECT s FROM SanBong s " +
-            "WHERE (:keyword IS NULL OR s.ten_san_bong LIKE %:keyword%) " +
-            "AND (:loaiSan IS NULL OR s.loaiSan.id = :loaiSan) " +
-            "AND (:monTheThao IS NULL OR s.loaiMonTheThao.id = :monTheThao)")
+
+    @Query("SELECT s FROM SanBong s WHERE s.trang_thai IN :trangThaiList ORDER BY s.id_san_bong DESC")
+    Page<SanBong> findSanBongsWithTrangThaiPaging(@Param("trangThaiList") List<Integer> trangThaiList, Pageable pageable);
+
+    @Query("SELECT s FROM SanBong s WHERE "
+           + "(:keyword IS NULL OR :keyword = '' OR LOWER(s.ten_san_bong) LIKE LOWER(CONCAT('%', :keyword, '%'))) "
+           + "AND (:loaiSan IS NULL OR s.loaiSan.id = :loaiSan) "
+           + "AND (:monTheThao IS NULL OR s.loaiMonTheThao.id = :monTheThao)")
     List<SanBong> timKiemSan(@Param("keyword") String keyword,
-                             @Param("loaiSan") Long loaiSan,
-                             @Param("monTheThao") Long monTheThao);
-    @Query("SELECT s FROM SanBong s " +
-            "WHERE (:keyword IS NULL OR LOWER(s.ten_san_bong) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
-            "AND (:loaiSan IS NULL OR s.loaiSan.id = :loaiSan) " +
-            "AND (:monTheThao IS NULL OR s.loaiMonTheThao.id = :monTheThao)")
-    Page<SanBong> timKiemPhanTrang(@Param("keyword") String keyword,
-                                   @Param("loaiSan") Long loaiSan,
-                                   @Param("monTheThao") Long monTheThao,
-                                   Pageable pageable);
+                             @Param("loaiSan") Integer loaiSan,
+                             @Param("monTheThao") Integer monTheThao);
+
+    @Query("SELECT s FROM SanBong s WHERE "
+           + "(:keyword IS NULL OR :keyword = '' OR LOWER(s.ten_san_bong) LIKE LOWER(CONCAT('%', :keyword, '%'))) "
+           + "AND (:loaiSan IS NULL OR s.loaiSan.id = :loaiSan) "
+           + "AND (:monTheThao IS NULL OR s.loaiMonTheThao.id = :monTheThao)"
+           + "AND s.trang_thai <> 3"
+           + "ORDER BY s.id_san_bong DESC")
+    Page<SanBong> timKiemSanPaging(@Param("keyword") String keyword,
+                                   @Param("loaiSan") Integer loaiSan,
+                                   @Param("monTheThao") Integer monTheThao, Pageable pageable);
+
+
+    @Query("SELECT s FROM SanBong s WHERE s.trang_thai = 0") // chỉ lấy sân đang hoạt động
+    List<SanBong> findAllHoatDong();
+
+    @Query("SELECT s FROM SanBong s where s.trang_thai <> 3  AND " +
+            "(:tenSan IS NULL OR :tenSan = '' OR LOWER(s.ten_san_bong) LIKE LOWER(CONCAT('%', :tenSan, '%'))) AND "+
+           "(:loaiSanId IS NULL OR s.loaiSan.id = :loaiSanId) AND " +
+           "(:matSanId IS NULL OR s.loaiMatSan.id = :matSanId) AND " +
+           "(:monTheThaoId IS NULL OR s.loaiMonTheThao.id = :monTheThaoId)")
+    List<SanBong> findByDieuKien(String tenSan, Integer loaiSanId, Integer matSanId, Integer monTheThaoId);
+
 }

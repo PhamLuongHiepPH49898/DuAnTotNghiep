@@ -2,7 +2,6 @@ package com.example.datn.Service;
 
 import com.example.datn.DTO.ChiTietDatLichDTO;
 import com.example.datn.DTO.XacNhanDatLichDTO;
-import com.example.datn.Entity.GiaTheoKhungGio;
 import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Entity.TaiKhoan;
 import com.example.datn.Repository.GiaTheoKhungGioRepo;
@@ -11,20 +10,23 @@ import com.example.datn.Repository.TaiKhoanRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class XacNhanDatLichService {
+
     @Autowired
     private LichDatSanRepo lichDatSanRepository;
+
     @Autowired
     private GiaTheoKhungGioRepo giaTheoKhungGioRepository;
+
     @Autowired
     private TaiKhoanRepo taiKhoanRepository;
+
 
     public List<Integer> luuDatLich(XacNhanDatLichDTO xacNhan) {
         List<Integer> idLichCapNhat = new ArrayList<>();
@@ -72,3 +74,4 @@ public class XacNhanDatLichService {
     }
 
 }
+

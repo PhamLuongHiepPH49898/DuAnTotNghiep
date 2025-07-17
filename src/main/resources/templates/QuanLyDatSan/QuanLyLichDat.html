@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Quản lý đặt sân</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .sidebar {
+            background: #ffffff;
+            color: #1B1E21;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            padding-top: 60px;
+            z-index: 1030;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Logo trong sidebar */
+        .sidebar-logo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 60px;
+            background: white;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1040;
+        }
+
+        .sidebar-logo img {
+            max-height: 40px;
+            object-fit: contain;
+        }
+
+        .sidebar .nav-link {
+            color: #1B1E21;
+            padding: 12px 20px;
+            transition: background 0.3s ease, padding-left 0.2s ease;
+        }
+
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding-left: 25px;
+        }
+
+        .offcanvas .nav-link {
+            color: #1B1E21;
+            padding: 12px 20px;
+            transition: background 0.3s ease, padding-left 0.2s ease;
+        }
+
+        .offcanvas .nav-link.active,
+        .offcanvas .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding-left: 25px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 240px;
+            right: 0;
+            height: 60px;
+            background: white;
+            color: #333;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 1px solid #dee2e6;
+            z-index: 1020;
+            justify-content: flex-end;
+        }
+
+        .main-wrapper {
+            margin-left: 240px;
+            padding: 100px 20px 40px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar,
+            .sidebar-logo {
+                display: none;
+            }
+
+            header {
+                display: none;
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+                padding-top: 130px;
+            }
+        }
+
+        .table img {
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            max-width: 80px;
+        }
+
+        footer {
+            background: #2563eb;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .form-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .form-content {
+                padding: 20px;
+            }
+        }
+
+        #mobileSidebar {
+            width: 240px !important;
+        }
+
+        .date-filter-sidebar {
+            width: 200px;
+            float: left;
+            margin-right: 20px;
+        }
+
+        .date-filter-sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .date-filter-sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .date-filter-sidebar a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #0d6efd;
+        }
+
+        .date-filter-sidebar a.active {
+            font-weight: bold;
+            color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Logo sidebar (desktop) -->
+<div class="sidebar-logo d-none d-md-flex">
+    <img src="/image/logo.png" alt="Logo">
+</div>
+
+<!-- Sidebar (Desktop) -->
+<nav class="sidebar d-none d-md-block">
+    <ul class="nav flex-column mt-3">
+        <li class="nav-item"><a class="nav-link active" href="/quan-ly-san"><i class="bi bi-card-list"></i> Quản lý sân</a>
+        </li>
+        <li class="nav-item"><a class="nav-link " href="/quan-ly-gia-theo-khung-gio"><i class="bi bi-card-list"></i>
+            Quản lý giá theo khung giờ</a></li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="qlDatSanDropdown1" role="button"
+               data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-calendar-event"></i> Quản lý đặt sân
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="qlDatSanDropdown1">
+                <li><a class="dropdown-item" href="/quan-ly-lich-dat">Quản lý lịch đặt</a></li>
+                <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
+            </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Quản lý thanh toán</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+        <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
+            thống kê</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bell"></i> Quản lý thông báo</a></li>
+        <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay lại
+            Trang chủ</a></li>
+    </ul>
+</nav>
+
+<header class="d-none d-md-flex">
+    <div class="dropdown">
+        <a class="d-flex align-items-center dropdown-toggle text-decoration-none text-dark" href="#" role="button"
+           id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle me-2 fs-5 text-dark"></i>
+            <span class="fw-semibold" th:text="${hoTen}"></span>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="dropdown-item text-dark">Đăng xuất</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</header>
+
+
+<nav class="navbar navbar-light bg-white fixed-top d-md-none border-bottom shadow-sm">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <img src="/image/logo.png" alt="Logo"
+                 style="height: 100%; max-height: 60px; object-fit: contain; margin-right: 10px;">
+            <span class="dropdown-toggle fw-semibold text-dark text-decoration-none" th:text="${hoTen}" role="button"
+                  id="userDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false"></span>
+
+
+            <ul class="dropdown-menu" aria-labelledby="userDropdownMobile">
+                <li>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="dropdown-item text-dark">Đăng xuất</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+        <button class="btn btn-outline-secondary" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+            <i class="bi bi-list"></i>
+        </button>
+    </div>
+</nav>
+
+
+<div class="offcanvas offcanvas-start white" tabindex="-1" id="mobileSidebar">
+    <div class="offcanvas-body">
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-san"><i class="bi bi-card-list"></i> Quản lý sân</a>
+            </li>
+            <li class="nav-item"><a class="nav-link " href="/quan-ly-gia-theo-khung-gio"><i class="bi bi-card-list"></i>
+                Quản lý giá theo khung giờ</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="qlDatSanDropdown2" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-calendar-event"></i> Quản lý đặt sân
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="qlDatSanDropdown2">
+                    <li><a class="dropdown-item" href="/quan-ly-lich-dat">Quản lý lịch đặt</a></li>
+                    <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
+                </ul>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Quản lý thanh
+                toán</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+            <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
+                thống kê</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bell"></i> Quản lý thông báo</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay
+                lại Trang chủ</a></li>
+        </ul>
+    </div>
+</div>
+
+<main class="main-wrapper">
+    <div class="container-fluid">
+        <div class="align-items-center justify-content-between flex-wrap gap-3 mb-4">
+            <h2 class="fw-bold mb-3">Quản lý đặt sân</h2>
+
+            <form method="get" th:action="@{/quan-ly-lich-dat}" class="row g-2">
+                <div class="col-md-2">
+                    <input type="date" name="ngayDat" th:value="${ngayDuocChon}" class="form-control"
+                           onchange="this.form.submit()"/>
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="tenSan" placeholder="Tên sân" class="form-control"/>
+                </div>
+                <div class="col-md-2">
+                    <select name="loaiSanId" class="form-select">
+                        <option value="">-- Loại sân --</option>
+                        <option th:each="loai : ${dsLoaiSan}" th:value="${loai.id}"
+                                th:text="${loai.ten_loai_san}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="matSanId" class="form-select">
+                        <option value="">-- Mặt sân --</option>
+                        <option th:each="mat : ${dsMatSan}" th:value="${mat.id}"
+                                th:text="${mat.ten_loai_mat_san}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="monTheThaoId" class="form-select">
+                        <option value="">-- Môn thể thao --</option>
+                        <option th:each="mon : ${dsMonTheThao}" th:value="${mon.id}"
+                                th:text="${mon.ten_mon_the_thao}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+                </div>
+            </form>
+
+
+            <div class="container mt-4">
+                <div th:each="entry : ${lichDatMap.entrySet()}" th:if="${!#lists.isEmpty(entry.value)}">
+                    <h5 th:text="'Sân ' + ${entry.key.ten_san_bong}"></h5>
+                    <div class="row">
+                        <div class="col-md-2 mb-3" th:each="lich : ${entry.value}">
+                            <div class="card h-100 border">
+                                <div class="card-body">
+                                    <!-- Ca (khung giờ) -->
+                                    <h6 class="card-title text-center">Ca <span
+                                            th:text="${lich.giaTheoKhungGio.khungGio.id}"></span></h6>
+
+                                    <!-- Ngày -->
+                                    <p><i class="bi bi-calendar3"></i>
+                                        <span th:text="${#temporals.format(lich.ngayDat, 'yyyy-MM-dd')}"></span>
+                                    </p>
+
+                                    <!-- Giờ -->
+                                    <p><i class="bi bi-clock"></i>
+                                        <span th:text="${#temporals.format(lich.giaTheoKhungGio.khungGio.gioBatDau, 'HH:mm')}"></span>
+                                        -
+                                        <span th:text="${#temporals.format(lich.giaTheoKhungGio.khungGio.gioKetThuc, 'HH:mm')}"></span>
+                                    </p>
+
+                                    <!-- Giá -->
+                                    <p><i class="bi bi-currency-dollar"></i>
+                                        <span th:if="${lich.giaApDung != null}"
+                                              th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></span>
+                                        <span th:if="${lich.giaApDung == null and lich.giaTheoKhungGio != null}"
+                                              th:text="${#numbers.formatDecimal(lich.giaTheoKhungGio.giaThue, 0, 'COMMA', 3, 'POINT')} + ' đ'"></span>
+                                    </p>
+                                    <td th:if="${lich.trangThai == 1}">
+                                        <span class="btn btn-success w-100">Đã duyệt</span>
+                                    </td>
+
+                                    <td th:if="${lich.trangThai == 3}">
+                                        <span th:if="${lich.giaTheoKhungGio.sanBong.trang_thai == 0}"
+                                              class="btn btn-primary w-100">Trống</span>
+                                        <span th:if="${lich.giaTheoKhungGio.sanBong.trang_thai == 2}"
+                                              class="badge bg-warning text-dark w-100  ">Bảo trì</span>
+                                        <span th:if="${lich.giaTheoKhungGio.sanBong.trang_thai == 1}"
+                                              class="badge bg-danger w-100">Khóa</span>
+                                    </td>
+
+                                    <td th:if="${lich.trangThai == 0}">
+                                        <span class="btn btn-warning w-100">Chờ duyệt</span>
+                                    </td>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Trường hợp không có dữ liệu -->
+            <div th:if=" ${khongCoKetQua}" class="alert alert-info">
+                Không tìm thấy kết quả phù hợp với điều kiện tìm kiếm.
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- dropdown khi ở dạng mobile-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+</html>

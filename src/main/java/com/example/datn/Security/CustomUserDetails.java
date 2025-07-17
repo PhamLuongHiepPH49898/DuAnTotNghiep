@@ -1,6 +1,5 @@
 package com.example.datn.Security;
 
-
 import com.example.datn.Entity.TaiKhoan;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -43,11 +42,19 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
+        // Giả sử: 0 là "đang hoạt động", 1 là "bị chặn"
         return taiKhoan.getTrang_thai() == 0;
     }
 
     public String getPassword1() {
         System.out.println("Mật khẩu trả về: " + taiKhoan.getMat_khau());
         return taiKhoan.getMat_khau();
+    }
+    public TaiKhoan getTaiKhoan() {
+        return taiKhoan;
+    }
+
+    public String getHoTen() {
+        return taiKhoan.getHo_ten();
     }
 }
