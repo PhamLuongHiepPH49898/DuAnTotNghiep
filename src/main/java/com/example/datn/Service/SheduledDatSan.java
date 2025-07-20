@@ -25,11 +25,10 @@ public class SheduledDatSan {
 
         List<GiaTheoKhungGio> danhSachGiaTheoKhungGio = giaTheoKhungGioRepo.findGiaTheoKhungGioByTrangThaiAndSanHoatDong(List.of(0));
 
-
         for (int i = 0; i < 30; i++) {
             LocalDate targetDate = ngay.plusDays(i);
             for (GiaTheoKhungGio gia : danhSachGiaTheoKhungGio) {
-                if (lichDatSanRepo.findByNgaySanKhungGio(targetDate, gia.getIdGiaTheoKhungGio()) == null) {
+                if (lichDatSanRepo.findByNgaySanKhungGio(targetDate, gia.getIdGiaTheoKhungGio()).isEmpty()) {
                     LichDatSan lichMoi = new LichDatSan();
                     lichMoi.setNgayDat(targetDate);
                     lichMoi.setGiaTheoKhungGio(gia);
@@ -38,10 +37,30 @@ public class SheduledDatSan {
                     lichMoi.setGiaApDung(null);
                     lichMoi.setNgayTao(LocalDate.now());
                     lichDatSanRepo.save(lichMoi);
+                    System.out.println("👉 Số lượng giá theo khung giờ: " + danhSachGiaTheoKhungGio.size());
+
                 } else {
                     System.out.println(" Đã có lịch cho ngày " + targetDate + " - ID Giá " + gia.getIdGiaTheoKhungGio() + " → Bỏ qua tạo mới.");
                 }
             }
         }
     }
+
+    public void taoLichChoGia(GiaTheoKhungGio gia) {
+        LocalDate ngay = LocalDate.now();
+        for (int i = 0; i < 30; i++) {
+            LocalDate targetDate = ngay.plusDays(i);
+            if (lichDatSanRepo.findByNgaySanKhungGio(targetDate, gia.getIdGiaTheoKhungGio()).isEmpty()) {
+                LichDatSan lichMoi = new LichDatSan();
+                lichMoi.setNgayDat(targetDate);
+                lichMoi.setGiaTheoKhungGio(gia);
+                lichMoi.setTrangThai(3);
+                lichMoi.setGhiChu("Tạo tự động");
+                lichMoi.setGiaApDung(null);
+                lichMoi.setNgayTao(LocalDate.now());
+                lichDatSanRepo.save(lichMoi);
+            }
+        }
+    }
+
 }

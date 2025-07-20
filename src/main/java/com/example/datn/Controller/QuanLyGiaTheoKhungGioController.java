@@ -1,6 +1,8 @@
 package com.example.datn.Controller;
 
 import com.example.datn.Entity.GiaTheoKhungGio;
+import com.example.datn.Entity.SanBong;
+import com.example.datn.Repository.GiaTheoKhungGioRepo;
 import com.example.datn.Repository.KhungGioRepo;
 import com.example.datn.Service.GiaTheoKhungGioService;
 import com.example.datn.Service.SanBongService;
@@ -16,14 +18,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class QuanLyGiaTheoKhungGioController {
 
     @Autowired
     private GiaTheoKhungGioService giaTheoKhungGioService;
+    @Autowired
+    private GiaTheoKhungGioRepo giaTheoKhungGioRepo;
     @Autowired
     private SanBongService sanBongService;
     @Autowired
@@ -33,18 +36,32 @@ public class QuanLyGiaTheoKhungGioController {
 
 
     @GetMapping("/quan-ly-gia-theo-khung-gio")
-    public String quanLyGiaTheoKhungGio(@RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "10") int size,
-                                        Model model) {
+    public String quanLyGiaTheoKhungGio(Model model) {
 
-        Page<GiaTheoKhungGio> list = giaTheoKhungGioService.getGiaTheoKhungGio(page, size);
-        model.addAttribute("dsGia", list);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("pageSize", size);
-        model.addAttribute("totalPages", list.getTotalPages());
+        List<GiaTheoKhungGio> dsGia = giaTheoKhungGioService.getGiaTheoKhungGio();
+        List<SanBong> dsSanBong = sanBongService.getSanBong();
+
+        // Map<sânId, Map<khungGioId, Gia>>
+        Map<Integer, Map<Integer, GiaTheoKhungGio>> bangGia = new HashMap<>();
+        for (GiaTheoKhungGio g : dsGia) {
+            bangGia
+                    .computeIfAbsent(g.getSanBong().getId_san_bong(), k -> new HashMap<>())
+                    .put(g.getKhungGio().getId(), g);
+        }
+
+        Map<Integer, List<GiaTheoKhungGio>> bangGiaTheoSan = new HashMap<>();
+        for (SanBong san : dsSanBong) {
+            List<GiaTheoKhungGio> giaList = giaTheoKhungGioRepo.findBySanBongId(san.getId_san_bong());
+            giaList.removeIf(Objects::isNull);
+            bangGiaTheoSan.put(san.getId_san_bong(), giaList);
+        }
+
+
         model.addAttribute("dsSanBong", sanBongService.getSanBong());
+        model.addAttribute("dsSanBongHienThi", sanBongService.getSanBong());
         model.addAttribute("dsKhungGio", khungGioRepo.findAll());
-        model.addAttribute("gia", new GiaTheoKhungGio());
+        model.addAttribute("bangGia", bangGia);
+        model.addAttribute("bangGiaTheoSan", bangGiaTheoSan);
         model.addAttribute("isTimKiem", false);
 
 
@@ -65,11 +82,16 @@ public class QuanLyGiaTheoKhungGioController {
         return "redirect:/quan-ly-gia-theo-khung-gio";
     }
 
-    @PostMapping("/sua-gia")
-    public String suaGia(@RequestParam("id") int id, @RequestParam("giaThue") BigDecimal giaThue, RedirectAttributes redirectAttributes) {
+    @PostMapping("/quan-ly-gia-theo-khung-gio/sua-gia")
+    public String suaGia(@RequestParam("ids") List<Integer> ids,
+                         @RequestParam("giaThues") List<BigDecimal> giaThues, RedirectAttributes redirectAttributes) {
         try {
-            giaTheoKhungGioService.sua(id, giaThue);
-            redirectAttributes.addFlashAttribute("success", "Sửa giá thành công!");
+            for (int i = 0; i < ids.size(); i++) {
+                int id = ids.get(i);
+                BigDecimal giaMoi = giaThues.get(i);
+                giaTheoKhungGioService.sua(id, giaMoi);
+                redirectAttributes.addFlashAttribute("success", "Sửa giá thành công!");
+            }
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (Exception e) {
@@ -78,7 +100,7 @@ public class QuanLyGiaTheoKhungGioController {
         return "redirect:/quan-ly-gia-theo-khung-gio";
     }
 
-    @PostMapping("/them-gia")
+    @PostMapping("/quan-ly-gia-theo-khung-gio/them-gia")
     public String themGia(@RequestParam("giaThue") BigDecimal giaThue,
                           @RequestParam("idSanBong") int idSanBong,
                           @RequestParam("idKhungGio") int idKhungGio, Model model,
@@ -96,27 +118,48 @@ public class QuanLyGiaTheoKhungGioController {
 
     @GetMapping("/quan-ly-gia-theo-khung-gio/tim-kiem")
     public String timKiem(@RequestParam(required = false) Integer sanBong,
-                          @RequestParam(required = false) Integer khungGio,
-                          @RequestParam(defaultValue = "0") int page,
-                          @RequestParam(defaultValue = "10") int size,
                           Model model) {
+        List<SanBong> dsSanBong = sanBongService.getSanBong();
+        List<GiaTheoKhungGio> dsGia = giaTheoKhungGioService.timKiem(sanBong);
 
-        Page<GiaTheoKhungGio> dsGia = giaTheoKhungGioService.timKiem(sanBong, khungGio, page, size);
-        model.addAttribute("dsGia", dsGia);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("pageSize", size);
-        model.addAttribute("totalPages", dsGia.getTotalPages());
+        Map<Integer, Map<Integer, GiaTheoKhungGio>> bangGia = new HashMap<>();
+        for (GiaTheoKhungGio g : dsGia) {
+            bangGia
+                    .computeIfAbsent(g.getSanBong().getId_san_bong(), k -> new HashMap<>())
+                    .put(g.getKhungGio().getId(), g);
+        }
+
+        Map<Integer, List<GiaTheoKhungGio>> bangGiaTheoSan = new HashMap<>();
+        for (SanBong san : dsSanBong) {
+            List<GiaTheoKhungGio> giaList = giaTheoKhungGioRepo.findBySanBongId(san.getId_san_bong());
+            giaList.removeIf(Objects::isNull);
+            bangGiaTheoSan.put(san.getId_san_bong(), giaList);
+        }
+
+
+        if (sanBong != null) {
+            SanBong sb = sanBongService.findById(sanBong);
+            if (sb != null) {
+                model.addAttribute("dsSanBongHienThi", List.of(sb));
+            } else {
+                model.addAttribute("dsSanBongHienThi", Collections.emptyList());
+            }
+        } else {
+            model.addAttribute("dsSanBongHienThi", sanBongService.findAll());
+        }
+
+
+        model.addAttribute("bangGia", bangGia);
+        model.addAttribute("bangGiaTheoSan", bangGiaTheoSan);
         model.addAttribute("dsSanBong", sanBongService.getSanBong());
         model.addAttribute("dsKhungGio", khungGioRepo.findAll());
         model.addAttribute("sanBong", sanBong);
-        model.addAttribute("khungGio", khungGio);
         model.addAttribute("khongCoKetQua", dsGia.isEmpty());
-
         model.addAttribute("isTimKiem", true);
 
-        // Để giữ lại lựa chọn người dùng
+
+
         model.addAttribute("sanBong", sanBong);
-        model.addAttribute("khungGio", khungGio);
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);

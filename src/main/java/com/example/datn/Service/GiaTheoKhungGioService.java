@@ -24,10 +24,11 @@ public class GiaTheoKhungGioService {
     private SanBongRepo sanBongRepo;
     @Autowired
     private KhungGioRepo khungGioRepo;
+    @Autowired
+    private SheduledDatSan sheduledDatSan;
 
-    public Page<GiaTheoKhungGio> getGiaTheoKhungGio(int page, int size) {
-        Pageable pageable = PageRequest.of(page,size);
-        return giaTheoKhungGioRepo.findAllByTrangThaiOrderByTenSanBong(List.of(0),pageable);
+    public List<GiaTheoKhungGio> getGiaTheoKhungGio() {
+        return giaTheoKhungGioRepo.findAllByTrangThaiOrderByTenSanBong(List.of(0));
     }
 
     public void xoa(int id) {
@@ -38,13 +39,16 @@ public class GiaTheoKhungGioService {
         }
     }
 
+
+
     public void sua(int id, BigDecimal giaThueMoi) {
 
         if (giaThueMoi == null || giaThueMoi.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Giá thuê phải lớn hơn 0");
         }
 
-        GiaTheoKhungGio giaTheoKhungGio = giaTheoKhungGioRepo.findById(id).orElse(null);
+        GiaTheoKhungGio giaTheoKhungGio = giaTheoKhungGioRepo.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("Không tìm thấy giá với ID: " + id));
         if (giaTheoKhungGio != null) {
             giaTheoKhungGio.setGiaThue(giaThueMoi);
             giaTheoKhungGioRepo.save(giaTheoKhungGio);
@@ -71,14 +75,15 @@ public class GiaTheoKhungGioService {
             gia.setKhungGio(khungGio);
             gia.setTrangThai(0);
             giaTheoKhungGioRepo.save(gia);
+            sheduledDatSan.taoLichChoGia(gia);
+
         } else {
             throw new IllegalArgumentException("Không tìm thấy sân bóng hoặc khung giờ.");
         }
     }
 
-    public Page<GiaTheoKhungGio> timKiem(Integer sanBong, Integer khungGio, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return giaTheoKhungGioRepo.findBySanAndKhungGio(sanBong, khungGio, pageable);
+    public List<GiaTheoKhungGio> timKiem(Integer sanBong) {
+        return giaTheoKhungGioRepo.findBySanAndKhungGio(List.of(0) , sanBong);
 
     }
 
