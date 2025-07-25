@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +58,7 @@ public class QuanLyDatSanController {
         model.addAttribute("danhSachSan", sanBongService.findAll());
         model.addAttribute("ngayDat", ngayDat);
         model.addAttribute("khongCoKetQua", lichDatList.isEmpty());
-        model.addAttribute("isTimKiem", false);
+
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);
@@ -92,6 +95,8 @@ public class QuanLyDatSanController {
         model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
         model.addAttribute("dsMatSan", loaiMatSanRepo.findAll());
         model.addAttribute("dsMonTheThao", loaiMonTheThaoRepo.findAll());
+        model.addAttribute("thoiGianHienTai",LocalDateTime.now());
+
 
         model.addAttribute("khongCoKetQua", lichDatMap.isEmpty());
 
@@ -158,7 +163,6 @@ public class QuanLyDatSanController {
         model.addAttribute("sanBong", sanBong);
         model.addAttribute("trangThai", trangThai);
         model.addAttribute("khongCoKetQua", danhSachLichDatSan.isEmpty());
-        model.addAttribute("isTimKiem", true);
 
         return "QuanLyDatSan/DuyetHuyDatLich";
     }

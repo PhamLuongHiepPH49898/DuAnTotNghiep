@@ -315,8 +315,8 @@
                             <label class="form-label">Trạng thái</label>
                             <select name="trangThai" class="form-select">
                                 <option value="">-- Tất cả --</option>
-                                <option value="0" th:selected="${trangThai == 0}">Chờ duyệt</option>
-                                <option value="1" th:selected="${trangThai == 1}">Đã duyệt</option>
+                                <option value="0" th:selected="${trangThai == 0}">Chưa thanh toán</option>
+                                <option value="1" th:selected="${trangThai == 1}">Đã thanh toán</option>
                                 <option value="2" th:selected="${trangThai == 2}">Đã hủy</option>
                             </select>
                         </div>
@@ -352,7 +352,10 @@
                     <td th:text="${currentPage * pageSize + stat.index + 1}"></td>
                     <td th:text="${danhSachLichDatSan.ngayDat}"></td>
                     <td th:text="${danhSachLichDatSan.giaTheoKhungGio.khungGio.gioBatDau} + ' - ' + ${danhSachLichDatSan.giaTheoKhungGio.khungGio.gioKetThuc}"></td>
-                    <td th:text="${danhSachLichDatSan.giaTheoKhungGio.sanBong.ten_san_bong}"></td>
+                    <td>
+                        <span th:text="${danhSachLichDatSan.giaTheoKhungGio.sanBong.ten_san_bong}"></span>
+                        <span th:if="${danhSachLichDatSan.giaTheoKhungGio.sanBong.trang_thai == 3}" class="text-danger fw-bold"> (Đã xóa)</span>
+                    </td>
                     <td th:text="${danhSachLichDatSan.taiKhoan.ho_ten}"></td>
                     <td th:text="${#numbers.formatDecimal(danhSachLichDatSan.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
 
@@ -367,8 +370,8 @@
                     </td>
 
                     <td>
-                        <span th:if="${danhSachLichDatSan.trangThai == 0}" class="badge bg-info">Chờ duyêt</span>
-                        <span th:if="${danhSachLichDatSan.trangThai == 1}" class="badge bg-success">Đã duyệt</span>
+                        <span th:if="${danhSachLichDatSan.trangThai == 0}" class="badge bg-info">Chờ thanh toán</span>
+                        <span th:if="${danhSachLichDatSan.trangThai == 1}" class="badge bg-success">Đã thanh toán</span>
                         <span th:if="${danhSachLichDatSan.trangThai == 2}"
                               class="badge bg-secondary">Đã hủy</span>
                         <span th:if="${danhSachLichDatSan.trangThai != 0 and danhSachLichDatSan.trangThai != 1 and danhSachLichDatSan.trangThai != 2 and danhSachLichDatSan.trangThai != 3}"
@@ -382,13 +385,17 @@
                            onclick="return confirm('Bạn có chắc duệt không')">Duyệt</a>
 
                         <!-- Nút hủy -->
-                        <button th:if="${danhSachLichDatSan.trangThai == 0 || danhSachLichDatSan.trangThai == 1} "
-                                type="button"
-                                class="btn btn-sm  btn-outline-danger"
-                                data-bs-toggle="modal"
-                                th:attr="data-bs-target='#modalHuyLich_' + ${danhSachLichDatSan.id}">
-                            Hủy
-                        </button>
+                        <th:block th:with="startDateTime=${T(java.time.LocalDateTime).of(danhSachLichDatSan.ngayDat, danhSachLichDatSan.giaTheoKhungGio.khungGio.gioBatDau)}">
+                            <button
+                                    th:if="(${danhSachLichDatSan.trangThai == 0} or ${danhSachLichDatSan.trangThai == 1}) and ${startDateTime.isAfter(T(java.time.LocalDateTime).now())}"
+                                    type="button"
+                                    class="btn btn-sm btn-outline-danger"
+                                    data-bs-toggle="modal"
+                                    th:attr="data-bs-target='#modalHuyLich_' + ${danhSachLichDatSan.id}">
+                                Hủy
+                            </button>
+                        </th:block>
+
 
 
                     </td>
@@ -421,15 +428,8 @@
             </table>
 
             <!-- Trường hợp tìm kiếm không ra -->
-            <div th:if="${isTimKiem} and ${khongCoKetQua}" class="alert alert-info">
+            <div th:if=" ${khongCoKetQua}" class="alert alert-info">
                 Không tìm thấy kết quả phù hợp với điều kiện tìm kiếm.
-            </div>
-
-            <!-- Trường hợp chọn ngày tạo không có dữ liệu -->
-            <div th:if="${!isTimKiem} and ${khongCoKetQua}" class="alert alert-warning">
-                Không tìm thấy có phiếu nào tạo vào ngày:
-                <strong th:text="${#temporals.format(ngayTao, 'dd/MM/yyyy')}"></strong>
-
             </div>
 
         </div>
