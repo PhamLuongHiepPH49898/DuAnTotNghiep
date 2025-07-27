@@ -41,8 +41,9 @@ public class NhacLichScheduler {
             }
         }
     }
-    @Scheduled(fixedRate = 60000) // chạy mỗi phút để test
-    public void guiThongBaoTruocHaiGio() {
+
+    @Scheduled(fixedRate = 60000)
+    public void guiThongBaoTruocMotGio() {
         LocalDate today = LocalDate.now();
         List<LichDatSan> lichDatSans = lichDatSanRepo.findByNgayDatAndTaiKhoanIsNotNullAndTrangThai(today, 1);
 
@@ -54,23 +55,21 @@ public class NhacLichScheduler {
             // Tính giờ bắt đầu của trận đấu
             LocalDateTime thoiGianBatDau = lich.getNgayDat().atTime(khungGio.getGioBatDau());
 
-            // Nếu còn đúng khoảng 2h (120 phút) và chưa gửi thông báo
+            // Tính số phút còn lại từ thời điểm hiện tại (now) đến thời gian bắt đầu đá sân (thoiGianBatDau)
             long minutesDiff = java.time.Duration.between(now, thoiGianBatDau).toMinutes();
 
-            if (minutesDiff <= 120 && minutesDiff > 110) { //
+            if (minutesDiff <= 60 && minutesDiff > 0) { //
                 boolean daGui = thongBaoRepo.existsByLichDatSan_IdAndTieuDe(
                         lich.getId(),
-                        "Nhắc lịch đá sân - còn 2 giờ"
+                        "Nhắc lịch đá sân"
                 );
 
                 if (!daGui) {
-                    thongBaoService.taoThongBaoTruoc2H(lich, khungGio);
-                    System.out.println("[DEBUG] Đã gửi thông báo trước 2h cho lịch ID: " + lich.getId());
+                    thongBaoService.taoThongBaoNhacLichTruoc1h(lich, khungGio);
+                    System.out.println("[DEBUG] Đã gửi thông báo nhắc lịch cho lịch ID: " + lich.getId());
                 }
             }
         }
     }
-
-
 }
 

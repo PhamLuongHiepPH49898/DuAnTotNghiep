@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
   <link rel="icon" type="image/png" th:href="@{/image/logo.png}">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <!--them cho phan thong bao-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     * {
       font-family: 'Poppins', sans-serif;
@@ -184,14 +187,19 @@
       <a class="nav-link" th:href="@{/ve-trang-chu}">Trang chủ</a>
       <a class="nav-link" href="/tim-kiem">Tìm kiếm</a>
       <a class="nav-link" href="/login" th:if="${username == null}">Đăng nhập</a>
+
       <form th:action="@{/thong-bao/xem-thong-bao}" method="post" style="position: relative;">
-        <button type="submit">
-          Xem Thông Báo Của Tôi
+        <button type="submit" style="background: none; border: none; cursor: pointer; position: relative;">
+          <!-- Icon chuông -->
+          <i class="fas fa-bell" style="font-size: 24px; color: #333;"></i>
+
+          <!-- Số thông báo mới (hiển thị như badge) -->
           <span th:if="${soLuongThongBaoMoi > 0}"
                 th:text="${soLuongThongBaoMoi}"
-                style="background-color: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; position: absolute; top: -5px; right: -5px;"></span>
+                style="background-color: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; position: absolute; top: -8px; right: -8px;"></span>
         </button>
       </form>
+
       <div class="user-dropdown" th:if="${username != null}">
         <span class="user-toggle text-white d-flex align-items-center gap-2" onclick="toggleMenu()">
           <i class="bi bi-person-circle fs-5"></i>

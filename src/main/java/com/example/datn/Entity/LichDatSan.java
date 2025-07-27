@@ -38,6 +38,12 @@ public class LichDatSan {
     @Column(name = "trang_thai", nullable = false)
     private Integer trangThai;
 
+    @Column(name = "trang_thai_check_in")
+    private Integer trangThaiCheckIn;
+
+    @Column(name = "thoi_gian_check_in")
+    private LocalDateTime  thoiGianCheckIn;
+    //
     @ManyToOne
     @JoinColumn(name = "id_tai_khoan")
     private TaiKhoan taiKhoan;
@@ -45,7 +51,9 @@ public class LichDatSan {
     @ManyToOne
     @JoinColumn(name = "id_gia_theo_khung_gio")
     private GiaTheoKhungGio giaTheoKhungGio;
+
     @ManyToOne
     @JoinColumn(name = "id_san_bong")
     private SanBong sanBong;
+
 }

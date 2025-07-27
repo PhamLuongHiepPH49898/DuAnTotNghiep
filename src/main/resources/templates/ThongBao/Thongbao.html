@@ -98,6 +98,14 @@
             margin-bottom: 10px;
         }
 
+        .tb-noidung strong,
+        .tb-noidung span,
+        .tb-noidung a {
+            display: inline;
+            font-size: inherit;
+            margin: 0;
+            padding: 0;
+        }
         em {
             color: #888;
             font-size: 14px;
@@ -116,10 +124,14 @@
     <li th:each="tb : ${thongBaoList}" th:class="${tb.trangThai == 0 ? 'chua-doc' : 'da-doc'}">
         <a th:href="@{/thong-bao/chi-tiet/{id}(id=${tb.idThongBao})}">
             <strong th:text="${tb.tieuDe}"></strong>
-            <span th:text="${tb.noiDung}"></span>
+            <div th:utext="${tb.noiDung}" class="tb-noidung"
+                 style="max-height:112px; overflow:hidden; line-height:1.4; margin:0; padding:0;">
+            </div>
             <em th:text="${#temporals.format(tb.ngayTao, 'dd/MM/yyyy HH:mm')}"></em>
         </a>
     </li>
+
+
 </ul>
 
 <p th:if="${#lists.size(thongBaoList) == 0}">Không có thông báo nào.</p>
