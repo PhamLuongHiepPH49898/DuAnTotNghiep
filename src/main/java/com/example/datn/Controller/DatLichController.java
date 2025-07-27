@@ -51,14 +51,14 @@ public class DatLichController {
         // Map key = "idSan_idKhungGio" -> Giá thuê
         Map<String, BigDecimal> bangGia = new HashMap<>();
         for (GiaTheoKhungGio gia : danhSachGiaTheoKhungGio) {
-            String key = gia.getSanBong().getId_san_bong() + "_" + gia.getKhungGio().getId();
+            String key = gia.getSanBong().getIdSanBong() + "_" + gia.getKhungGio().getId();
             bangGia.put(key, gia.getGiaThue());
         }
 
         // Map key = "idSan_idKhungGio" -> ID bảng giá
         Map<String, Integer> bangGiaId = new HashMap<>();
         for (GiaTheoKhungGio gia : danhSachGiaTheoKhungGio) {
-            String key = gia.getSanBong().getId_san_bong() + "_" + gia.getKhungGio().getId();
+            String key = gia.getSanBong().getIdSanBong() + "_" + gia.getKhungGio().getId();
             bangGiaId.put(key, gia.getIdGiaTheoKhungGio());
         }
 

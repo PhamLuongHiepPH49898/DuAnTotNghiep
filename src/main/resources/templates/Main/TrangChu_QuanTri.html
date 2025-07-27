@@ -234,11 +234,11 @@
             <img th:if="${#strings.startsWith(san.hinh_anh, 'anh')}" th:src="@{'/image/' + ${san.hinh_anh}}" alt="Sân bóng">
             <img th:if="${!#strings.startsWith(san.hinh_anh, 'anh')}" th:src="@{'/uploads/' + ${san.hinh_anh}}" alt="Sân bóng">
             <div class="info">
-                <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" th:text="${san.ten_san_bong}"></a>
+                <a th:href="@{'/chi-tiet/' + ${san.idSanBong}}" th:text="${san.ten_san_bong}"></a>
                 <p><strong>Thể thao:</strong> <span th:text="${san.loaiMonTheThao.ten_mon_the_thao}"></span></p>
                 <p><strong>Địa chỉ:</strong> <span th:text="${san.dia_chi}"></span></p>
             </div>
-            <a th:href="@{'/datsan?id=' + ${san.id_san_bong}}">⚽ Đặt sân ngay</a>
+            <a th:href="@{'/datsan?id=' + ${san.idSanBong}}">⚽ Đặt sân ngay</a>
         </div>
     </div>
 </div>

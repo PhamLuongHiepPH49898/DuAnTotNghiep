@@ -18,21 +18,21 @@ public interface GiaTheoKhungGioRepo extends JpaRepository<GiaTheoKhungGio, Inte
            "JOIN g.sanBong sb " +
            "JOIN g.khungGio kg " +
            "WHERE g.trangThai IN :trangThaiList " +
-           "ORDER BY sb.id_san_bong ASC, kg.gioBatDau ASC")
+           "ORDER BY sb.idSanBong ASC, kg.gioBatDau ASC")
     Page<GiaTheoKhungGio> findAllByTrangThaiOrderByTenSanBong(@Param("trangThaiList") List<Integer> trangThaiList, Pageable pageable);
 
     // kiểm tra sân bóng có thời gian trùng ko
-    @Query("SELECT g FROM GiaTheoKhungGio g WHERE g.sanBong.id_san_bong = :idSanBong AND g.khungGio.id = :idKhungGio AND g.trangThai <> 3")
+    @Query("SELECT g FROM GiaTheoKhungGio g WHERE g.sanBong.idSanBong = :idSanBong AND g.khungGio.id = :idKhungGio AND g.trangThai <> 3")
     Optional<GiaTheoKhungGio> findBySanBongAndKhungGio(@Param("idSanBong") int idSanBong, @Param("idKhungGio") int idKhungGio);
 
     // tim kiem
     @Query("SELECT g FROM GiaTheoKhungGio g " +
            "JOIN g.sanBong sb " +
            "JOIN g.khungGio kg " +
-           "WHERE (:sanBong IS NULL OR g.sanBong.id_san_bong = :sanBong) AND " +
+           "WHERE (:sanBong IS NULL OR g.sanBong.idSanBong = :sanBong) AND " +
            "(:khungGio IS NULL OR g.khungGio.id = :khungGio) AND " +
            "g.trangThai <> 3 " +
-           "ORDER BY sb.id_san_bong ASC, kg.gioBatDau ASC")
+           "ORDER BY sb.idSanBong ASC, kg.gioBatDau ASC")
     Page<GiaTheoKhungGio> findBySanAndKhungGio(
             @Param("sanBong") Integer sanBong,
             @Param("khungGio") Integer khungGio,

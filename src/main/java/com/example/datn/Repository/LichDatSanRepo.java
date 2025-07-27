@@ -25,7 +25,7 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
     @Query("SELECT l FROM LichDatSan l " +
            "WHERE (:keyword IS NULL OR :keyword = '' OR LOWER(l.taiKhoan.ho_ten) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
            "AND (:ngayDat IS NULL OR l.ngayDat = :ngayDat) " +
-           "AND (:sanBong IS NULL OR l.giaTheoKhungGio.sanBong.id_san_bong = :sanBong) " +
+           "AND (:sanBong IS NULL OR l.giaTheoKhungGio.sanBong.idSanBong = :sanBong) " +
            "AND (:trangThai IS NULL OR l.trangThai = :trangThai)" +
            "ORDER BY l.ngayTao DESC")
     Page<LichDatSan> timKiem(@Param("keyword") String keyword,

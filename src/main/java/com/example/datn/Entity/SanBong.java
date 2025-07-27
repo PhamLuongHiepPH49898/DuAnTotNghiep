@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,7 +23,7 @@ public class SanBong {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_san_bong")
-    private int id_san_bong;
+    private int idSanBong;
 
     @NotBlank(message = "Tên sân bóng không được để trống")
     @Column(name = "ten_san_bong", columnDefinition = "NVARCHAR(255)")
@@ -67,7 +69,7 @@ public class SanBong {
     @Override
     public String toString() {
         return "SanBong{" +
-                "id_san_bong=" + id_san_bong +
+                "id_san_bong=" + idSanBong +
                 ", ten_san_bong='" + ten_san_bong + '\'' +
                 ", dia_chi='" + dia_chi + '\'' +
                 ", mo_ta='" + mo_ta + '\'' +
@@ -79,5 +81,8 @@ public class SanBong {
                 ", taiKhoan=" + taiKhoan +
                 '}';
     }
+    @Transient
+    private List<DanhGia> danhGias;
+
 
 }

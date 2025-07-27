@@ -140,12 +140,12 @@
     <tr th:each="khungGio : ${danhSachKhungGio}">
         <td th:text="${khungGio.gioBatDau} + '-' + ${khungGio.gioKetThuc}"></td>
         <td th:each="san : ${danhSachSan}"
-            th:with="key=${san.id_san_bong + '_' + khungGio.id}, gia=${bangGia[key]}, idgia=${bangGiaId[key]}"
-            th:data-idgia="${bangGiaId[san.id_san_bong + '_' + khungGio.id]}"
-            th:data-price="${bangGia[san.id_san_bong + '_' + khungGio.id] != null ? bangGia[san.id_san_bong + '_' + khungGio.id] : 0}"
+            th:with="key=${san.idSanBong + '_' + khungGio.id}, gia=${bangGia[key]}, idgia=${bangGiaId[key]}"
+            th:data-idgia="${bangGiaId[san.idSanBong + '_' + khungGio.id]}"
+            th:data-price="${bangGia[san.idSanBong + '_' + khungGio.id] != null ? bangGia[san.idSanBong + '_' + khungGio.id] : 0}"
             th:data-court="${san.ten_san_bong}"
             th:data-time="${#temporals.format(khungGio.gioBatDau, 'HH:mm') + '-' + #temporals.format(khungGio.gioKetThuc, 'HH:mm')}">//ép tg cùng 1 kiểu
-            <span th:text="${#numbers.formatDecimal(bangGia[san.id_san_bong + '_' + khungGio.id], 1, 'COMMA', 0, 'POINT')}">0</span>
+            <span th:text="${#numbers.formatDecimal(bangGia[san.idSanBong + '_' + khungGio.id], 1, 'COMMA', 0, 'POINT')}">0</span>
         </td>
     </tr>
     </tbody>

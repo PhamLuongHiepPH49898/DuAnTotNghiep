@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface TaiKhoanRepo extends JpaRepository<TaiKhoan, Long> {
+public interface TaiKhoanRepo extends JpaRepository<TaiKhoan,Integer> {
 
     Optional<TaiKhoan> findByEmail(String email);
 

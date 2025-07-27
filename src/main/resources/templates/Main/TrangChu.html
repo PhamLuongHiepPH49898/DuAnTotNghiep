@@ -196,20 +196,36 @@
 <div class="intro">
     <h2>Đặt sân nhanh chóng - Tiện lợi - Chính xác</h2>
 </div>
+<!-- Chỉ là phần trong vòng lặp sân -->
 <div class="san-container">
     <h2>Danh sách sân bóng nổi bật</h2>
     <div class="san-grid">
         <div th:each="san : ${danhSachSan}" class="san-item">
             <img th:if="${#strings.startsWith(san.hinh_anh, 'anh')}" th:src="@{'/image/' + ${san.hinh_anh}}" alt="Sân bóng">
             <img th:if="${!#strings.startsWith(san.hinh_anh, 'anh')}" th:src="@{'/uploads/' + ${san.hinh_anh}}" alt="Sân bóng">
+
             <div class="info">
-                <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" th:text="${san.ten_san_bong}"></a>
+                <a th:href="@{'/chi-tiet/' + ${san.idSanBong}}" th:text="${san.ten_san_bong}"></a>
                 <p><strong>Thể thao:</strong> <span th:text="${san.loaiMonTheThao.ten_mon_the_thao}"></span></p>
                 <p><strong>Địa chỉ:</strong> <span th:text="${san.dia_chi}"></span></p>
+
+                <!-- ⭐ HIỂN THỊ ĐÁNH GIÁ -->
+                <div th:if="${san.danhGias != null && !san.danhGias.isEmpty()}">
+                    <div th:each="danhGia : ${san.danhGias}">
+                        <p>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <span th:text="${danhGia.sao} + ' sao - ' + ${danhGia.noiDung}"></span>
+                        </p>
+                    </div>
+                </div>
+                <div th:if="${san.danhGias == null || san.danhGias.isEmpty()}">
+                    <p><i>Chưa có đánh giá.</i></p>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <footer>
     <div class="features">
         <div>
@@ -226,7 +242,10 @@
         </div>
         <div>
             <i class="bi bi-star-half"></i>
-            <h5>Đánh giá sân</h5>
+            <a th:href="@{'/ChiTietSan/' + ${danhSachSan[0].idSanBong} + '#danh-gia'}"
+               style="color:white; text-decoration:none; font-weight:600;">
+                Đánh giá sân
+            </a>
         </div>
     </div>
     <p>Email: support@sambabooking.vn | Hotline: 1800-1234</p>
@@ -240,6 +259,42 @@
         <a href="#" class="btn btn-outline-light">Lên đầu trang</a>
     </div>
 </footer>
+
+<!--<footer>-->
+<!--    <div class="features">-->
+<!--        <div>-->
+<!--            <i class="bi bi-search"></i>-->
+<!--            <h5>Tìm kiếm sân</h5>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <i class="bi bi-calendar-check"></i>-->
+<!--            <h5>Đặt sân nhanh</h5>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <i class="bi bi-clock-history"></i>-->
+<!--            <h5>Lịch sử đặt</h5>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <i class="bi bi-star-half"></i>-->
+<!--            <a th:href="@{'/chi-tiet/' + ${danhSachSan[0].idSanBong} + '#danh-gia'}"-->
+<!--               style="color:white; text-decoration:none; font-weight:600;">-->
+<!--                Đánh giá sân-->
+<!--            </a>-->
+<!--        </div>-->
+
+
+<!--    </div>-->
+<!--    <p>Email: support@sambabooking.vn | Hotline: 1800-1234</p>-->
+<!--    <p>Địa chỉ: Đâu đó trên thế giới</p>-->
+<!--    <div class="social-icons">-->
+<!--        <a href="#"><i class="bi bi-facebook"></i></a>-->
+<!--        <a href="#"><i class="bi bi-twitter"></i></a>-->
+<!--        <a href="#"><i class="bi bi-instagram"></i></a>-->
+<!--    </div>-->
+<!--    <div class="mt-3">-->
+<!--        <a href="#" class="btn btn-outline-light">Lên đầu trang</a>-->
+<!--    </div>-->
+<!--</footer>-->
 <script>
     document.querySelector('.btn-outline-light').addEventListener('click', function (e) {
         e.preventDefault();

@@ -15,7 +15,7 @@ public interface SanBongRepo extends JpaRepository<SanBong, Integer>, JpaSpecifi
     @Query("SELECT s FROM SanBong s WHERE s.trang_thai IN :trangThaiList")
     List<SanBong> findByTrangThaiIn(@Param("trangThaiList") List<Integer> trangThaiList);
 
-    @Query("SELECT s FROM SanBong s WHERE s.trang_thai IN :trangThaiList ORDER BY s.id_san_bong DESC")
+    @Query("SELECT s FROM SanBong s WHERE s.trang_thai IN :trangThaiList ORDER BY s.idSanBong DESC")
     Page<SanBong> findSanBongsWithTrangThaiPaging(@Param("trangThaiList") List<Integer> trangThaiList, Pageable pageable);
 
     @Query("SELECT s FROM SanBong s WHERE "
@@ -31,7 +31,7 @@ public interface SanBongRepo extends JpaRepository<SanBong, Integer>, JpaSpecifi
            + "AND (:loaiSan IS NULL OR s.loaiSan.id = :loaiSan) "
            + "AND (:monTheThao IS NULL OR s.loaiMonTheThao.id = :monTheThao)"
            + "AND s.trang_thai <> 3"
-           + "ORDER BY s.id_san_bong DESC")
+           + "ORDER BY s.idSanBong DESC")
     Page<SanBong> timKiemSanPaging(@Param("keyword") String keyword,
                                    @Param("loaiSan") Integer loaiSan,
                                    @Param("monTheThao") Integer monTheThao, Pageable pageable);
