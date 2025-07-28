@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
@@ -259,152 +258,131 @@
             <div class="col-12 col-md-9">
                 <form method="get" th:action="@{/quan-ly-gia-theo-khung-gio/tim-kiem}" class="row g-2">
                     <div class="col-6 col-md-4">
-                        <select name="sanBong" class="form-select">
+                        <select name="sanBong" class="form-select" onchange="this.form.submit()">
                             <option value="">-- Tất cả sân --</option>
                             <option th:each="san : ${dsSanBong}"
                                     th:value="${san.id_san_bong}"
                                     th:text="${san.ten_san_bong}"
-                                    th:selected="${idSanBong == san.id_san_bong}">
+                                    th:selected="${sanBong == san.id_san_bong}">
                             </option>
                         </select>
-                    </div>
-
-                    <div class="col-6 col-md-4">
-                        <select name="khungGio" class="form-select">
-                            <option value="">-- Tất cả khung giờ --</option>
-                            <option th:each="kg : ${dsKhungGio}"
-                                    th:value="${kg.id}"
-                                    th:text="${#temporals.format(kg.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(kg.gioKetThuc, 'HH:mm')}"
-                                    th:selected="${idKhungGio == kg.id}">
-                            </option>
-                        </select>
-                    </div>
-
-                    <div class="col-12 col-md-4">
-                        <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
                     </div>
                 </form>
             </div>
             <div class="col-12 col-md-3">
                 <button type="button" class="btn btn-success w-100" data-bs-toggle="modal"
-                        data-bs-target="#modalThemGia">
-                    Thêm Giá
+                        data-bs-target="#modalThemGia"> <i class="bi bi-plus-lg"></i> Thêm Giá
                 </button>
             </div>
         </div>
 
-
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover align-middle">
             <thead>
             <tr>
-                <th>#</th>
                 <th>Sân</th>
-                <th>Khung giờ</th>
-                <th>Giá thuê (VNĐ)</th>
-                <th>Trạng thái</th>
+                <th th:each="kg : ${dsKhungGio}"
+                    th:text="${#temporals.format(kg.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(kg.gioKetThuc, 'HH:mm')}">
+                </th>
                 <th>Hành động</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="gia, stat : ${dsGia}">
-                <td th:text="${currentPage * pageSize + stat.index + 1}"></td>
+            <tr th:each="san : ${dsSanBongHienThi}">
+                <td th:text="${san.ten_san_bong}"></td>
+                <td th:each="kg : ${dsKhungGio}">
+                    <span th:with="gia = ${bangGia[san.id_san_bong]?.get(kg.id)}">
+                        <span th:if="${gia != null}" class="justify-content-between align-items-center">
+                            <span th:text="${#numbers.formatDecimal(gia.giaThue, 0, 'COMMA', 3, 'POINT')} + ' đ'"></span>
+                            <a th:href="@{/xoa-gia/{id}(id=${gia.idGiaTheoKhungGio})}" class="btn btn-sm btn-outline-danger btn-xs p-0 px-1 float-end"  onclick="return confirm('Bạn có chắc muốn xóa?')">
+                            <i class="bi bi-trash-fill"></i> Xóa
+                            </a>
+                          </span>
+                        <span th:if="${gia == null}" class="text-muted ">Chưa có giá</span>
 
-                <td th:text="${gia.sanBong.ten_san_bong}">Sân</td>
-                <td th:text="${gia.khungGio.gioBatDau} + ' - ' + ${gia.khungGio.gioKetThuc}">
+                    </span>
                 </td>
-                <td th:text="${#numbers.formatDecimal(gia.giaThue, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
-
                 <td>
-                <span th:text="${gia.trangThai == 0 ? 'Đang áp dụng' : 'Đã xóa'}"
-                      th:classappend="${gia.trangThai == 0 ? 'text-success' : 'text-danger'}"></span>
-                </td>
-
-                <td>
-
-
-                    <button type="button"
-                            class="btn btn-sm btn-outline-warning"
+                    <button class="btn btn-sm btn-outline-warning me-1"
+                            th:if="${bangGiaTheoSan[san.id_san_bong] != null and #lists.size(bangGiaTheoSan[san.id_san_bong]) > 0}"
                             data-bs-toggle="modal"
-                            th:attr="data-bs-target='#modalSuaGia_' + ${gia.idGiaTheoKhungGio}">
-                        Sửa
+                            th:attr="data-bs-target='#modalSuaGia-' + ${san.id_san_bong}"><i class="bi bi-pencil-square"></i> Sửa
                     </button>
-                    <a th:href="@{/xoa-gia/{id}(id = ${gia.idGiaTheoKhungGio})}"
-                       class="btn btn-outline-danger btn-sm"
-                       onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
                 </td>
 
 
-                <!-- Modal sửa giá -->
-                <div class="modal fade" th:id="'modalSuaGia_' + ${gia.idGiaTheoKhungGio}" tabindex="-1">
+            </tr>
+
+            <!-- Modal sửa giá theo từng sân -->
+            <div th:each="san : ${dsSanBongHienThi}">
+                <div class="modal fade" th:id="'modalSuaGia-' + ${san.id_san_bong}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog">
-                        <form th:action="@{/sua-gia}" method="post">
-                            <input type="hidden" name="id" th:value="${gia.idGiaTheoKhungGio}"/>
-                            <div class="modal-content">
+                        <div class="modal-content">
+                            <form method="post" th:action="@{/quan-ly-gia-theo-khung-gio/sua-gia}">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Sửa giá thuê</h5>
+                                    <h5 class="modal-title" th:text="'Sửa Giá - ' + ${san.ten_san_bong}"></h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <label class="form-label">Giá thuê:</label>
-                                    <input type="number" name="giaThue" class="form-control" required
-                                           th:value="${gia.giaThue}"/>
+
+                                    <input type="hidden" name="idSanBong" th:value="${san.id_san_bong}"/>
+
+                                    <div th:each="gia : ${bangGiaTheoSan[san.id_san_bong]}" th:if="${gia != null}"
+                                         class="mb-3">
+                                        <label class="form-label"
+                                               th:text="${#temporals.format(gia.khungGio.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(gia.khungGio.gioKetThuc, 'HH:mm')}"></label>
+                                        <input type="hidden" name="ids" th:value="${gia.idGiaTheoKhungGio}"/>
+                                        <input type="number" name="giaThues" th:value="${gia.giaThue}"
+                                               class="form-control" required/>
+                                    </div>
+
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Sửa</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
+                                    </button>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-            </tr>
+
             </tbody>
         </table>
 
-        <!-- Hiển thị thông báo nếu danh sách đã lọc trống -->
-        <div th:if="${khongCoKetQua}" class="alert alert-warning text-center mt-4">
-            Không tìm thấy giá theo khung giờ phù hợp với yêu cầu của bạn.
-        </div>
-
-        <!-- Modal thêm giá -->
-        <div class="modal fade" id="modalThemGia" tabindex="-1">
+        <!-- Modal Thêm Giá -->
+        <div class="modal fade" id="modalThemGia" tabindex="-1" aria-labelledby="modalThemGiaLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <form th:action="@{/them-gia}" method="post">
+                <form method="post" th:action="@{/quan-ly-gia-theo-khung-gio/them-gia}">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Thêm Giá Theo Khung Giờ</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            <h5 class="modal-title" id="modalThemGiaLabel">Thêm Giá</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label>Sân bóng:</label>
-                                <select name="idSanBong" class="form-control" required>
-                                    <option th:each="san : ${dsSanBong}"
-                                            th:value="${san.id_san_bong}"
-                                            th:text="${san.ten_san_bong}">
-                                    </option>
+                                <label class="form-label">Sân bóng</label>
+                                <select name="idSanBong" class="form-select" required>
+                                    <option th:each="san : ${dsSanBong}" th:value="${san.id_san_bong}"
+                                            th:text="${san.ten_san_bong}"></option>
                                 </select>
                             </div>
-
                             <div class="mb-3">
-                                <label>Khung giờ:</label>
-                                <select name="idKhungGio" class="form-control" required>
-                                    <option th:each="kg : ${dsKhungGio}"
-                                            th:value="${kg.id}"
+                                <label class="form-label">Khung giờ</label>
+                                <select name="idKhungGio" class="form-select" required>
+                                    <option th:each="kg : ${dsKhungGio}" th:value="${kg.id}"
                                             th:text="${#temporals.format(kg.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(kg.gioKetThuc, 'HH:mm')}">
                                     </option>
                                 </select>
                             </div>
-
                             <div class="mb-3">
-                                <label>Giá thuê:</label>
-                                <input type="number" name="giaThue" class="form-control" required>
+                                <label class="form-label">Giá thuê (VNĐ)</label>
+                                <input type="number" name="giaThue" class="form-control" required min="0"/>
                             </div>
-
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Thêm</button>
+                            <button type="submit" class="btn btn-primary">Lưu</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                         </div>
                     </div>
@@ -412,57 +390,6 @@
             </div>
         </div>
 
-
-<!--        phan trang-->
-        <nav aria-label="Page navigation" th:if="${totalPages > 1}">
-            <ul class="pagination justify-content-center">
-                <!-- Nút Trước -->
-                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                    <a class="page-link"
-                       th:if="${isTimKiem}"
-                       th:href="@{/quan-ly-gia-theo-khung-gio/tim-kiem(page=${currentPage - 1}, size=10,
-                             sanBong=${sanBong}, khungGio=${khungGio})}">
-                        Trước
-                    </a>
-                    <a class="page-link"
-                       th:if="${!isTimKiem}"
-                       th:href="@{/quan-ly-gia-theo-khung-gio(page=${currentPage - 1}, size=10)}">
-                        Trước
-                    </a>
-                </li>
-
-                <!-- Các số trang -->
-                <li class="page-item"
-                    th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                    th:classappend="${i == currentPage} ? 'active'">
-                    <a class="page-link"
-                       th:if="${isTimKiem}"
-                       th:href="@{/quan-ly-gia-theo-khung-gio/tim-kiem(page=${i}, size=10,
-                             sanBong=${sanBong}, khungGio=${khungGio})}"
-                       th:text="${i + 1}"></a>
-
-                    <a class="page-link"
-                       th:if="${!isTimKiem}"
-                       th:href="@{/quan-ly-gia-theo-khung-gio(page=${i}, size=10)}"
-                       th:text="${i + 1}"></a>
-                </li>
-
-                <!-- Nút Tiếp -->
-                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-                    <a class="page-link"
-                       th:if="${isTimKiem}"
-                       th:href="@{/quan-ly-gia-theo-khung-gio/tim-kiem(page=${currentPage + 1}, size=10,
-                             sanBong=${sanBong}, khungGio=${khungGio})}">
-                        Tiếp
-                    </a>
-                    <a class="page-link"
-                       th:if="${!isTimKiem}"
-                       th:href="@{/quan-ly-gia-theo-khung-gio(page=${currentPage + 1}, size=10)}">
-                        Tiếp
-                    </a>
-                </li>
-            </ul>
-        </nav>
 
     </div>
 </main>
