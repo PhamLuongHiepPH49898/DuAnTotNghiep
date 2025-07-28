@@ -53,8 +53,32 @@ public class XacNhanDatLichService {
                     return taiKhoanRepository.save(newTK);
                 });
 
-        if (dto.getChiTietDatLichList() == null || dto.getChiTietDatLichList().isEmpty()) {
-            throw new IllegalArgumentException("Danh sách chi tiết đặt lịch không được rỗng");
+
+            LichDatSan lichSan = lichDatSanRepository.findListLichTrongByNgaySanKhungGio(
+                    chiTiet.getNgayDat(), chiTiet.getIdGiaTheoKhungGio()
+            );
+
+            if (lichSan == null) {
+                System.err.println("⚠️ Không tìm thấy lịch trống phù hợp.");
+                continue;
+            }
+
+            if (lichSan.getTrangThai() != 3 || lichSan.getTaiKhoan() != null) {
+                System.err.println("🚫 Lịch đã được đặt bởi người khác hoặc không còn trống.");
+                continue;
+            }
+
+            // Gán thông tin đặt lịch
+            lichSan.setTrangThai(0); // Đã đặt
+            lichSan.setGiaApDung(chiTiet.getGia());
+            lichSan.setGhiChu("");
+            lichSan.setTaiKhoan(taiKhoan);
+            lichSan.setSanBong(lichSan.getGiaTheoKhungGio().getSanBong());
+
+            lichDatSanRepository.save(lichSan);
+            idLichCapNhat.add(lichSan.getId());
+
+            System.out.println("✅ Đã cập nhật lịch ID: " + lichSan.getId());
         }
 
         List<Integer> danhSachIdDaLuu = new ArrayList<>();

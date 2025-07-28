@@ -19,22 +19,32 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
            "JOIN FETCH l.taiKhoan tk " +
            "JOIN FETCH l.giaTheoKhungGio g " +
            "JOIN FETCH g.khungGio kg " +
+           "WHERE l.ngayDat = :ngayDat " +
+           "AND l.trangThai <> 3" +
            "ORDER BY l.ngayTao DESC")
-    Page<LichDatSan> findAllLichDatSan(Pageable pageable);
+    Page<LichDatSan> findAllLichDatSan(@Param("ngayDat") LocalDate ngayDat, Pageable pageable);
 
     @Query("SELECT l FROM LichDatSan l " +
            "WHERE (:keyword IS NULL OR :keyword = '' OR LOWER(l.taiKhoan.ho_ten) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
            "AND (:ngayDat IS NULL OR l.ngayDat = :ngayDat) " +
            "AND (:sanBong IS NULL OR l.giaTheoKhungGio.sanBong.id_san_bong = :sanBong) " +
            "AND (:trangThai IS NULL OR l.trangThai = :trangThai)" +
+           "AND l.trangThai <> 3" +
            "ORDER BY l.ngayTao DESC")
     Page<LichDatSan> timKiem(@Param("keyword") String keyword,
                              @Param("ngayDat") LocalDate ngayDat,
                              @Param("sanBong") Integer sanBong,
                              @Param("trangThai") Integer trangThai,
                              Pageable pageable);
-    //loc theo ngay tao
-    Page<LichDatSan> findByNgayTaoBetween(LocalDateTime start, LocalDateTime end, Pageable pageable);
+
+    // dùng cho hiển thị lịch đặt sân
+    @Query("SELECT l FROM LichDatSan l " +
+           "JOIN FETCH l.giaTheoKhungGio g " +
+           "JOIN FETCH g.khungGio " +
+           "JOIN FETCH g.sanBong s " +
+           "WHERE l.ngayDat = :ngayDat AND " +
+           "l.trangThai <> 2")
+    List<LichDatSan> findByNgay(@Param("ngayDat") LocalDate ngayDat);
 
     @Query("SELECT l FROM LichDatSan l WHERE l.taiKhoan.id = :idTaiKhoan")
     List<LichDatSan> findByTaiKhoanId(Integer idTaiKhoan);
@@ -49,12 +59,19 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
     List<LichDatSan> findByTaiKhoanIdAndNgayDat(@Param("id") Long idTaiKhoan, @Param("ngayDat") LocalDate ngayDat);
 
 
-
     @Query("SELECT s FROM LichDatSan s WHERE s.trangThai IN :trangThaiList")
     List<LichDatSan> findByTrangThaiIn(@Param("trangThaiList") List<Integer> trangThaiList);
-    // thêm
-    @Query("SELECT l FROM LichDatSan l WHERE l.ngayDat = :ngayDat AND l.giaTheoKhungGio.idGiaTheoKhungGio = :idGia AND l.trangThai = 3 AND l.taiKhoan IS NULL")
-    LichDatSan findByNgaySanKhungGio(@Param("ngayDat") LocalDate ngayDat, @Param("idGia") Integer idGia);
+
+
+    // // Dùng cho tạo lịch tự động
+    @Query("SELECT l FROM LichDatSan l WHERE l.ngayDat = :ngayDat AND l.giaTheoKhungGio.idGiaTheoKhungGio = :idGiaTheoKhungGio ")
+    List<LichDatSan> findByNgaySanKhungGio(@Param("ngayDat") LocalDate ngayDat,
+                                     @Param("idGiaTheoKhungGio") Integer idGiaTheoKhungGio);
+    // Dùng cho đặt sân
+    @Query("SELECT l FROM LichDatSan l WHERE l.ngayDat = :ngayDat AND l.giaTheoKhungGio.idGiaTheoKhungGio = :idGiaTheoKhungGio AND l.trangThai = 3 ")
+    LichDatSan findListLichTrongByNgaySanKhungGio(@Param("ngayDat") LocalDate ngayDat,
+                                     @Param("idGiaTheoKhungGio") Integer idGiaTheoKhungGio);
+
 
 
 }
