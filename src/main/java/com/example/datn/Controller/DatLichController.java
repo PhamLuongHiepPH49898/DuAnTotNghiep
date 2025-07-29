@@ -37,12 +37,14 @@ public class DatLichController {
 
     @GetMapping("/datsan")
     public String hienThiTrangDatSan(@RequestParam("id") Integer idSan, Model model) {
-        SanBong san = datSanService.laySanTheoId(idSan);  // <-- Lấy 1 sân
-        if (san == null) return "redirect:/trang-chu";
+        SanBong san = datSanService.laySanTheoId(idSan); // <-- Lấy 1 sân
+        if (san == null)
+            return "redirect:/trang-chu";
 
         List<SanBong> sanList = datSanService.layDanhSachSan();
         List<KhungGio> khungGioList = datSanService.layDanhSachKhungGio();
-        List<GiaTheoKhungGio> danhSachGiaTheoKhungGio = datSanService.layDanhGiaTheoKhungGio(); // lấy danh sách giá theo khung giờ
+        List<GiaTheoKhungGio> danhSachGiaTheoKhungGio = datSanService.layDanhGiaTheoKhungGio(); // lấy danh sách giá
+                                                                                                // theo khung giờ
         List<String> cacSlotDaDat = datSanService.getAllSlotKeys();
         List<String> cacSlotTonTai = datSanService.getAllSlotKeysTonTai(); // dạng: "2025-07-07_Sân A_08:00-09:00"
         model.addAttribute("cacSlotTonTai", cacSlotTonTai);
@@ -99,19 +101,12 @@ public class DatLichController {
     }
 
     @PostMapping("/datLichThanhCong")
-    public String luuDatLich(@ModelAttribute XacNhanDatLichDTO xacNhan, Model model, Principal principal) {
-        List<ChiTietDatLichDTO> danhSachChiTiet = xacNhan.getChiTietDatLichList();
-
-        // In log kiểm tra
-        for (ChiTietDatLichDTO chiTiet : danhSachChiTiet) {
-            System.out.println("Ngày: " + chiTiet.getNgayDat());
-            System.out.println("Giờ: " + chiTiet.getThoiGian());
-            System.out.println("Sân: " + chiTiet.getTenSan());
-            System.out.println("Giá: " + chiTiet.getGia());
-            System.out.println("ID Giá Thuê: " + chiTiet.getIdGiaTheoKhungGio());
+    public String chuyenSangTrangThanhToan(@ModelAttribute XacNhanDatLichDTO xacNhan, Model model) {
+        List<Integer> idLichDatDuocLuu = xacNhanDatLichService.luuDatLich(xacNhan);
+        if (idLichDatDuocLuu.isEmpty()) {
+            return "redirect:/xacnhan"; // nếu không có đơn nào
         }
-
-        xacNhanDatLichService.luuDatLich(xacNhan);
-        return "Main/Success";
+        // redirect sang trang thanh toán, truyền idLichDatSan
+        return "redirect:/gia-lap-thanh-toan?idLichDatSan=" + idLichDatDuocLuu.get(0);
     }
 }

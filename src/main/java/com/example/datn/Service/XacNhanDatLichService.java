@@ -2,6 +2,7 @@ package com.example.datn.Service;
 
 import com.example.datn.DTO.ChiTietDatLichDTO;
 import com.example.datn.DTO.XacNhanDatLichDTO;
+import com.example.datn.Entity.GiaTheoKhungGio;
 import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Entity.TaiKhoan;
 import com.example.datn.Repository.GiaTheoKhungGioRepo;
@@ -9,7 +10,6 @@ import com.example.datn.Repository.LichDatSanRepo;
 import com.example.datn.Repository.TaiKhoanRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,19 @@ public class XacNhanDatLichService {
     @Autowired
     private TaiKhoanRepo taiKhoanRepository;
 
+    @Autowired
+    private LichDatSanRepo lichDatSanRepo;  // Nhớ import repo này
+
+    public void capNhatTrangThaiThanhToan(int idLichDatSan, boolean daThanhToan) {
+        Optional<LichDatSan> optional = lichDatSanRepo.findById(idLichDatSan);
+        if (optional.isPresent()) {
+            LichDatSan lich = optional.get();
+            lich.setTrangThai(daThanhToan ? 1 : 0); // 1: đã thanh toán, 0: chưa thanh toán
+            lichDatSanRepo.save(lich);
+        } else {
+            throw new RuntimeException("Không tìm thấy lịch đặt sân với ID: " + idLichDatSan);
+        }
+    }
 
     public List<Integer> luuDatLich(XacNhanDatLichDTO xacNhan) {
         List<Integer> idLichCapNhat = new ArrayList<>();
@@ -41,7 +54,7 @@ public class XacNhanDatLichService {
 
         for (ChiTietDatLichDTO chiTiet : danhSach) {
             System.out.println("🔍 Đang tìm lịch cho: Ngày = " + chiTiet.getNgayDat()
-                    + ", ID Giá = " + chiTiet.getIdGiaTheoKhungGio());
+                               + ", ID Giá = " + chiTiet.getIdGiaTheoKhungGio());
 
             LichDatSan lichSan = lichDatSanRepository.findListLichTrongByNgaySanKhungGio(
                     chiTiet.getNgayDat(), chiTiet.getIdGiaTheoKhungGio()
@@ -72,6 +85,4 @@ public class XacNhanDatLichService {
 
         return idLichCapNhat;
     }
-
 }
-

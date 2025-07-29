@@ -32,7 +32,7 @@ public class LichDatSan {
     @Column(name = "gia_ap_dung", nullable = false)
     private BigDecimal giaApDung;
 
-    @Column(name = "ghi_chu", columnDefinition = "NVARCHAR(255)", nullable = false)
+    @Column(name = "ghi_chu", columnDefinition = "NVARCHAR(255)")
     private String ghiChu;
 
     @Column(name = "trang_thai", nullable = false)
@@ -42,10 +42,13 @@ public class LichDatSan {
     @JoinColumn(name = "id_tai_khoan")
     private TaiKhoan taiKhoan;
 
-    @ManyToOne
-    @JoinColumn(name = "id_gia_theo_khung_gio")
-    private GiaTheoKhungGio giaTheoKhungGio;
+
     @ManyToOne
     @JoinColumn(name = "id_san_bong")
     private SanBong sanBong;
+
+    @ManyToOne
+    @JoinColumn(name = "id_gia_theo_khung_gio")
+    private GiaTheoKhungGio giaTheoKhungGio;
+
 }

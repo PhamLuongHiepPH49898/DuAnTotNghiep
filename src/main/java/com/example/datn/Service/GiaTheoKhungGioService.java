@@ -6,6 +6,7 @@ import com.example.datn.Entity.SanBong;
 import com.example.datn.Repository.GiaTheoKhungGioRepo;
 import com.example.datn.Repository.KhungGioRepo;
 import com.example.datn.Repository.SanBongRepo;
+import com.example.datn.Sheduled.DatSanSheduled;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +26,7 @@ public class GiaTheoKhungGioService {
     @Autowired
     private KhungGioRepo khungGioRepo;
     @Autowired
-    private SheduledDatSan sheduledDatSan;
+    private DatSanSheduled datSanSheduled;
 
     public List<GiaTheoKhungGio> getGiaTheoKhungGio() {
         return giaTheoKhungGioRepo.findAllByTrangThaiOrderByTenSanBong(List.of(0));
@@ -75,7 +76,7 @@ public class GiaTheoKhungGioService {
             gia.setKhungGio(khungGio);
             gia.setTrangThai(0);
             giaTheoKhungGioRepo.save(gia);
-            sheduledDatSan.taoLichChoGia(gia);
+            datSanSheduled.taoLichChoGia(gia);
 
         } else {
             throw new IllegalArgumentException("Không tìm thấy sân bóng hoặc khung giờ.");

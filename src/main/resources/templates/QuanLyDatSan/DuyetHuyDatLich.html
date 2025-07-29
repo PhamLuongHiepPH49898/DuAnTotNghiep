@@ -191,7 +191,7 @@
                 <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Quản lý thanh toán</a>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i> Quản lý thanh toán</a>
         </li>
         <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
         <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
@@ -261,7 +261,7 @@
                     <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
                 </ul>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Quản lý thanh
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i> Quản lý thanh
                 toán</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
             <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
@@ -315,7 +315,9 @@
                             <label class="form-label">Trạng thái</label>
                             <select name="trangThai" class="form-select">
                                 <option value="">-- Tất cả --</option>
+
                                 <option value="0" th:selected="${trangThai == 0}">Chưa thanh toán</option>
+
                                 <option value="1" th:selected="${trangThai == 1}">Đã thanh toán</option>
                                 <option value="2" th:selected="${trangThai == 2}">Đã hủy</option>
                             </select>
@@ -382,7 +384,7 @@
                         <a th:href="@{/duyet/{id}(id=${danhSachLichDatSan.id})}"
                            th:if="${danhSachLichDatSan.trangThai ==0}"
                            class="btn btn-sm btn-outline-success"
-                           onclick="return confirm('Bạn có chắc duệt không')">Duyệt</a>
+                           onclick="return confirm('Bạn có chắc duyệt không')">Duyệt</a>
 
                         <!-- Nút hủy -->
                         <th:block th:with="startDateTime=${T(java.time.LocalDateTime).of(danhSachLichDatSan.ngayDat, danhSachLichDatSan.giaTheoKhungGio.khungGio.gioBatDau)}">

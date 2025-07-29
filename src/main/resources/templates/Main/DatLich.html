@@ -118,6 +118,7 @@
             background-color: #75a6b6;
         }
 
+
     </style>
 </head>
 <body>
@@ -144,6 +145,7 @@
             th:data-idgia="${bangGiaId[san.id_san_bong + '_' + khungGio.id]}"
             th:data-price="${bangGia[san.id_san_bong + '_' + khungGio.id] != null ? bangGia[san.id_san_bong + '_' + khungGio.id] : 0}"
             th:data-court="${san.ten_san_bong}"
+            th:data-status="${san.trang_thai}"
             th:data-time="${#temporals.format(khungGio.gioBatDau, 'HH:mm') + '-' + #temporals.format(khungGio.gioKetThuc, 'HH:mm')}">//ép tg cùng 1 kiểu
             <span th:text="${#numbers.formatDecimal(bangGia[san.id_san_bong + '_' + khungGio.id], 1, 'COMMA', 0, 'POINT')}">0</span>
         </td>
@@ -154,6 +156,7 @@
 <p>Tổng tiền: <strong><span id="totalPrice">0</span> đ</strong></p>
 <a class="btn-style" onclick="submitBooking()">Đặt lịch</a>
 <a th:href="@{/ve-trang-chu}" class="btn-style">Trang chủ</a>
+
 
 <script th:inline="javascript">
     let selectedSlots = [];
@@ -199,25 +202,43 @@
         const isPast = checkDate < today;
         toggleBookingCells(!isPast, isPast);
     }
-
+    //fix lại để check ko đặt đc h đã qua
     function toggleBookingCells(enable, isPast) {
         const cells = document.querySelectorAll("#bookingTable td[data-price]");
         const dateKey = getCurrentDateKey();
 
+        const now = new Date();
+        const isToday = currentDate.toDateString() === now.toDateString();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes(); // Tổng số phút hiện tại
+
         cells.forEach(cell => {
             const slotId = `${dateKey}_${cell.dataset.court}_${cell.dataset.time}`;
+            const price = Number(cell.dataset.price || 0);
+            const status = parseInt(cell.dataset.status || "0", 10);
+            const isDaDat = slotsDaDat.includes(slotId);
+            const isTonTai = slotsTonTai.includes(slotId);
 
-            // Reset
             cell.classList.remove("disabled", "selected");
             cell.onclick = null;
             cell.style.cursor = "pointer";
 
-            const price = Number(cell.dataset.price || 0);
-            const isDaDat = slotsDaDat.includes(slotId);
-            const isTonTai = slotsTonTai.includes(slotId);
+            // Tách giờ bắt đầu + kết thúc
+            const [startStr, endStr] = cell.dataset.time.split('-');
+            const [endHour, endMinute] = endStr.split(':').map(Number);
+            const endMinutes = endHour * 60 + endMinute;
 
-            if (!isTonTai || isPast || price <= 0 || isDaDat) {
-                cell.textContent = !isTonTai ? "Chưa có lịch" : (isDaDat ? "Đã đặt" : (price <= 0 ? "-" : ""));
+            const isExpired = isToday && endMinutes <= currentMinutes;
+
+            if (!isTonTai || isPast || price <= 0 || isDaDat || isExpired || status !== 0) {
+                cell.textContent =
+                    status === 1 ? "Sân đang khóa"
+                        : status === 2 ? "Sân bảo trì"
+                            : !isTonTai ? "Chưa có lịch"
+                                : isDaDat ? "Đã đặt"
+                                    : isPast ? "Đã qua"
+                                        : isExpired ? "Đã qua"
+                                    : (price <= 0 ? "-" : "");
+
                 cell.classList.add("disabled");
                 cell.style.cursor = "not-allowed";
             } else {
@@ -232,6 +253,7 @@
 
         updateTotal();
     }
+
 
     function selectSlot(cell, dateKey) {
         if (cell.classList.contains("disabled")) return;
