@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,11 +42,10 @@ public class QuanLyDatSanController {
             @RequestParam(defaultValue = "10") int size,
             Model model) {
 
-
         if (ngayDat == null) {
             ngayDat = LocalDate.now();
         }
-        Page<LichDatSan> lichDatList = lichDatSanService.getLichDatSan(ngayDat, page, size);
+        Page<LichDatSan> lichDatList = lichDatSanService.getLichDatSan(ngayDat.atStartOfDay(), page, size);
 
         model.addAttribute("danhSachLichDatSan", lichDatList);
         model.addAttribute("currentPage", page);
@@ -58,7 +54,6 @@ public class QuanLyDatSanController {
         model.addAttribute("danhSachSan", sanBongService.findAll());
         model.addAttribute("ngayDat", ngayDat);
         model.addAttribute("khongCoKetQua", lichDatList.isEmpty());
-
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);
@@ -80,7 +75,7 @@ public class QuanLyDatSanController {
         }
 
         List<SanBong> danhSachSanLoc = sanBongService.timKiemSan(tenSan, loaiSanId, matSanId, monTheThaoId);
-        Map<SanBong, List<LichDatSan>> lichDatMap = lichDatSanService.getLichDatSanTheoNgay(ngayDat, danhSachSanLoc);
+        Map<SanBong, List<LichDatSan>> lichDatMap = lichDatSanService.getLichDatSanTheoNgay(ngayDat.atStartOfDay(), danhSachSanLoc);
         List<KhungGio> khungGios = lichDatSanService.getAllKhungGio();
 
         model.addAttribute("ngayDuocChon", ngayDat);
@@ -95,22 +90,18 @@ public class QuanLyDatSanController {
         model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
         model.addAttribute("dsMatSan", loaiMatSanRepo.findAll());
         model.addAttribute("dsMonTheThao", loaiMonTheThaoRepo.findAll());
-        model.addAttribute("thoiGianHienTai",LocalDateTime.now());
-
+        model.addAttribute("thoiGianHienTai", LocalDate.now());
 
         model.addAttribute("khongCoKetQua", lichDatMap.isEmpty());
 
-
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);
-
 
         return "QuanLyDatSan/QuanLyLichDat";
     }
 
     @GetMapping("/duyet/{id}")
     public String duyet(@PathVariable int id, RedirectAttributes redirectAttributes) {
-
         try {
             lichDatSanService.duyet(id);
             redirectAttributes.addFlashAttribute("success", "Đã duyệt lịch thành công!");
@@ -133,7 +124,6 @@ public class QuanLyDatSanController {
         return "redirect:/duyet-huy-lich";
     }
 
-
     @GetMapping("/duyet-huy-lich/tim-kiem")
     public String quanLyDatSanTimKiem(Model model,
                                       @RequestParam(required = false) String keyword,
@@ -150,8 +140,14 @@ public class QuanLyDatSanController {
             keyword = keyword.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
         }
 
+        Page<LichDatSan> danhSachLichDatSan = lichDatSanService.timKiem(
+                keyword,
+                ngayDat != null ? ngayDat.atStartOfDay() : null,
+                sanBong,
+                trangThai,
+                page,
+                size);
 
-        Page<LichDatSan> danhSachLichDatSan = lichDatSanService.timKiem(keyword, ngayDat, sanBong, trangThai, page, size);
         model.addAttribute("danhSachLichDatSan", danhSachLichDatSan);
         model.addAttribute("currentPage", page);
         model.addAttribute("pageSize", size);

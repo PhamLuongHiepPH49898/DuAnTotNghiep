@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,7 +25,7 @@ public class ThongTinNguoiDungService {
 
     // Tìm kiếm theo tên sân (có phân trang)
     public List<LichDatSan> timLichDatHomNay(Long idTaiKhoan) {
-        LocalDate today = LocalDate.now();
+        LocalDateTime today = LocalDateTime.now();
         return lichDatSanRepo.findByTaiKhoanIdAndNgayDat(idTaiKhoan, today);
     }
 
