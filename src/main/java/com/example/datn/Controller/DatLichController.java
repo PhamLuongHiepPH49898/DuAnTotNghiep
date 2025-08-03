@@ -4,14 +4,16 @@ package com.example.datn.Controller;
 import com.example.datn.DTO.ChiTietDatLichDTO;
 import com.example.datn.DTO.XacNhanDatLichDTO;
 import com.example.datn.Entity.*;
-import com.example.datn.Repository.LichDatSanRepo;
 import com.example.datn.Repository.TaiKhoanRepo;
 import com.example.datn.Service.DatSanService;
 import com.example.datn.Service.LichDatSanService;
 import com.example.datn.Service.XacNhanDatLichService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,23 +98,87 @@ public class DatLichController {
 
     @GetMapping("/datLichThanhCong")
     public String hienThiTrangDatLichThanhCong() {
-        return "Main/Success";
+        return "Main/ketQuaTb";
     }
+
 
     @PostMapping("/datLichThanhCong")
-    public String luuDatLich(@ModelAttribute XacNhanDatLichDTO xacNhan, Model model, Principal principal) {
-        List<ChiTietDatLichDTO> danhSachChiTiet = xacNhan.getChiTietDatLichList();
+    public String kiemTraHopLeVaChuyenThanhToan(
+            @ModelAttribute @Validated XacNhanDatLichDTO xacNhan,
+            BindingResult result,
+            Model model,
+            HttpSession session) {
 
-        // In log kiểm tra
-        for (ChiTietDatLichDTO chiTiet : danhSachChiTiet) {
-            System.out.println("Ngày: " + chiTiet.getNgayDat());
-            System.out.println("Giờ: " + chiTiet.getThoiGian());
-            System.out.println("Sân: " + chiTiet.getTenSan());
-            System.out.println("Giá: " + chiTiet.getGia());
-            System.out.println("ID Giá Thuê: " + chiTiet.getIdGiaTheoKhungGio());
+        if (result.hasErrors()) {
+            model.addAttribute("error", "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.");
+            return "Main/XacNhanDatLich";
         }
 
-        xacNhanDatLichService.luuDatLich(xacNhan);
-        return "Main/Success";
+        List<ChiTietDatLichDTO> danhSachChiTiet = xacNhan.getChiTietDatLichList();
+
+        for (ChiTietDatLichDTO chiTiet : danhSachChiTiet) {
+            if (chiTiet.getNgayDat() == null || chiTiet.getThoiGian() == null || chiTiet.getGia() == null) {
+                model.addAttribute("error", "Một số thông tin lịch đặt không hợp lệ. Vui lòng kiểm tra lại.");
+                return "Main/XacNhanDatLich";
+            }
+
+            if (chiTiet.getNgayDat().isBefore(LocalDate.now())) {
+                model.addAttribute("error", "Ngày đặt lịch không thể trước ngày hiện tại.");
+                return "Main/XacNhanDatLich";
+            }
+        }
+
+        // Kiểm tra logic nghiệp vụ (slot có bị trùng không, giá có hợp lệ không,...)
+        List<Integer> lichTamHopLe = xacNhanDatLichService.kiemTraHopLeTamThoi(xacNhan);
+
+        int tongSoLich = danhSachChiTiet.size();
+        int soLichHopLe = lichTamHopLe.size();
+
+        if (soLichHopLe == 0) {
+            model.addAttribute("ketQua", "fail");
+            return "Main/ketQuaTb";
+        } else if (soLichHopLe < tongSoLich) {
+            model.addAttribute("ketQua", "partial");
+            return "Main/ketQuaTb";
+        }
+
+        // ✅ Toàn bộ hợp lệ → lưu tạm vào Session → sang trang thanh toán
+        session.setAttribute("thongTinDatLich", xacNhan);
+
+        return "redirect:/thanh-toan"; // vd sang trang thanh toan
     }
+    //giả lập
+    @GetMapping("/thanh-toan")
+    public String hienThiTrangThanhToan(HttpSession session, Model model) {
+        XacNhanDatLichDTO xacNhan = (XacNhanDatLichDTO) session.getAttribute("thongTinDatLich");
+        if (xacNhan == null) {
+            return "redirect:/xacnhan";
+        }
+
+        model.addAttribute("xacNhan", xacNhan);
+        return "Main/thanh-toan";
+    }
+    //giả lập để test khi xac nhan thanh toan sẽ luu lich và tb thanh cong
+    @PostMapping("/thanh-toan/xac-nhan")
+    public String luuSauKhiThanhToan(HttpSession session, Model model) {
+        XacNhanDatLichDTO xacNhan = (XacNhanDatLichDTO) session.getAttribute("thongTinDatLich");
+        if (xacNhan == null) {
+            return "redirect:/xacnhan";
+        }
+
+        List<Integer> danhSachIdLich = xacNhanDatLichService.luuDatLich(xacNhan);
+        session.removeAttribute("thongTinDatLich"); // Xóa sau khi đã lưu
+
+        if (danhSachIdLich.isEmpty()) {
+            model.addAttribute("ketQua", "fail");
+        } else if (danhSachIdLich.size() < xacNhan.getChiTietDatLichList().size()) {
+            model.addAttribute("ketQua", "partial");
+        } else {
+            model.addAttribute("ketQua", "success");
+        }
+
+        return "Main/ketQuaTb";
+    }
+    // file giả lập thanh-toan.html
+
 }

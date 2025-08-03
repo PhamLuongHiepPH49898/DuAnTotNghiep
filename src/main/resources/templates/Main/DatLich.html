@@ -103,6 +103,14 @@
         a{
             text-decoration: none;
         }
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
         .btn-style {
             padding: 10px 20px;
             background-color: #75a6b6;
@@ -154,8 +162,10 @@
 </table>
 <p>Đã chọn <span id="slotCount">0</span> lịch</p>
 <p>Tổng tiền: <strong><span id="totalPrice">0</span> đ</strong></p>
-<a class="btn-style" onclick="submitBooking()">Đặt lịch</a>
-<a th:href="@{/ve-trang-chu}" class="btn-style">Trang chủ</a>
+<div class="button-group">
+    <a class="btn-style" onclick="submitBooking()">Đặt lịch</a>
+    <a th:href="@{/ve-trang-chu}" class="btn-style">Trang chủ</a>
+</div>
 
 
 <script th:inline="javascript">
@@ -224,11 +234,11 @@
 
             // Tách giờ bắt đầu + kết thúc
             const [startStr, endStr] = cell.dataset.time.split('-');
-            const [endHour, endMinute] = endStr.split(':').map(Number);
-            const endMinutes = endHour * 60 + endMinute;
+            const [startHour, startMinute] = startStr.split(':').map(Number);
 
-            const isExpired = isToday && endMinutes <= currentMinutes;
+            const startMinutes = startHour * 60 + startMinute;
 
+            const isExpired = isToday && currentMinutes >= startMinutes;
             if (!isTonTai || isPast || price <= 0 || isDaDat || isExpired || status !== 0) {
                 cell.textContent =
                     status === 1 ? "Sân đang khóa"
@@ -237,7 +247,7 @@
                                 : isDaDat ? "Đã đặt"
                                     : isPast ? "Đã qua"
                                         : isExpired ? "Đã qua"
-                                    : (price <= 0 ? "-" : "");
+                                            : (price <= 0 ? "-" : "");
 
                 cell.classList.add("disabled");
                 cell.style.cursor = "not-allowed";
