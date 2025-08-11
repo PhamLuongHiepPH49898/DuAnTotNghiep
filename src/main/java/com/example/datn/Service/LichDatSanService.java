@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class LichDatSanService {
     @Autowired
     private KhungGioRepo khungGioRepo;
 
-    public Page<LichDatSan> getLichDatSan(LocalDateTime ngayDat, int page, int size) {
+    public Page<LichDatSan> getLichDatSan(LocalDate ngayDat, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return lichDatSanRepo.findAllLichDatSan(ngayDat, pageable);
     }
@@ -53,7 +54,7 @@ public class LichDatSanService {
             lichMoi.setGiaTheoKhungGio(lichDatSan.getGiaTheoKhungGio());
             lichMoi.setTrangThai(3); // trống
             lichMoi.setGhiChu("Tạo lại sau khi hủy");
-            lichMoi.setNgayTao(LocalDateTime.now());
+            lichMoi.setNgayTao(LocalDate.now());
             lichMoi.setGiaApDung(null);
             lichMoi.setTaiKhoan(null);
             lichDatSanRepo.save(lichMoi);
@@ -61,7 +62,7 @@ public class LichDatSanService {
     }
 
 
-    public Page<LichDatSan> timKiem(String keyword, LocalDateTime ngaydat, Integer sanBong, Integer trangThai, int page, int size) {
+    public Page<LichDatSan> timKiem(String keyword, LocalDate ngaydat, Integer sanBong, Integer trangThai, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return lichDatSanRepo.timKiem(keyword, ngaydat, sanBong, trangThai, pageable);
 
@@ -70,7 +71,7 @@ public class LichDatSanService {
         return lichDatSanRepo.findByTaiKhoanId(taiKhoanId);
     }
 
-    public Map<SanBong, List<LichDatSan>> getLichDatSanTheoNgay(LocalDateTime ngayDat, List<SanBong> danhSachSanLoc) {
+    public Map<SanBong, List<LichDatSan>> getLichDatSanTheoNgay(LocalDate ngayDat, List<SanBong> danhSachSanLoc) {
         List<LichDatSan> lichDatList = lichDatSanRepo.findByNgay(ngayDat);
         Map<SanBong, List<LichDatSan>> result = new LinkedHashMap<>();
 

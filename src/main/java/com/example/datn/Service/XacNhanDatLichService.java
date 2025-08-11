@@ -57,7 +57,7 @@ public class XacNhanDatLichService {
                                + ", ID Giá = " + chiTiet.getIdGiaTheoKhungGio());
 
             LichDatSan lichSan = lichDatSanRepository.findListLichTrongByNgaySanKhungGio(
-                    chiTiet.getNgayDat().atStartOfDay(), chiTiet.getIdGiaTheoKhungGio()
+                    chiTiet.getNgayDat(), chiTiet.getIdGiaTheoKhungGio()
             );
 
             if (lichSan == null) {

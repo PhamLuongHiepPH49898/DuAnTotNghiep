@@ -41,27 +41,15 @@ public class GiaLapThanhToanController {
 
 
     @GetMapping("/gia-lap-thanh-toan")
-    public String hienThiForm(@RequestParam("idLichDatSan") Integer idLich,
-                              Model model,
-                              Principal principal) {
-        // Lấy tài khoản đang đăng nhập
-        String email = principal.getName();
-        TaiKhoan taiKhoan = taiKhoanRepo.findByEmail(email).orElse(null);
-
+    public String hienThiForm(@RequestParam("idLichDatSan") Integer idLich, Model model) {
         List<PhuongThucThanhToan> danhSachPhuongThuc = phuongThucRepo.findAll();
         List<TaiKhoanNganHang> danhSachTaiKhoan = taiKhoanNganHangRepo.findAll();
 
         model.addAttribute("dsPhuongThuc", danhSachPhuongThuc);
         model.addAttribute("dsTaiKhoanNganHang", danhSachTaiKhoan);
         model.addAttribute("idLichDatSan", idLich);
-
-        if (taiKhoan != null) {
-            model.addAttribute("idTaiKhoan", taiKhoan.getId()); // ✅ truyền vào view
-        }
-
         return "Main/GiaLapThanhToan";
     }
-
 
     @PostMapping("/gia-lap-thanh-toan")
     public String thanhToanVaLuu(@RequestParam("idLichDatSan") int idLichDatSan,

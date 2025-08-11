@@ -63,14 +63,6 @@
             font-size: 1.4rem !important;
             text-align: center;
         }
-
-        .countdown {
-            font-size: 18px;
-            font-weight: bold;
-            color: red;
-            text-align: center;
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
@@ -83,9 +75,8 @@
         <p class="fw-bold text-danger fs-5" id="totalPrice">0</p>
     </div>
 
-    <form id="paymentForm">
-        <input type="hidden" name="idLichDatSan" id="idLichDatSan" th:value="${idLichDatSan}" />
-        <input type="hidden" id="idTaiKhoan" th:value="${idTaiKhoan}" />
+    <form id="paymentForm" th:action="@{/gia-lap-thanh-toan}" method="post">
+        <input type="hidden" name="idLichDatSan" th:value="${idLichDatSan}" />
 
         <div class="mb-3">
             <label class="form-label" for="phuongThucSelect">Phương thức thanh toán</label>
@@ -114,52 +105,29 @@
             <p class="mt-2 fw-bold">Quét mã để thanh toán</p>
         </div>
 
-        <div class="countdown">
-            Hết hạn trong: <span id="timer">05:00</span>
-        </div>
-
-        <a href="/ve-trang-chu" class="btn btn-pay w-100 mt-4 text-center" style="text-decoration: none;">Tạm ngừng thanh toán</a>
+        <button type="submit" class="btn btn-pay w-100 mt-4">Xác nhận thanh toán</button>
     </form>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const bookingList = JSON.parse(localStorage.getItem("chiTietDatLichList")) || [];
-        const total = bookingList.reduce((sum, item) => sum + Number(item.price), 0);
+        let bookingList = JSON.parse(localStorage.getItem("chiTietDatLichList")) || [];
+        let total = bookingList.reduce((sum, item) => sum + Number(item.price), 0);
         document.getElementById("totalPrice").innerText = total.toLocaleString('vi-VN');
 
-        const taiKhoanSelect = document.getElementById('taiKhoanNganHang');
-        taiKhoanSelect.addEventListener('change', function () {
+        document.getElementById('taiKhoanNganHang').addEventListener('change', function () {
             const selectedOption = this.options[this.selectedIndex];
             const bank = selectedOption.getAttribute('data-bank');
             const accountNumber = selectedOption.value;
             const accountName = selectedOption.getAttribute('data-account-name');
-            const idTaiKhoan = document.getElementById('idTaiKhoan').value;
-
-            if (bank && accountNumber && accountName && idTaiKhoan) {
-                const qrUrl = `https://img.vietqr.io/image/${bank}-${accountNumber}-qronly.png?amount=${total}&accountName=${accountName}&addInfo=SAMBA${idTaiKhoan}`;
+            if (bank && accountNumber && accountName) {
+                const qrUrl = `https://img.vietqr.io/image/${bank}-${accountNumber}-compact2.png?amount=${total}&accountName=${accountName}`;
                 document.getElementById('qrImage').src = qrUrl;
                 document.getElementById('qrContainer').style.display = 'block';
             } else {
                 document.getElementById('qrContainer').style.display = 'none';
             }
         });
-
-        // COUNTDOWN 5 PHÚT
-        let timeLeft = 300;
-        const timerEl = document.getElementById("timer");
-
-        const countdown = setInterval(() => {
-            const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-            const seconds = (timeLeft % 60).toString().padStart(2, '0');
-            timerEl.textContent = `${minutes}:${seconds}`;
-            timeLeft--;
-
-            if (timeLeft < 0) {
-                clearInterval(countdown);
-                window.location.href = "/ve-trang-chu";
-            }
-        }, 1000);
     });
 </script>
 

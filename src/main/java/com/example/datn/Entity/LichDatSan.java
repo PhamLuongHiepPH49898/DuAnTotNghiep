@@ -24,10 +24,10 @@ public class LichDatSan {
     private int id;
 
     @Column(name = "ngay_dat", nullable = false)
-    private LocalDateTime ngayDat;
+    private LocalDate ngayDat;
 
     @Column(name = "ngay_tao", nullable = false)
-    private LocalDateTime ngayTao = LocalDateTime.now();
+    private LocalDate ngayTao = LocalDate.now();
 
     @Column(name = "gia_ap_dung", nullable = false)
     private BigDecimal giaApDung;
@@ -51,6 +51,4 @@ public class LichDatSan {
     @JoinColumn(name = "id_gia_theo_khung_gio")
     private GiaTheoKhungGio giaTheoKhungGio;
 
-    @Column(name = "da_thanh_toan")
-    private boolean daThanhToan = false;
 }
