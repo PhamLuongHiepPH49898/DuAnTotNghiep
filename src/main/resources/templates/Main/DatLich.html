@@ -247,7 +247,7 @@
                                 : isDaDat ? "Đã đặt"
                                     : isPast ? "Đã qua"
                                         : isExpired ? "Đã qua"
-                                            : (price <= 0 ? "-" : "");
+                                            : (price <= 0 ? "Chưa có lịch" : "");
 
                 cell.classList.add("disabled");
                 cell.style.cursor = "not-allowed";

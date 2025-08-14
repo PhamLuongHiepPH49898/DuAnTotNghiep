@@ -6,7 +6,6 @@ import com.example.datn.DTO.XacNhanDatLichDTO;
 import com.example.datn.Entity.*;
 import com.example.datn.Repository.TaiKhoanRepo;
 import com.example.datn.Service.DatSanService;
-import com.example.datn.Service.LichDatSanService;
 import com.example.datn.Service.XacNhanDatLichService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,35 +30,29 @@ import java.util.Optional;
 public class DatLichController {
     @Autowired
     private TaiKhoanRepo taiKhoanRepo;
-    @Autowired
-    private LichDatSanService lichDatSan;
+
     @Autowired
     private DatSanService datSanService;
+
     @Autowired
     private XacNhanDatLichService xacNhanDatLichService;
 
     @GetMapping("/datsan")
+
     public String hienThiTrangDatSan(@RequestParam("id") Integer idSan, Model model) {
-        SanBong san = datSanService.laySanTheoId(idSan);  // <-- Lấy 1 sân
+        SanBong san = datSanService.laySanTheoId(idSan);
         if (san == null) return "redirect:/trang-chu";
 
-        List<SanBong> sanList = datSanService.layDanhSachSan();
         List<KhungGio> khungGioList = datSanService.layDanhSachKhungGio();
-        List<GiaTheoKhungGio> danhSachGiaTheoKhungGio = datSanService.layDanhGiaTheoKhungGio(); // lấy danh sách giá theo khung giờ
+        List<GiaTheoKhungGio> dsGiaTheoKhung = datSanService.layDanhGiaTheoKhungGio();
         List<String> cacSlotDaDat = datSanService.getAllSlotKeys();
-        List<String> cacSlotTonTai = datSanService.getAllSlotKeysTonTai(); // dạng: "2025-07-07_Sân A_08:00-09:00"
-        model.addAttribute("cacSlotTonTai", cacSlotTonTai);
-        // Map key = "idSan_idKhungGio" -> Giá thuê
+        List<String> cacSlotTonTai = datSanService.getAllSlotKeysTonTai();
+
         Map<String, BigDecimal> bangGia = new HashMap<>();
-        for (GiaTheoKhungGio gia : danhSachGiaTheoKhungGio) {
+        Map<String, Integer> bangGiaId = new HashMap<>();
+        for (GiaTheoKhungGio gia : dsGiaTheoKhung) {
             String key = gia.getSanBong().getId_san_bong() + "_" + gia.getKhungGio().getId();
             bangGia.put(key, gia.getGiaThue());
-        }
-
-        // Map key = "idSan_idKhungGio" -> ID bảng giá
-        Map<String, Integer> bangGiaId = new HashMap<>();
-        for (GiaTheoKhungGio gia : danhSachGiaTheoKhungGio) {
-            String key = gia.getSanBong().getId_san_bong() + "_" + gia.getKhungGio().getId();
             bangGiaId.put(key, gia.getIdGiaTheoKhungGio());
         }
 
@@ -68,11 +61,7 @@ public class DatLichController {
         model.addAttribute("bangGia", bangGia);
         model.addAttribute("bangGiaId", bangGiaId);
         model.addAttribute("cacSlotDaDat", cacSlotDaDat);
-
-        System.out.println("San: " + sanList.size());
-        System.out.println("KhungGio: " + khungGioList.size());
-        System.out.println("BangGia: " + bangGia.size());
-        System.out.println("BangGiaId: " + bangGiaId.size());
+        model.addAttribute("cacSlotTonTai", cacSlotTonTai);
 
         return "Main/DatLich";
     }

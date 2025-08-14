@@ -11,11 +11,8 @@ import com.example.datn.Repository.SanBongRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class DatSanService {
@@ -40,7 +37,7 @@ public class DatSanService {
     }
 
     public List<GiaTheoKhungGio> layDanhGiaTheoKhungGio() {
-        return giaTheoKhungGioRepository.findByTrangThaiIn(List.of(0,1,2));
+        return giaTheoKhungGioRepository.findByTrangThaiIn(List.of(0));
     }
     //check lich chua đc tao
     public List<String> getAllSlotKeysTonTai() {
@@ -56,10 +53,8 @@ public class DatSanService {
             String key = ngay + "_" + tenSan + "_" + thoiGian;
             slotKeys.add(key);
         }
-
         return slotKeys;
     }
-
 
     public List<String> getAllSlotKeys() {
         List<LichDatSan> danhSach = lichDatSanRepository.findByTrangThaiIn(List.of(0,1));// fix để khi hủy lịch thì lịch đó có thể đặt tiếp
@@ -73,14 +68,10 @@ public class DatSanService {
 
             keys.add(date + "_" + court + "_" + time);
         }
-
         return keys;
     }
     public SanBong laySanTheoId(int id) {
         return sanBongRepository.findById(id).orElse(null);
     }
-
-
-
 }
 
