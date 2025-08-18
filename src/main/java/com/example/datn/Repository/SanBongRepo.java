@@ -35,5 +35,6 @@ public interface SanBongRepo extends JpaRepository<SanBong, Integer>, JpaSpecifi
     Page<SanBong> timKiemSanPaging(@Param("keyword") String keyword,
                                    @Param("loaiSan") Integer loaiSan,
                                    @Param("monTheThao") Integer monTheThao, Pageable pageable);
-
+    @Query("SELECT s FROM SanBong s WHERE s.trang_thai = 0")
+    List<SanBong> findSanBongById();
 }

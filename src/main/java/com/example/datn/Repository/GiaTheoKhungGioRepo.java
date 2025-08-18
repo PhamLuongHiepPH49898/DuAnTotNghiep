@@ -37,7 +37,4 @@ public interface GiaTheoKhungGioRepo extends JpaRepository<GiaTheoKhungGio, Inte
             @Param("sanBong") Integer sanBong,
             @Param("khungGio") Integer khungGio,
             Pageable pageable);
-
-
-
 }

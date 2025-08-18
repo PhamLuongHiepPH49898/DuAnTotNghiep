@@ -21,7 +21,7 @@ public class LichDatSan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_lich_dat_san")
-    private int id;
+    private Integer id;
 
     @Column(name = "ngay_dat", nullable = false)
     private LocalDate ngayDat;
@@ -46,5 +46,4 @@ public class LichDatSan {
     @ManyToOne
     @JoinColumn(name = "id_gia_theo_khung_gio")
     private GiaTheoKhungGio giaTheoKhungGio;
-
 }

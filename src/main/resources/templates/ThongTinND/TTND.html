@@ -151,6 +151,51 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .btn {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+            border: none;
+        }
+
+        .btn-sm {
+            font-size: 0.75rem;
+            padding: 0.35rem 0.7rem;
+        }
+
+        .btn-warning {
+            background-color: #fbbf24;
+            color: #1f2937;
+        }
+
+        .btn-warning:hover {
+            background-color: #f59e0b;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+        .btn + .btn {
+            margin-left: 0.5rem; /* Khoảng cách giữa hai nút */
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
     </style>
 </head>
 <body>
@@ -191,7 +236,7 @@
             <div id="tab1" class="tab-content inner-tab active">
                 <table>
                     <thead>
-                    <tr><th>STT</th><th>Tên sân</th><th>Ngày đặt</th><th>Khung giờ</th><th>Giá</th><th>Ghi chú</th></tr>
+                    <tr><th>STT</th><th>Tên sân</th><th>Ngày đặt</th><th>Khung giờ</th><th>Giá</th><th>Ghi chú</th><th>Hủy lịch</th></tr>
                     </thead>
                     <tbody>
                     <tr th:each="lich, iterStat : ${lichChoXacNhan}">
@@ -203,6 +248,13 @@
                         <td th:text="${lich.giaTheoKhungGio.khungGio.gioBatDau + ' - ' + lich.giaTheoKhungGio.khungGio.gioKetThuc}"></td>
                         <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
                         <td th:text="${lich.ghiChu}"></td>
+                        <td>
+<!--
+                            <a th:href="@{/lich-dat/sua(id=${lich.id})}" class="btn btn-warning btn-sm">Sửa</a>
+-->
+                            <a th:href="@{/lich-dat/huy(id=${lich.id})}" class="btn btn-danger btn-sm"
+                               onclick="return confirm('Bạn có chắc chắn muốn hủy lịch này?')">Hủy</a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
