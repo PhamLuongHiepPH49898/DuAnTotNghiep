@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Quản lý giá theo khung giờ</title>
+    <title>Quản lý hoàn tiền</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
     <style>
@@ -39,8 +39,6 @@
             align-items: center;
             justify-content: center;
             z-index: 1040;
-            color: #595555;
-            /*gap: 5px;*/
         }
 
         .sidebar-logo img {
@@ -140,15 +138,39 @@
         #mobileSidebar {
             width: 240px !important;
         }
+
+        .date-filter-sidebar {
+            width: 200px;
+            float: left;
+            margin-right: 20px;
+        }
+
+        .date-filter-sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .date-filter-sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .date-filter-sidebar a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #0d6efd;
+        }
+
+        .date-filter-sidebar a.active {
+            font-weight: bold;
+            color: #dc3545;
+        }
     </style>
 </head>
-
 <body>
 
 <!-- Logo sidebar (desktop) -->
-<div class="sidebar-logo d-none d-md-flex mt-1">
+<div class="sidebar-logo d-none d-md-flex">
     <img src="/image/logo.png" alt="Logo">
-    <h4>SAMBA</h4>
 </div>
 
 <!-- Sidebar (Desktop) -->
@@ -238,6 +260,8 @@
                     <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
                 </ul>
             </li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản lý hoàn tiền</a>
+
             <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Quản lý thanh
                 toán</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
@@ -249,156 +273,83 @@
     </div>
 </div>
 
-<main class="main-wrapper">
-    <div class="container-fluid">
-        <h2 class="mb-3">Quản lý giá theo khung giờ</h2>
+<div class="main-wrapper">
+    <div class="container">
+        <h3 class="mb-4 fw-bold text-primary">
+            <i class="bi bi-cash-coin"></i> Quản lý hoàn tiền
+        </h3>
 
-        <div class="row gy-2 align-items-end mb-4">
-            <div class="col-12 col-md-9">
-                <form method="get" th:action="@{/quan-ly-gia-theo-khung-gio/tim-kiem}" class="row g-2">
-                    <div class="col-6 col-md-4">
-                        <select name="sanBong" class="form-select" onchange="this.form.submit()">
-                            <option value="">-- Tất cả sân --</option>
-                            <option th:each="san : ${dsSanBong}"
-                                    th:value="${san.id_san_bong}"
-                                    th:text="${san.ten_san_bong}"
-                                    th:selected="${sanBong == san.id_san_bong}">
-                            </option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="col-12 col-md-3">
-                <button type="button" class="btn btn-success w-100" data-bs-toggle="modal"
-                        data-bs-target="#modalThemGia"> <i class="bi bi-plus-lg"></i> Thêm Giá
-                </button>
-            </div>
+        <!-- Bảng danh sách hoàn tiền -->
+        <div class="form-content">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-primary text-center">
+                <tr>
+                    <th>Mã</th>
+                    <th>Người đặt</th>
+                    <th>SĐT</th>
+                    <th>Sân</th>
+                    <th>Ngày đặt</th>
+                    <th>Số tiền</th>
+                    <th>Lý do</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Loop Thymeleaf -->
+                <tr th:each="ht : ${dsHoanTien}" class="text-center">
+                    <td th:text="${ht.id}"></td>
+                    <td th:text="${ht.lichDatSan.taiKhoan.ho_ten}"></td>
+                    <td th:text="${ht.lichDatSan.taiKhoan.so_dien_thoai}"></td>
+                    <td th:text="${ht.lichDatSan.giaTheoKhungGio.sanBong.ten_san_bong}"></td>
+                    <td th:text="${#temporals.format(ht.lichDatSan.ngayDat, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${#numbers.formatDecimal(ht.soTien, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                    <td th:text="${ht.lyDo}"></td>
+                    <td>
+                        <span th:switch="${ht.trangThai}">
+                            <span th:case="0" class="badge bg-warning">Chờ duyệt</span>
+                            <span th:case="1" class="badge bg-success">Đã duyệt</span>
+                            <span th:case="2" class="badge bg-danger">Từ chối</span>
+                        </span>
+                    </td>
+                    <td>
+                        <!-- Nút duyệt -->
+                        <a th:href="@{/quan-ly-hoan-tien/duyet/{id}(id=${ht.id})}"
+                           th:if="${ht.trangThai ==0}"
+                           class="btn btn-sm btn-outline-success"
+                           onclick="return confirm('Bạn có chắc duệt không')">
+                            <i class="bi bi-check-circle"></i> Duyệt</a>
+
+                          <a th:href="@{/quan-ly-hoan-tien/tu-choi/{id}(id=${ht.id})}"
+                           th:if="${ht.trangThai ==0}"
+                           class="btn btn-sm btn-outline-danger"
+                           onclick="return confirm('Bạn có chắc từ chôi không')">
+                              <i class="bi bi-x-circle"></i> Từ chối</a>
+
+                    </td>
+                </tr>
+                <!-- Nếu rỗng -->
+                <tr th:if="${#lists.isEmpty(dsHoanTien)}">
+                    <td colspan="8" class="text-center text-muted">Không có yêu cầu hoàn tiền nào</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
-        <table class="table table-bordered table-hover align-middle">
-            <thead>
-            <tr>
-                <th>Sân</th>
-                <th th:each="kg : ${dsKhungGio}"
-                    th:text="${#temporals.format(kg.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(kg.gioKetThuc, 'HH:mm')}">
-                </th>
-                <th>Hành động</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="san : ${dsSanBongHienThi}">
-                <td th:text="${san.ten_san_bong}"></td>
-                <td th:each="kg : ${dsKhungGio}">
-                    <span th:with="gia = ${bangGia[san.id_san_bong]?.get(kg.id)}">
-                        <span th:if="${gia != null}" class="justify-content-between align-items-center">
-                            <span th:text="${#numbers.formatDecimal(gia.giaThue, 0, 'COMMA', 3, 'POINT')} + ' đ'"></span>
-                            <a th:href="@{/xoa-gia/{id}(id=${gia.idGiaTheoKhungGio})}" class="btn btn-sm btn-outline-danger btn-xs p-0 px-1 float-end"  onclick="return confirm('Bạn có chắc muốn xóa?')">
-                            <i class="bi bi-trash-fill"></i> Xóa
-                            </a>
-                          </span>
-                        <span th:if="${gia == null}" class="text-muted ">Chưa có giá</span>
-
-                    </span>
-                </td>
-                <td>
-                    <button class="btn btn-sm btn-outline-warning me-1"
-                            th:if="${bangGiaTheoSan[san.id_san_bong] != null and #lists.size(bangGiaTheoSan[san.id_san_bong]) > 0}"
-                            data-bs-toggle="modal"
-                            th:attr="data-bs-target='#modalSuaGia-' + ${san.id_san_bong}"><i class="bi bi-pencil-square"></i> Sửa
-                    </button>
-                </td>
-            </tr>
-
-            <!-- Modal sửa giá theo từng sân -->
-            <div th:each="san : ${dsSanBongHienThi}">
-                <div class="modal fade" th:id="'modalSuaGia-' + ${san.id_san_bong}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form method="post" th:action="@{/quan-ly-gia-theo-khung-gio/sua-gia}">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" th:text="'Sửa Giá - ' + ${san.ten_san_bong}"></h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-
-                                    <input type="hidden" name="idSanBong" th:value="${san.id_san_bong}"/>
-
-                                    <div th:each="gia : ${bangGiaTheoSan[san.id_san_bong]}" th:if="${gia != null}"
-                                         class="mb-3">
-                                        <label class="form-label"
-                                               th:text="${#temporals.format(gia.khungGio.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(gia.khungGio.gioKetThuc, 'HH:mm')}"></label>
-                                        <input type="hidden" name="ids" th:value="${gia.idGiaTheoKhungGio}"/>
-                                        <input type="number" name="giaThues" th:value="${gia.giaThue}"
-                                               class="form-control" required/>
-                                    </div>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Lưu</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            </tbody>
-        </table>
-
-        <!-- Modal Thêm Giá -->
-        <div class="modal fade" id="modalThemGia" tabindex="-1" aria-labelledby="modalThemGiaLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <form method="post" th:action="@{/quan-ly-gia-theo-khung-gio/them-gia}">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalThemGiaLabel">Thêm Giá</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label class="form-label">Sân bóng</label>
-                                <select name="idSanBong" class="form-select" required>
-                                    <option th:each="san : ${dsSanBong}" th:value="${san.id_san_bong}"
-                                            th:text="${san.ten_san_bong}"></option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Khung giờ</label>
-                                <select name="idKhungGio" class="form-select" required>
-                                    <option th:each="kg : ${dsKhungGio}" th:value="${kg.id}"
-                                            th:text="${#temporals.format(kg.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(kg.gioKetThuc, 'HH:mm')}">
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Giá thuê (VNĐ)</label>
-                                <input type="number" name="giaThue" class="form-control" required min="0"/>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Lưu</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- Phân trang -->
+        <!--        phan trang-->
         <nav aria-label="Page navigation" th:if="${totalPages > 1}">
             <ul class="pagination justify-content-center">
                 <!-- Nút Trước -->
                 <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                     <a class="page-link"
                        th:if="${isTimKiem}"
-                       th:href="@{/quan-ly-gia-theo-khung-gio/tim-kiem(page=${currentPage - 1}, size=10, sanBong=${sanBong})}">
+                       th:href="@{/quan-ly-hoan-tientim-kiem(page=${currentPage - 1}, size=10,
+                            keyword=${keyword}, monTheThao=${monTheThao}, loaiSan=${loaiSan})}">
                         Trước
                     </a>
                     <a class="page-link"
                        th:if="${!isTimKiem}"
-                       th:href="@{/quan-ly-gia-theo-khung-gio(page=${currentPage - 1}, size=10)}">
+                       th:href="@{/quan-ly-hoan-tien(page=${currentPage - 1}, size=10)}">
                         Trước
                     </a>
                 </li>
@@ -409,12 +360,13 @@
                     th:classappend="${i == currentPage} ? 'active'">
                     <a class="page-link"
                        th:if="${isTimKiem}"
-                       th:href="@{/quan-ly-gia-theo-khung-gio/tim-kiem(page=${i}, size=10, sanBong=${sanBong})}"
+                       th:href="@{/quan-ly-hoan-tien/tim-kiem(page=${i}, size=10,
+                            keyword=${keyword}, monTheThao=${monTheThao}, loaiSan=${loaiSan})}"
                        th:text="${i + 1}"></a>
 
                     <a class="page-link"
                        th:if="${!isTimKiem}"
-                       th:href="@{/quan-ly-gia-theo-khung-gio(page=${i}, size=10)}"
+                       th:href="@{/quan-ly-hoan-tien(page=${i}, size=10)}"
                        th:text="${i + 1}"></a>
                 </li>
 
@@ -422,21 +374,21 @@
                 <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
                     <a class="page-link"
                        th:if="${isTimKiem}"
-                       th:href="@{/quan-ly-gia-theo-khung-gio/tim-kiem(page=${currentPage + 1}, size=10, sanBong=${sanBong})}">
+                       th:href="@{/quan-ly-hoan-tien/tim-kiem(page=${currentPage + 1}, size=10,
+                            keyword=${keyword}, monTheThao=${monTheThao}, loaiSan=${loaiSan})}">
                         Tiếp
                     </a>
                     <a class="page-link"
                        th:if="${!isTimKiem}"
-                       th:href="@{/quan-ly-gia-theo-khung-gio(page=${currentPage + 1}, size=10)}">
+                       th:href="@{/quan-ly-hoan-tien(page=${currentPage + 1}, size=10)}">
                         Tiếp
                     </a>
                 </li>
             </ul>
         </nav>
-
-
     </div>
-</main>
+</div>
+
 
 <!--thông báo thanh công thất bai-->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
