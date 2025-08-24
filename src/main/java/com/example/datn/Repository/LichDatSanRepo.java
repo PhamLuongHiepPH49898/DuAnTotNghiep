@@ -53,4 +53,9 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
     @Query("SELECT s FROM LichDatSan s WHERE s.trangThai IN :trangThaiList")
     List<LichDatSan> findByTrangThaiIn(@Param("trangThaiList") List<Integer> trangThaiList);// thêm
 
+    @Query("SELECT l FROM LichDatSan l WHERE l.trangThai = 3 AND l.ngayDat = :ngay")
+    List<LichDatSan> findLichConTrongTheoNgay(@Param("ngay") LocalDate ngay);
+    List<LichDatSan> findByNgayDat(LocalDate ngayDat);
+
+
 }
