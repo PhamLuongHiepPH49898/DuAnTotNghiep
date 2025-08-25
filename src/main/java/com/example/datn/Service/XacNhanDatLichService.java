@@ -27,20 +27,7 @@ public class XacNhanDatLichService {
     @Autowired
     private TaiKhoanRepo taiKhoanRepository;
 
-    @Autowired
-    private LichDatSanRepo lichDatSanRepo;  // Nhớ import repo này
-
-    public void capNhatTrangThaiThanhToan(int idLichDatSan, boolean daThanhToan) {
-        Optional<LichDatSan> optional = lichDatSanRepo.findById(idLichDatSan);
-        if (optional.isPresent()) {
-            LichDatSan lich = optional.get();
-            lich.setTrangThai(daThanhToan ? 1 : 0); // 1: đã thanh toán, 0: chưa thanh toán
-            lichDatSanRepo.save(lich);
-        } else {
-            throw new RuntimeException("Không tìm thấy lịch đặt sân với ID: " + idLichDatSan);
-        }
-    }
-
+    //Trạng thái 1: đã thanh toán, 0: chưa thanh toán, 2: đã hủy, 3: trống
     public List<Integer> luuDatLich(XacNhanDatLichDTO xacNhan) {
         List<Integer> idLichCapNhat = new ArrayList<>();
         List<ChiTietDatLichDTO> danhSach = xacNhan.getChiTietDatLichList();

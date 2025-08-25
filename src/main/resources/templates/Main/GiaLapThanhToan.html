@@ -121,7 +121,7 @@
             const accountNumber = selectedOption.value;
             const accountName = selectedOption.getAttribute('data-account-name');
             if (bank && accountNumber && accountName) {
-                const qrUrl = `https://img.vietqr.io/image/${bank}-${accountNumber}-compact2.png?amount=${total}&accountName=${accountName}`;
+                const qrUrl = `https://qr.sepay.vn/img?acc=${bank}-${accountNumber}&amount=${total}&des=${accountName}`;
                 document.getElementById('qrImage').src = qrUrl;
                 document.getElementById('qrContainer').style.display = 'block';
             } else {

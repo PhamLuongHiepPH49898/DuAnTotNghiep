@@ -312,10 +312,8 @@
                             <!-- Phương thức thanh toán -->
                             <div class="mb-3">
                                 <label>Phương thức thanh toán</label>
-                                <select name="phuongThuc.idPhuongThucThanhToan" class="form-select" required>
-                                    <option th:each="pt : ${dsPhuongThuc}" th:value="${pt.idPhuongThucThanhToan}"
-                                            th:text="${pt.tenPhuongThucThanhToan}"></option>
-                                </select>
+                                <input type="hidden" name="phuongThuc.idPhuongThucThanhToan" value="2">
+                                <input type="text" class="form-control" value="Chuyển khoản" readonly>
                             </div>
 
                             <!-- Ngân hàng -->

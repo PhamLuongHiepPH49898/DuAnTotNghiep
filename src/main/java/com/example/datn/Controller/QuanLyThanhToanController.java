@@ -55,11 +55,13 @@ public class QuanLyThanhToanController {
         if (optionalTaiKhoan.isPresent()) {
             model.addAttribute("taiKhoan", optionalTaiKhoan.get());
             model.addAttribute("dsPhuongThuc", phuongThucRepo.findAll());
-            return "ThanhToan/SuaTaiKhoan";  // Tên template Thymeleaf (bạn tự tạo file này)
+            model.addAttribute("banks", bankService.getAllBanks());
+            return "ThanhToan/SuaTaiKhoan";
         } else {
             return "redirect:/quan-ly-thanh-toan";
         }
     }
+
     @PostMapping("/cap-nhat")
     public String capNhatTaiKhoan(@ModelAttribute TaiKhoanNganHang taiKhoan) {
         if (taiKhoan.getBankCode() == null || taiKhoan.getBankCode().isEmpty() ||

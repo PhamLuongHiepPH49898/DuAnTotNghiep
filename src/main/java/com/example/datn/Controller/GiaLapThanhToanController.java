@@ -51,17 +51,17 @@ public class GiaLapThanhToanController {
         return "Main/GiaLapThanhToan";
     }
 
-    @PostMapping("/gia-lap-thanh-toan")
-    public String thanhToanVaLuu(@RequestParam("idLichDatSan") int idLichDatSan,
-                                 @RequestParam("idPhuongThucThanhToan") int idPhuongThuc,
-                                 Model model) {
-        // Cập nhật trạng thái thanh toán
-        xacNhanDatLichService.capNhatTrangThaiThanhToan(idLichDatSan, true);
-
-        // (Tùy chọn) Nếu bạn muốn lưu phương thức thanh toán, thêm code tại đây
-
-        return "redirect:/datLichThanhCong";
-    }
+//    @PostMapping("/gia-lap-thanh-toan")
+//    public String thanhToanVaLuu(@RequestParam("idLichDatSan") int idLichDatSan,
+//                                 @RequestParam("idPhuongThucThanhToan") int idPhuongThuc,
+//                                 Model model) {
+//        // Cập nhật trạng thái thanh toán
+//        xacNhanDatLichService.capNhatTrangThaiThanhToan(idLichDatSan, true);
+//
+//        // (Tùy chọn) Nếu bạn muốn lưu phương thức thanh toán, thêm code tại đây
+//
+//        return "redirect:/datLichThanhCong";
+//    }
 
 
     @ResponseBody
