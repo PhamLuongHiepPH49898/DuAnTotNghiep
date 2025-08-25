@@ -279,12 +279,53 @@
             <i class="bi bi-cash-coin"></i> Quản lý hoàn tiền
         </h3>
 
+        <form method="get" th:action="@{/quan-ly-hoan-tien/tim-kiem}" class="row g-3 mb-3">
+            <!-- Tên người đặt -->
+            <div class="col-md-3">
+                <input type="text" name="tenNguoiDat" class="form-control"
+                       th:value="${tenNguoiDat}" placeholder="Tên người đặt">
+            </div>
+
+            <!-- Số điện thoại -->
+            <div class="col-md-3">
+                <input type="text" name="soDienThoai" class="form-control"
+                       th:value="${soDienThoai}" placeholder="Số điện thoại">
+            </div>
+
+            <!-- Chọn sân bóng -->
+            <div class="col-md-2">
+                <select name="sanBongId" class="form-select">
+                    <option value="">-- Tất cả sân bóng --</option>
+                    <option th:each="sb : ${dsSanBong}"
+                            th:value="${sb.id_san_bong}"
+                            th:text="${sb.ten_san_bong}"
+                            th:selected="${sanBongId != null and sanBongId == sb.id_san_bong}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Trạng thái -->
+            <div class="col-md-2">
+                <select name="trangThai" class="form-select">
+                    <option value="">-- Tất cả trạng thái --</option>
+                    <option value="0" th:selected="${trangThai != null and trangThai == 0}">Chờ duyệt</option>
+                    <option value="1" th:selected="${trangThai != null and trangThai == 1}">Đã duyệt</option>
+                    <option value="2" th:selected="${trangThai != null and trangThai == 2}">Từ chối</option>
+                </select>
+            </div>
+
+            <!-- Nút tìm kiếm -->
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+            </div>
+        </form>
+
         <!-- Bảng danh sách hoàn tiền -->
         <div class="form-content">
             <table class="table table-bordered table-hover align-middle">
                 <thead class="table-primary text-center">
                 <tr>
-                    <th>Mã</th>
+                    <th>ID</th>
                     <th>Người đặt</th>
                     <th>SĐT</th>
                     <th>Sân</th>
@@ -329,10 +370,10 @@
                     </td>
                 </tr>
                 <!-- Nếu rỗng -->
-                <tr th:if="${#lists.isEmpty(dsHoanTien)}">
+                </tbody>
+                <tr th:if="${khongCoKetQua}">
                     <td colspan="8" class="text-center text-muted">Không có yêu cầu hoàn tiền nào</td>
                 </tr>
-                </tbody>
             </table>
         </div>
 
@@ -343,8 +384,8 @@
                 <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                     <a class="page-link"
                        th:if="${isTimKiem}"
-                       th:href="@{/quan-ly-hoan-tientim-kiem(page=${currentPage - 1}, size=10,
-                            keyword=${keyword}, monTheThao=${monTheThao}, loaiSan=${loaiSan})}">
+                       th:href="@{/quan-ly-hoan-tien/tim-kiem(page=${currentPage - 1}, size=10,
+                            tenNguoiDat=${tenNguoiDat}, soDienThoai=${soDienThoai}, sanBongid=${sanBongId}, trangThai=${trangThai})}">
                         Trước
                     </a>
                     <a class="page-link"
@@ -361,7 +402,7 @@
                     <a class="page-link"
                        th:if="${isTimKiem}"
                        th:href="@{/quan-ly-hoan-tien/tim-kiem(page=${i}, size=10,
-                            keyword=${keyword}, monTheThao=${monTheThao}, loaiSan=${loaiSan})}"
+                            tenNguoiDat=${tenNguoiDat}, soDienThoai=${soDienThoai}, sanBongid=${sanBongId}, trangThai=${trangThai})}"
                        th:text="${i + 1}"></a>
 
                     <a class="page-link"
@@ -375,7 +416,7 @@
                     <a class="page-link"
                        th:if="${isTimKiem}"
                        th:href="@{/quan-ly-hoan-tien/tim-kiem(page=${currentPage + 1}, size=10,
-                            keyword=${keyword}, monTheThao=${monTheThao}, loaiSan=${loaiSan})}">
+                            tenNguoiDat=${tenNguoiDat}, soDienThoai=${soDienThoai}, sanBongid=${sanBongId}, trangThai=${trangThai})}">
                         Tiếp
                     </a>
                     <a class="page-link"

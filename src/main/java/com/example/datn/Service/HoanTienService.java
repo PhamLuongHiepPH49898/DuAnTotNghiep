@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,4 +41,8 @@ public class HoanTienService {
         }
     }
 
+    public Page<HoanTien> timKiem(String tenNguoiDat, String soDienThoai, Integer sanBongId, Integer trangThai, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return hoanTienRepo.timKiem(tenNguoiDat, soDienThoai, sanBongId, trangThai, pageable);
+    }
 }

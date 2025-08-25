@@ -81,7 +81,10 @@ public class QuanLyDatSanController {
     ) {
         if (ngayDat == null) {
             ngayDat = LocalDate.now();
+        } if (tenSan != null) {
+            tenSan = tenSan.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
         }
+
 
         List<SanBong> danhSachSanLoc = sanBongService.timKiemSan(tenSan, loaiSanId, matSanId, monTheThaoId);
         Map<SanBong, List<LichDatSan>> lichDatMap = lichDatSanService.getLichDatSanTheoNgay(ngayDat, danhSachSanLoc);
