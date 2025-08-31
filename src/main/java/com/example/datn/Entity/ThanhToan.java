@@ -28,6 +28,9 @@ public class ThanhToan {
     @Column(name = "trang_thai", nullable = false)
     private int trangThai;
 
+    @Column(name = "han_thanh_toan", nullable = false)
+    private LocalDate hanThanhToan;
+
     @ManyToOne
     @JoinColumn(name = "id_tai_khoan", nullable = false)
     private TaiKhoan taiKhoan;
