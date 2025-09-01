@@ -60,7 +60,7 @@
 
   <!-- Nút làm mới -->
   <div class="text-center mt-3">
-    <button class="btn btn-refresh" onclick="updateStatus()">🔄 Làm mới trạng thái</button>
+    <button class="btn btn-refresh" onclick="updateStatus()">🔄 Nếu thấy chưa thông báo đã thanh toán hãy ấn vào đây</button>
   </div>
 </div>
 
@@ -109,7 +109,7 @@
         // ✅ Sau 1.5s redirect sang Success.html
         setTimeout(() => {
           window.location.href = "/thanh-toan/thanh-cong";
-        }, 1500);
+        }, 1000);
 
       } else if (data.trangThai === -1) {
         statusEl.innerText = "❌ Đã hủy (quá hạn)";
