@@ -29,7 +29,4 @@ public class TaiKhoanNganHang {
     @Column(name = "bank_code", length = 50)
     private String bankCode;
 
-    @ManyToOne
-    @JoinColumn(name = "id_phuong_thuc_thanh_toan")
-    private PhuongThucThanhToan phuongThuc;
 }

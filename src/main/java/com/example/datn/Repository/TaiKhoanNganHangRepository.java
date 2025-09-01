@@ -8,6 +8,8 @@ import java.util.List;
 
 @Repository
 public interface TaiKhoanNganHangRepository extends JpaRepository<TaiKhoanNganHang, Integer> {
-    List<TaiKhoanNganHang> findByPhuongThuc_IdPhuongThucThanhToan(Integer id);
+    List<TaiKhoanNganHang> findByTenNganHang(String tenNganHang);
+    List<TaiKhoanNganHang> findByBankCode(String bankCode);
 }
+
 

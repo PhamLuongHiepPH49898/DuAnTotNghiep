@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thanh toán đặt sân</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #eef5ff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .card {
+      max-width: 500px;
+      margin: auto;
+      border-radius: 14px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+      border: none;
+    }
+    .countdown {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #e63946;
+    }
+    .btn-refresh {
+      background-color: #4ca1af;
+      color: white;
+      font-weight: 600;
+    }
+    .btn-refresh:hover {
+      background-color: #357e89;
+      color: white;
+    }
+  </style>
+</head>
+<body class="container py-5">
+
+<div class="card p-4">
+  <h3 class="text-center mb-3 text-primary">💳 Thanh toán đặt sân</h3>
+
+  <p><strong>Số tiền:</strong> <span th:text="${thanhToan.soTien}"></span> VND</p>
+  <p><strong>Nội dung chuyển khoản:</strong> <span th:text="${thanhToan.reference}"></span></p>
+
+  <!-- QR Code -->
+  <div class="text-center my-3">
+    <img th:src="@{'https://qr.sepay.vn/img?acc=929233&bank=mbbank&amount=' + ${thanhToan.soTien} + '&des=' + ${thanhToan.reference}}"
+         alt="QR Code Thanh Toán" class="img-fluid border rounded p-2">
+  </div>
+
+  <p class="text-muted text-center">Vui lòng quét mã QR và chuyển khoản với <strong>đúng nội dung</strong> trên.</p>
+
+  <!-- Countdown -->
+  <div class="alert alert-warning text-center">
+    ⏳ Thời gian còn lại: <span id="countdown" class="countdown">05:00</span>
+  </div>
+
+  <!-- Trạng thái -->
+  <div class="text-center my-2">
+    <span id="statusText" class="badge bg-warning text-dark">⏳ Chưa thanh toán</span>
+  </div>
+
+  <!-- Nút làm mới -->
+  <div class="text-center mt-3">
+    <button class="btn btn-refresh" onclick="updateStatus()">🔄 Làm mới trạng thái</button>
+  </div>
+</div>
+
+<script th:inline="javascript">
+  // Lấy dữ liệu từ backend
+  const idThanhToan = [[${thanhToan.idThanhToan}]];
+  const expireAt = new Date('[[${#temporals.format(thanhToan.hanThanhToan, "yyyy-MM-dd'T'HH:mm:ss")}]]').getTime();
+
+  // Countdown
+  const countdownEl = document.getElementById("countdown");
+  const statusEl = document.getElementById("statusText");
+
+  let timer = setInterval(function () {
+    const now = new Date().getTime();
+    const distance = expireAt - now;
+
+    if (distance <= 0) {
+      clearInterval(timer);
+      countdownEl.innerText = "00:00";
+      statusEl.innerText = "❌ Đã hủy (quá hạn)";
+      statusEl.className = "badge bg-secondary";
+      return;
+    }
+
+    const minutes = Math.floor(distance / 1000 / 60);
+    const seconds = Math.floor((distance / 1000) % 60);
+    countdownEl.innerText =
+            (minutes < 10 ? "0" : "") + minutes + ":" +
+            (seconds < 10 ? "0" : "") + seconds;
+  }, 1000);
+
+  // Hàm update trạng thái thanh toán
+  async function updateStatus() {
+    try {
+      const res = await fetch(`/thanh-toan/status/${idThanhToan}`);
+      const data = await res.json();
+
+      if (data.trangThai === 0) {
+        statusEl.innerText = "⏳ Chưa thanh toán";
+        statusEl.className = "badge bg-warning text-dark";
+      } else if (data.trangThai === 1) {
+        statusEl.innerText = "✅ Đã thanh toán";
+        statusEl.className = "badge bg-success";
+        clearInterval(timer);
+
+        // ✅ Sau 1.5s redirect sang Success.html
+        setTimeout(() => {
+          window.location.href = "/thanh-toan/thanh-cong";
+        }, 1500);
+
+      } else if (data.trangThai === -1) {
+        statusEl.innerText = "❌ Đã hủy (quá hạn)";
+        statusEl.className = "badge bg-secondary";
+        clearInterval(timer);
+      }
+    } catch (e) {
+      console.error("❌ Lỗi khi gọi API:", e);
+    }
+  }
+
+  // Tự động check mỗi 10 giây
+  setInterval(updateStatus, 10000);
+</script>
+
+</body>
+</html>

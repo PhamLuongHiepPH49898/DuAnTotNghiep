@@ -1,8 +1,6 @@
 package com.example.datn.Controller;
 
-import com.example.datn.Entity.PhuongThucThanhToan;
 import com.example.datn.Entity.TaiKhoanNganHang;
-import com.example.datn.Repository.PhuongThucThanhToanRepo;
 import com.example.datn.Repository.TaiKhoanNganHangRepository;
 import com.example.datn.Service.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -21,15 +18,11 @@ public class QuanLyThanhToanController {
     private TaiKhoanNganHangRepository taiKhoanRepo;
 
     @Autowired
-    private PhuongThucThanhToanRepo phuongThucRepo;
-
-    @Autowired
     private BankService bankService;
 
     @GetMapping
     public String hienThiTrangThanhToan(Model model) {
         model.addAttribute("dsTaiKhoan", taiKhoanRepo.findAll());
-        model.addAttribute("dsPhuongThuc", phuongThucRepo.findAll());
         model.addAttribute("banks", bankService.getAllBanks());  // lấy ngân hàng từ API
         return "ThanhToan/QuanLyThanhToan";
     }
@@ -54,7 +47,6 @@ public class QuanLyThanhToanController {
         Optional<TaiKhoanNganHang> optionalTaiKhoan = taiKhoanRepo.findById(id);
         if (optionalTaiKhoan.isPresent()) {
             model.addAttribute("taiKhoan", optionalTaiKhoan.get());
-            model.addAttribute("dsPhuongThuc", phuongThucRepo.findAll());
             model.addAttribute("banks", bankService.getAllBanks());
             return "ThanhToan/SuaTaiKhoan";
         } else {

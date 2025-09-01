@@ -107,6 +107,6 @@ public class DatLichController {
             return "redirect:/xacnhan"; // nếu không có đơn nào
         }
         // redirect sang trang thanh toán, truyền idLichDatSan
-        return "redirect:/gia-lap-thanh-toan?idLichDatSan=" + idLichDatDuocLuu.get(0);
+        return "redirect:/thanh-toan?idLichDatSan=" + idLichDatDuocLuu.get(0);
     }
 }
