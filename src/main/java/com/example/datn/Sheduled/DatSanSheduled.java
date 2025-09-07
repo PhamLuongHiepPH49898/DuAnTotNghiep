@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -38,7 +39,7 @@ public class DatSanSheduled {
                     lichMoi.setTrangThai(3); // lịch trống
                     lichMoi.setGhiChu("Tạo tự động");
                     lichMoi.setGiaApDung(null);
-                    lichMoi.setNgayTao(LocalDate.now());
+                    lichMoi.setNgayTao(LocalDateTime.now());
                     lichDatSanRepo.save(lichMoi);
                     System.out.println("👉 Số lượng giá theo khung giờ: " + danhSachGiaTheoKhungGio.size());
 
@@ -61,7 +62,7 @@ public class DatSanSheduled {
                 lichMoi.setTrangThai(3);
                 lichMoi.setGhiChu("Tạo tự động");
                 lichMoi.setGiaApDung(null);
-                lichMoi.setNgayTao(LocalDate.now());
+                lichMoi.setNgayTao(LocalDateTime.now());
                 lichDatSanRepo.save(lichMoi);
             }
         }

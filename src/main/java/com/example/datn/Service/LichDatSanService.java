@@ -54,7 +54,7 @@ public class LichDatSanService {
             lichMoi.setGiaTheoKhungGio(lichDatSan.getGiaTheoKhungGio());
             lichMoi.setTrangThai(3); // trống
             lichMoi.setGhiChu("Tạo lại sau khi hủy");
-            lichMoi.setNgayTao(LocalDate.now());
+            lichMoi.setNgayTao(LocalDateTime.now());
             lichMoi.setGiaApDung(null);
             lichMoi.setTaiKhoan(null);
             lichDatSanRepo.save(lichMoi);

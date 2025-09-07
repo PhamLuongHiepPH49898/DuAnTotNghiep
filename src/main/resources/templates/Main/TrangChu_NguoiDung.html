@@ -8,168 +8,36 @@
   <link rel="icon" type="image/png" th:href="@{/image/logo.png}">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      font-family: 'Poppins', sans-serif;
-    }
-    body {
-      background-color: #f8f9fa;
-      margin: 0;
-      padding: 0;
-    }
-    .main-header {
-      background: linear-gradient(90deg, #4ca1af, #0077cc);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .main-header .container {
-      padding: 12px 20px;
-    }
-    .nav-menu .nav-link {
-      color: white;
-      font-weight: 500;
-      margin: 0 10px;
-      transition: color 0.3s;
-    }
-    .nav-menu .nav-link:hover {
-      text-decoration: underline;
-      color: #e0f7ff;
-    }
-    .user-dropdown {
-      position: relative;
-    }
-    .user-dropdown .dropdown-menu-custom {
-      display: none;
-      position: absolute;
-      top: 120%;
-      right: 0;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 10px 0;
-      min-width: 180px;
-      z-index: 100;
-    }
-    .user-dropdown .dropdown-menu-custom a {
-      display: block;
-      padding: 8px 16px;
-      text-decoration: none;
-      color: #333;
-      font-size: 0.95rem;
-      transition: background 0.3s;
-    }
-    .user-dropdown .dropdown-menu-custom a:hover {
-      background-color: #f5f5f5;
-    }
-    .user-dropdown.open .dropdown-menu-custom {
-      display: block;
-    }
-    .banner img {
-      width: 100%;
-      height: 350px;
-      object-fit: cover;
-      border-bottom: 5px solid #89cff0;
-    }
-    .intro {
-      text-align: center;
-      padding: 40px 20px 20px;
-      background: #ffffff;
-    }
-    .intro h2 {
-      color: #0077cc;
-      font-weight: 600;
-    }
-    .san-container {
-      padding: 40px 20px;
-      background-color: #f0f2f5;
-    }
-    .san-container h2 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 30px;
-      font-weight: 600;
-    }
-    .san-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-    .san-item {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .san-item a[href*="/datsan"] {
-      display: block;
-      margin: 10px 15px 15px;
-      padding: 10px 15px;
-      background: linear-gradient(90deg, #00c6ff, #0077cc);
-      color: white;
-      font-weight: 600;
-      text-align: center;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: background 0.3s, transform 0.2s;
-      box-shadow: 0 2px 6px rgba(0, 119, 204, 0.3);
-    }
-
-    .san-item a[href*="/datsan"]:hover {
-      background: linear-gradient(90deg, #0077cc, #005fa3);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0, 119, 204, 0.4);
-    }
-
-    .san-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-    }
-    .san-item img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-    }
-    .san-item .info {
-      padding: 15px;
-    }
-    .san-item .info a {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #0077cc;
-      text-decoration: none;
-    }
-    .san-item .info p {
-      margin: 8px 0;
-      color: #555;
-      font-size: 0.95rem;
-    }
-    footer {
-      background: #4ca1af;
-      color: white;
-      padding: 30px 20px;
-      text-align: center;
-    }
-    footer .features {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    footer .features div {
-      max-width: 200px;
-    }
-    footer .social-icons a {
-      color: white;
-      font-size: 1.5rem;
-      margin: 0 10px;
-      transition: 0.3s;
-    }
-    footer .social-icons a:hover {
-      transform: scale(1.2);
-    }
+    * { font-family: 'Poppins', sans-serif; }
+    body { background-color: #f8f9fa; margin: 0; padding: 0; }
+    .main-header { background: linear-gradient(90deg, #4ca1af, #0077cc); box-shadow: 0 2px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+    .main-header .container { padding: 12px 20px; }
+    .nav-menu .nav-link { color: white; font-weight: 500; margin: 0 10px; transition: color 0.3s; }
+    .nav-menu .nav-link:hover { text-decoration: underline; color: #e0f7ff; }
+    .user-dropdown { position: relative; }
+    .user-dropdown .dropdown-menu-custom { display: none; position: absolute; top: 120%; right: 0; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 10px 0; min-width: 180px; z-index: 100; }
+    .user-dropdown .dropdown-menu-custom a { display: block; padding: 8px 16px; text-decoration: none; color: #333; font-size: 0.95rem; transition: background 0.3s; }
+    .user-dropdown .dropdown-menu-custom a:hover { background-color: #f5f5f5; }
+    .user-dropdown.open .dropdown-menu-custom { display: block; }
+    .banner img { width: 100%; height: 350px; object-fit: cover; border-bottom: 5px solid #89cff0; }
+    .intro { text-align: center; padding: 40px 20px 20px; background: #ffffff; }
+    .intro h2 { color: #0077cc; font-weight: 600; }
+    .san-container { padding: 40px 20px; background-color: #f0f2f5; }
+    .san-container h2 { text-align: center; color: #333; margin-bottom: 30px; font-weight: 600; }
+    .san-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .san-item { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .san-item:hover { transform: translateY(-5px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+    .san-item img { width: 100%; height: 180px; object-fit: cover; }
+    .san-item .info { padding: 15px; }
+    .san-item .info a { font-size: 1.2rem; font-weight: 600; color: #0077cc; text-decoration: none; }
+    .san-item .info p { margin: 8px 0; color: #555; font-size: 0.95rem; }
+    .san-item a.datsan-btn { display: block; margin: 10px 15px 15px; padding: 10px 15px; background: linear-gradient(90deg, #00c6ff, #0077cc); color: white; font-weight: 600; text-align: center; text-decoration: none; border-radius: 8px; transition: background 0.3s, transform 0.2s; box-shadow: 0 2px 6px rgba(0, 119, 204, 0.3); }
+    .san-item a.datsan-btn:hover { background: linear-gradient(90deg, #0077cc, #005fa3); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 119, 204, 0.4); }
+    footer { background: #4ca1af; color: white; padding: 30px 20px; text-align: center; }
+    footer .features { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 20px; }
+    footer .features div { max-width: 200px; }
+    footer .social-icons a { color: white; font-size: 1.5rem; margin: 0 10px; transition: 0.3s; }
+    footer .social-icons a:hover { transform: scale(1.2); }
   </style>
 </head>
 <body>
@@ -199,13 +67,16 @@
 
   </div>
 </header>
+
 <div class="banner">
   <img src="/image/anh7.jpg" alt="Banner">
 </div>
+
 <div class="intro">
   <h2>Đặt sân nhanh chóng - Tiện lợi - Chính xác</h2>
   <p>Trải nghiệm hệ thống đặt sân bóng hiện đại, thuận tiện và đáng tin cậy.</p>
 </div>
+
 <div class="san-container">
   <h2>Danh sách sân bóng nổi bật</h2>
   <div class="san-grid">
@@ -213,33 +84,38 @@
       <img th:if="${#strings.startsWith(san.hinh_anh, 'anh')}" th:src="@{'/image/' + ${san.hinh_anh}}" alt="Sân bóng">
       <img th:if="${!#strings.startsWith(san.hinh_anh, 'anh')}" th:src="@{'/uploads/' + ${san.hinh_anh}}" alt="Sân bóng">
       <div class="info">
+        <!-- Sửa link chi tiết sân dùng id_san_bong -->
         <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" th:text="${san.ten_san_bong}"></a>
         <p><strong>Thể thao:</strong> <span th:text="${san.loaiMonTheThao.ten_mon_the_thao}"></span></p>
         <p><strong>Địa chỉ:</strong> <span th:text="${san.dia_chi}"></span></p>
-      </div>
-      <a th:href="@{'/datsan?id=' + ${san.id_san_bong}}">⚽ Đặt sân ngay</a>
 
+        <!-- Hiển thị đánh giá nếu có -->
+        <div th:if="${san.danhGias != null}">
+          <div th:if="${!san.danhGias.isEmpty()}">
+            <div th:each="danhGia : ${san.danhGias}">
+              <p>
+                <i class="bi bi-star-fill text-warning"></i>
+                <span th:text="${danhGia.sao} + ' sao - ' + ${danhGia.noiDung}"></span>
+              </p>
+            </div>
+          </div>
+          <div th:if="${san.danhGias.isEmpty()}">
+            <p><i>Chưa có đánh giá.</i></p>
+          </div>
+        </div>
+      </div>
+      <!-- Sửa link đặt sân dùng id_san_bong -->
+      <a th:href="@{'/datsan?id=' + ${san.id_san_bong}}" class="datsan-btn">⚽ Đặt sân ngay</a>
     </div>
   </div>
 </div>
+
 <footer>
   <div class="features">
-    <div>
-      <i class="bi bi-search"></i>
-      <h5>Tìm kiếm sân</h5>
-    </div>
-    <div>
-      <i class="bi bi-calendar-check"></i>
-      <h5>Đặt sân nhanh</h5>
-    </div>
-    <div>
-      <i class="bi bi-clock-history"></i>
-      <h5>Lịch sử đặt</h5>
-    </div>
-    <div>
-      <i class="bi bi-star-half"></i>
-      <h5>Đánh giá sân</h5>
-    </div>
+    <div><i class="bi bi-search"></i><h5>Tìm kiếm sân</h5></div>
+    <div><i class="bi bi-calendar-check"></i><h5>Đặt sân nhanh</h5></div>
+    <div><i class="bi bi-clock-history"></i><h5>Lịch sử đặt</h5></div>
+    <div><i class="bi bi-star-half"></i><h5>Đánh giá sân</h5></div>
   </div>
   <p>Email: support@sambabooking.vn | Hotline: 1800-1234</p>
   <p>Địa chỉ: Đâu đó trên thế giới</p>
@@ -252,6 +128,7 @@
     <a href="#" class="btn btn-outline-light">Lên đầu trang</a>
   </div>
 </footer>
+
 <script>
   function toggleMenu() {
     const dropdown = document.querySelector('.user-dropdown');

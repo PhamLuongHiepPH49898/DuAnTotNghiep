@@ -8,175 +8,33 @@
     <link rel="icon" type="image/png" th:href="@{/image/logo.png}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        * {
-            font-family: 'Poppins', sans-serif;
-        }
-        body {
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: linear-gradient(90deg, #4ca1af, #c4e0e5);
-            color: white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .menu {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            flex-wrap: wrap;
-        }
-        .menu h1 {
-            font-size: 2rem;
-            font-weight: 600;
-            margin: 0;
-        }
-        .nav-links {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: 0.3s;
-        }
-        .nav-links a:hover {
-            text-decoration: underline;
-        }
-        .user-menu {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-        .user-menu .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            z-index: 100;
-        }
-        .user-menu:hover .dropdown-menu {
-            display: block;
-        }
-        .dropdown-menu a {
-            display: block;
-            padding: 10px 20px;
-            color: #333;
-            text-decoration: none;
-        }
-        .dropdown-menu a:hover {
-            background: #4ca1af;
-            color: white;
-        }
-        .banner img {
-            width: 100%;
-            height: 350px;
-            object-fit: cover;
-            border-bottom: 5px solid #89cff0;
-        }
-        .intro {
-            text-align: center;
-            padding: 40px 20px;
-            background: #ffffff;
-        }
-        .intro h2 {
-            color: #0077cc;
-            font-weight: 600;
-        }
-        .san-container {
-            padding: 40px 20px;
-            background-color: #f0f2f5;
-        }
-        .san-container h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-weight: 600;
-        }
-        .san-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        .san-item {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .san-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-        }
-        .san-item img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-        }
-        .san-item .info {
-            padding: 15px;
-        }
-        .san-item .info a {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #0077cc;
-            text-decoration: none;
-        }
-        .san-item .info p {
-            margin: 8px 0;
-            color: #555;
-            font-size: 0.95rem;
-        }
-        footer {
-            background: #4ca1af;
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-        }
-        footer .features {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        footer .features div {
-            max-width: 200px;
-        }
-        footer .social-icons a {
-            color: white;
-            font-size: 1.5rem;
-            margin: 0 10px;
-            transition: 0.3s;
-        }
-        footer .social-icons a:hover {
-            transform: scale(1.2);
-        }
-        footer .btn {
-            margin-top: 20px;
-            color: white;
-            border: 2px solid white;
-            padding: 8px 16px;
-            border-radius: 20px;
-        }
-        footer .btn:hover {
-            background-color: white;
-            color: #1e90ff;
-        }
+        * { font-family: 'Poppins', sans-serif; }
+        body { background-color: #f8f9fa; margin: 0; padding: 0; }
+        header { position: sticky; top: 0; z-index: 1000; background: linear-gradient(90deg, #4ca1af, #c4e0e5); color: white; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .menu { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; flex-wrap: wrap; }
+        .menu h1 { font-size: 2rem; font-weight: 600; margin: 0; }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .nav-links a { color: white; text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { text-decoration: underline; }
+        .banner img { width: 100%; height: 350px; object-fit: cover; border-bottom: 5px solid #89cff0; }
+        .intro { text-align: center; padding: 40px 20px; background: #ffffff; }
+        .intro h2 { color: #0077cc; font-weight: 600; }
+        .san-container { padding: 40px 20px; background-color: #f0f2f5; }
+        .san-container h2 { text-align: center; color: #333; margin-bottom: 30px; font-weight: 600; }
+        .san-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .san-item { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .san-item:hover { transform: translateY(-5px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+        .san-item img { width: 100%; height: 180px; object-fit: cover; }
+        .san-item .info { padding: 15px; }
+        .san-item .info a { font-size: 1.2rem; font-weight: 600; color: #0077cc; text-decoration: none; }
+        .san-item .info p { margin: 8px 0; color: #555; font-size: 0.95rem; }
+        footer { background: #4ca1af; color: white; padding: 30px 20px; text-align: center; }
+        footer .features { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 20px; }
+        footer .features div { max-width: 200px; }
+        footer .social-icons a { color: white; font-size: 1.5rem; margin: 0 10px; transition: 0.3s; }
+        footer .social-icons a:hover { transform: scale(1.2); }
+        footer .btn { margin-top: 20px; color: white; border: 2px solid white; padding: 8px 16px; border-radius: 20px; }
+        footer .btn:hover { background-color: white; color: #1e90ff; }
     </style>
 </head>
 <body>
@@ -190,12 +48,16 @@
         </div>
     </div>
 </header>
+
 <div class="banner">
     <img src="/image/anh7.jpg" alt="Banner">
 </div>
+
 <div class="intro">
     <h2>Đặt sân nhanh chóng - Tiện lợi - Chính xác</h2>
 </div>
+
+<!-- Danh sách sân bóng -->
 <div class="san-container">
     <h2>Danh sách sân bóng nổi bật</h2>
     <div class="san-grid">
@@ -203,30 +65,39 @@
             <img th:if="${#strings.startsWith(san.hinh_anh, 'anh')}" th:src="@{'/image/' + ${san.hinh_anh}}" alt="Sân bóng">
             <img th:if="${!#strings.startsWith(san.hinh_anh, 'anh')}" th:src="@{'/uploads/' + ${san.hinh_anh}}" alt="Sân bóng">
             <div class="info">
+                <!-- Link chi tiết sân theo id_san_bong -->
                 <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" th:text="${san.ten_san_bong}"></a>
                 <p><strong>Thể thao:</strong> <span th:text="${san.loaiMonTheThao.ten_mon_the_thao}"></span></p>
                 <p><strong>Địa chỉ:</strong> <span th:text="${san.dia_chi}"></span></p>
+
+                <!-- Hiển thị đánh giá -->
+                <div th:if="${san.danhGias != null}">
+                    <div th:if="${!san.danhGias.isEmpty()}">
+                        <div th:each="danhGia : ${san.danhGias}">
+                            <p>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <span th:text="${danhGia.sao} + ' sao - ' + ${danhGia.noiDung}"></span>
+                            </p>
+                        </div>
+                    </div>
+                    <div th:if="${san.danhGias.isEmpty()}">
+                        <p><i>Chưa có đánh giá.</i></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <footer>
     <div class="features">
-        <div>
-            <i class="bi bi-search"></i>
-            <h5>Tìm kiếm sân</h5>
-        </div>
-        <div>
-            <i class="bi bi-calendar-check"></i>
-            <h5>Đặt sân nhanh</h5>
-        </div>
-        <div>
-            <i class="bi bi-clock-history"></i>
-            <h5>Lịch sử đặt</h5>
-        </div>
+        <div><i class="bi bi-search"></i><h5>Tìm kiếm sân</h5></div>
+        <div><i class="bi bi-calendar-check"></i><h5>Đặt sân nhanh</h5></div>
+        <div><i class="bi bi-clock-history"></i><h5>Lịch sử đặt</h5></div>
         <div>
             <i class="bi bi-star-half"></i>
-            <h5>Đánh giá sân</h5>
+            <a th:href="@{'/ChiTietSan/' + ${danhSachSan[0].id_san_bong} + '#danh-gia'}"
+               style="color:white; text-decoration:none; font-weight:600;">Đánh giá sân</a>
         </div>
     </div>
     <p>Email: support@sambabooking.vn | Hotline: 1800-1234</p>
@@ -240,6 +111,7 @@
         <a href="#" class="btn btn-outline-light">Lên đầu trang</a>
     </div>
 </footer>
+
 <script>
     document.querySelector('.btn-outline-light').addEventListener('click', function (e) {
         e.preventDefault();

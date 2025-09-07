@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Sửa lịch đặt</title>
+  <meta charset="UTF-8">
+  <!-- Select2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <!-- Select2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <style>
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select {
+      width: 300px;
+      padding: 5px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 8px 16px;
+    }
+  </style>
+</head>
+<body>
+<h2>Sửa Lịch Đặt Sân</h2>
+
+<form th:action="@{/lich-dat/cap-nhat}" method="post" th:object="${lichDatSan}">
+  <input type="hidden" th:field="*{id}"/>
+
+  <label>Ngày đặt:</label>
+  <input type="date" th:field="*{ngayDat}" required />
+
+  <!-- Khung giờ -->
+  <label>Khung giờ + Sân:</label>
+  <select th:field="*{giaTheoKhungGio.idGiaTheoKhungGio}" required><th:block th:each="san : ${dsSan}">
+    <optgroup th:label="${san.ten_san_bong}">
+      <option th:each="khung : ${dsKhungGio}"
+              th:if="${khung.sanBong.id_san_bong == san.id_san_bong}"
+              th:value="${khung.idGiaTheoKhungGio}"
+              th:attr="data-gia=${khung.giaThue}"
+              th:text="${khung.khungGio.gioBatDau + ' - ' + khung.khungGio.gioKetThuc}">
+      </option>
+
+    </optgroup>
+  </th:block>
+  </select>
+
+  <label>Giá thuê:</label>
+  <input type="text" id="giaThue" readonly />
+
+
+  <!-- Ghi chú -->
+  <label>Ghi chú:</label>
+  <input type="text" th:field="*{ghiChu}" required/>
+
+  <button type="submit">💾 Lưu thay đổi</button>
+</form>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const selectKhungGio = document.querySelector('[name="giaTheoKhungGio.idGiaTheoKhungGio"]');
+    const giaThueField = document.getElementById('giaThue');
+    const ngayDatField = document.querySelector('[name="ngayDat"]');
+
+    function formatGiaVN(gia) {
+      const giaSo = parseFloat(gia);
+      return isNaN(giaSo) ? '' : giaSo.toLocaleString('vi-VN', {
+        minimumFractionDigits: 3,
+        maximumFractionDigits: 3
+      }) + ' VNĐ';
+    }
+
+    function updateGia() {
+      const selectedOption = selectKhungGio.options[selectKhungGio.selectedIndex];
+      const gia = selectedOption?.getAttribute('data-gia');
+      giaThueField.value = gia ? formatGiaVN(gia) : '';
+    }
+
+    function taiLaiKhungGio(ngay) {
+      fetch(`/api/khung-gio-trong?ngay=${ngay}`)
+              .then(res => res.json())
+              .then(data => {
+                // Xóa tất cả option cũ
+                selectKhungGio.innerHTML = '';
+
+                const sanMap = {};
+
+                data.forEach(kh => {
+                  const san = kh.sanBong;
+                  if (!sanMap[san.id_san_bong]) {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = san.ten_san_bong;
+                    optgroup.dataset.sanId = san.id_san_bong;
+                    sanMap[san.id_san_bong] = optgroup;
+                    selectKhungGio.appendChild(optgroup);
+                  }
+
+                  const option = document.createElement('option');
+                  option.value = kh.idGiaTheoKhungGio;
+                  option.setAttribute('data-gia', kh.giaThue);
+                  option.text = `${kh.khungGio.gioBatDau} - ${kh.khungGio.gioKetThuc}`;
+                  sanMap[san.id_san_bong].appendChild(option);
+                });
+
+                updateGia();
+              });
+    }
+
+    // Gọi lần đầu
+    updateGia();
+
+    // Khi thay đổi khung giờ
+    selectKhungGio.addEventListener('change', updateGia);
+
+    // Khi thay đổi ngày
+    ngayDatField.addEventListener('change', function () {
+      const ngay = this.value;
+      if (ngay) {
+        taiLaiKhungGio(ngay);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

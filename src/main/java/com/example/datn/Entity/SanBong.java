@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -60,6 +62,9 @@ public class SanBong {
     @ManyToOne
     @JoinColumn(name = "id_tai_khoan")
     private TaiKhoan taiKhoan;
+
+    @OneToMany(mappedBy = "sanBong", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DanhGia> danhGias;
 
     @Transient
     private MultipartFile file; // dùng để bind file upload, không lưu DB

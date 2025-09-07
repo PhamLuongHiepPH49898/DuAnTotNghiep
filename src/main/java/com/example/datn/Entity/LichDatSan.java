@@ -21,13 +21,13 @@ public class LichDatSan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_lich_dat_san")
-    private int id;
+    private Integer id;
 
     @Column(name = "ngay_dat", nullable = false)
     private LocalDate ngayDat;
 
     @Column(name = "ngay_tao", nullable = false)
-    private LocalDate ngayTao = LocalDate.now();
+    private LocalDateTime ngayTao = LocalDateTime.now();
 
     @Column(name = "gia_ap_dung", nullable = false)
     private BigDecimal giaApDung;

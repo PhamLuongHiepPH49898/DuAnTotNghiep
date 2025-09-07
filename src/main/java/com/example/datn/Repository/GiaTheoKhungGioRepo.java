@@ -36,8 +36,12 @@ public interface GiaTheoKhungGioRepo extends JpaRepository<GiaTheoKhungGio, Inte
             @Param("trangThaiList") List<Integer> trangThaiList,
             @Param("sanBong") Integer sanBong);
 
-        @Query("SELECT g FROM GiaTheoKhungGio g WHERE g.trangThai IN (:trangThaiList) AND g.sanBong.trang_thai = 0")
-        List<GiaTheoKhungGio> findGiaTheoKhungGioByTrangThaiAndSanHoatDong(@Param("trangThaiList") List<Integer> trangThaiList);
+
+    @Query("SELECT g FROM GiaTheoKhungGio g WHERE g.trangThai IN (:trangThaiList) AND g.sanBong.trang_thai = 0")
+    List<GiaTheoKhungGio> findGiaTheoKhungGioByTrangThaiAndSanHoatDong(@Param("trangThaiList") List<Integer> trangThaiList);
+
+    @Query("SELECT g FROM GiaTheoKhungGio g WHERE g.trangThai = 0")
+    List<GiaTheoKhungGio> findGiaByTrangThai(@Param("trangThai") int trangThai);
 
 
     @Query("SELECT g FROM GiaTheoKhungGio g WHERE g.sanBong.id_san_bong = :idSanBong")
