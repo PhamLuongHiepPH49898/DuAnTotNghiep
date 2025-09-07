@@ -1,9 +1,11 @@
 package com.example.datn.Controller;
 
+import com.example.datn.DTO.XacNhanDatLichDTO;
 import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Entity.TaiKhoan;
 import com.example.datn.Repository.TaiKhoanRepo;
 import com.example.datn.Service.ThongTinNguoiDungService;
+import com.example.datn.Service.XacNhanDatLichService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
@@ -33,7 +36,8 @@ public class ThongTinNguoiDungController {
     public String hienThiThongTinNguoiDung(Model model,
                                            Principal principal,
                                            @RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(required = false) String keyword) {
+                                           @RequestParam(required = false) String keyword
+                                           ) {
         String email = principal.getName();
         Optional<TaiKhoan> optionalTaiKhoan = taiKhoanRepo.findByEmail(email);
         if (optionalTaiKhoan.isEmpty()) {
@@ -43,7 +47,6 @@ public class ThongTinNguoiDungController {
         TaiKhoan taiKhoan = optionalTaiKhoan.get();
         Pageable pageable = PageRequest.of(page, 6, Sort.by("ngayDat").descending());
         Page<LichDatSan> lichSuPage = thongTinNguoiDungService.layLichSuDatSan((long) taiKhoan.getId(), pageable);
-
 
 
 

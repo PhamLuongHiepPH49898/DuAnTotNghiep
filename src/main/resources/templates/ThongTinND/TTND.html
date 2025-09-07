@@ -184,14 +184,14 @@
         <div class="card">
             <h2>Lịch sử đặt sân</h2>
             <div class="inner-tabs">
-                <button class="tab-button active" onclick="showInnerTab('tab1', this)">⏳ Chờ xác nhận</button>
-                <button class="tab-button" onclick="showInnerTab('tab2', this)">✅ Đã xác nhận</button>
+                <button class="tab-button active" onclick="showInnerTab('tab1', this)">⏳ Chờ thanh toán</button>
+                <button class="tab-button" onclick="showInnerTab('tab2', this)">✅ Đã thanh toán</button>
                 <button class="tab-button" onclick="showInnerTab('tab3', this)">❌ Đã hủy</button>
             </div>
             <div id="tab1" class="tab-content inner-tab active">
                 <table>
                     <thead>
-                    <tr><th>STT</th><th>Tên sân</th><th>Ngày đặt</th><th>Khung giờ</th><th>Giá</th><th>Ghi chú</th></tr>
+                    <tr><th>STT</th><th>Tên sân</th><th>Ngày đặt</th><th>Khung giờ</th><th>Giá</th><th>Ghi chú</th><th>Thanh toán</th></tr>
                     </thead>
                     <tbody>
                     <tr th:each="lich, iterStat : ${lichChoXacNhan}">
@@ -203,6 +203,7 @@
                         <td th:text="${lich.giaTheoKhungGio.khungGio.gioBatDau + ' - ' + lich.giaTheoKhungGio.khungGio.gioKetThuc}"></td>
                         <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
                         <td th:text="${lich.ghiChu}"></td>
+                        <td><button></button></td>
                     </tr>
                     </tbody>
                 </table>

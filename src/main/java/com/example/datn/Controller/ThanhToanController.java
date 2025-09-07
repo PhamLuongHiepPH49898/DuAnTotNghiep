@@ -1,17 +1,24 @@
 package com.example.datn.Controller;
 
+import com.example.datn.Entity.TaiKhoanNganHang;
 import com.example.datn.Entity.ThanhToan;
+import com.example.datn.Service.TaiKhoanNganHangService;
 import com.example.datn.Service.ThanhToanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class ThanhToanController {
 
     @Autowired
     private ThanhToanService thanhToanService;
+
+    @Autowired
+    private TaiKhoanNganHangService taiKhoanNganHangService;
 
     /**
      * Trang thanh toán (có cả trạng thái + đếm ngược)
@@ -33,6 +40,6 @@ public class ThanhToanController {
     }
     @GetMapping("/thanh-toan/thanh-cong")
     public String hienThiThanhCong() {
-        return "Main/Success"; // chính là Success.html bạn có sẵn
+        return "Main/Success";
     }
 }

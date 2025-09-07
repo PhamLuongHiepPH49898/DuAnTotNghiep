@@ -116,7 +116,7 @@ public class ThanhToanService {
         return tt;
     }
 
-    // ✅ Cron job: mỗi 30 giây
+    //Cron job: mỗi 30 giây
     @Scheduled(fixedDelay = 30000)
     public void autoCheckPayments() {
         List<ThanhToan> pending = thanhToanRepo.findByTrangThai(0);
@@ -124,7 +124,7 @@ public class ThanhToanService {
             try {
                 kiemTraThanhToan(tt.getIdThanhToan());
             } catch (Exception e) {
-                System.out.println("❌ Lỗi khi kiểm tra id=" + tt.getIdThanhToan() + ": " + e.getMessage());
+                System.out.println("Lỗi khi kiểm tra id=" + tt.getIdThanhToan() + ": " + e.getMessage());
             }
         }
     }
