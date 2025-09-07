@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Quản lý sân bóng</title>
+    <title>Quản lý hoàn tiền</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
     <style>
         body {
-            background-color:  #f0f2f5;
+            background-color: #f0f2f5;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
@@ -138,9 +138,34 @@
         #mobileSidebar {
             width: 240px !important;
         }
+
+        .date-filter-sidebar {
+            width: 200px;
+            float: left;
+            margin-right: 20px;
+        }
+
+        .date-filter-sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .date-filter-sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .date-filter-sidebar a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #0d6efd;
+        }
+
+        .date-filter-sidebar a.active {
+            font-weight: bold;
+            color: #dc3545;
+        }
     </style>
 </head>
-
 <body>
 
 <!-- Logo sidebar (desktop) -->
@@ -165,8 +190,9 @@
                 <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i> Quản lý thanh toán</a>
-        </li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản lý hoàn tiền</a>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i> Quản lý thanh
+            toán</a></li>
         <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
         <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
             thống kê</a></li>
@@ -247,91 +273,195 @@
     </div>
 </div>
 
-<main class="main-wrapper">
+<div class="main-wrapper">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-4 fw-bold text-primary">Sửa sân bóng</h2>
-        </div>
+        <h3 class="mb-4 fw-bold text-primary">
+            <i class="bi bi-cash-coin"></i> Quản lý hoàn tiền
+        </h3>
 
-        <form th:action="@{/sua-san-bong/{id}(id=${sanBong.id_san_bong})}" th:object="${sanBong}" method="post"
-              enctype="multipart/form-data" class="form-content">
-
-            <input type="hidden" th:field="*{id_san_bong}">
-
-                <div class="mb-3 ">
-                    <label class="form-label">Tên sân bóng</label>
-                    <input type="text" class="form-control" th:field="*{ten_san_bong}" placeholder="Nhập tên sân bóng" >
-                    <div class="text-danger" th:if="${#fields.hasErrors('ten_san_bong')}" th:errors="*{ten_san_bong}"></div>
-                </div>
-
-
-
-            <div class="mb-3">
-                <label class="form-label">Địa chỉ</label>
-                <input type="text" class="form-control" th:field="*{dia_chi}" placeholder="Nhập địa chỉ sân bóng" >
-                <div class="text-danger" th:if="${#fields.hasErrors('dia_chi')}" th:errors="*{dia_chi}"></div>
+        <form method="get" th:action="@{/quan-ly-hoan-tien/tim-kiem}" class="row g-3 mb-3">
+            <!-- Tên người đặt -->
+            <div class="col-md-3">
+                <input type="text" name="tenNguoiDat" class="form-control"
+                       th:value="${tenNguoiDat}" placeholder="Tên người đặt">
             </div>
 
-            <div class="row">
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">Loại môn thể thao</label>
-                    <select th:field="*{loaiMonTheThao}" class="form-select">
-                        <option value="" hidden>Chọn loại môn thể thao ...</option>
-                        <option th:each="dsLoaiMonTheThao : ${dsLoaiMonTheThao}" th:value="${dsLoaiMonTheThao.id}" th:utext="${dsLoaiMonTheThao.ten_mon_the_thao}"></option>
-                    </select>
-                    <div class="text-danger" th:if="${#fields.hasErrors('loaiMonTheThao')}" th:errors="*{loaiMonTheThao}"></div>
-                </div>
-
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">Loại sân</label>
-                    <select th:field="*{loaiSan}" class="form-select">
-                        <option value="" hidden>Chọn loại sân ...</option>
-                        <option th:each="dsLoaiSan : ${dsLoaiSan}" th:value="${dsLoaiSan.id}" th:utext="${dsLoaiSan.ten_loai_san}"></option>
-                    </select>
-                    <div class="text-danger" th:if="${#fields.hasErrors('loaiSan')}" th:errors="*{loaiSan}"></div>
-                </div>
-
-                <div class="mb-3 col-md-4">
-                    <label class="form-label">Loại mặt sân</label>
-                    <select th:field="*{loaiMatSan}" class="form-select">
-                        <option value="" hidden>Chọn loại mặt sân ...</option>
-                        <option th:each="dsLoaiMatSan : ${dsLoaiMatSan}" th:value="${dsLoaiMatSan.id}" th:utext="${dsLoaiMatSan.ten_loai_mat_san}"></option>
-                    </select>
-                    <div class="text-danger" th:if="${#fields.hasErrors('loaiMatSan')}" th:errors="*{loaiMatSan}"></div>
-                </div>
+            <!-- Số điện thoại -->
+            <div class="col-md-3">
+                <input type="text" name="soDienThoai" class="form-control"
+                       th:value="${soDienThoai}" placeholder="Số điện thoại">
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Mô tả</label>
-                <textarea class="form-control" th:field="*{mo_ta}" rows="4" placeholder="Nhập mô tả"></textarea>
-                <div class="text-danger" th:if="${#fields.hasErrors('mo_ta')}" th:errors="*{mo_ta}"></div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Hình ảnh</label>
-                <input type="file" class="form-control" th:field="*{file}"/>
-                <div class="text-danger" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></div>
-            </div>
-
-            <div class="mb-4">
-                <label class="form-label">Trạng thái</label>
-                <select th:field="*{trang_thai}" class="form-select">
-                    <option value="0">Đang hoạt động</option>
-                    <option value="1">Khóa</option>
-                    <option value="2">Bảo trì</option>
+            <!-- Chọn sân bóng -->
+            <div class="col-md-2">
+                <select name="sanBongId" class="form-select">
+                    <option value="">-- Tất cả sân bóng --</option>
+                    <option th:each="sb : ${dsSanBong}"
+                            th:value="${sb.id_san_bong}"
+                            th:text="${sb.ten_san_bong}"
+                            th:selected="${sanBongId != null and sanBongId == sb.id_san_bong}">
+                    </option>
                 </select>
             </div>
 
-            <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary me-2">Sửa</button>
-                <a href="/quan-ly-san" class="btn btn-secondary">Quay lại</a>
+            <!-- Trạng thái -->
+            <div class="col-md-2">
+                <select name="trangThai" class="form-select">
+                    <option value="">-- Tất cả trạng thái --</option>
+                    <option value="0" th:selected="${trangThai != null and trangThai == 0}">Chờ duyệt</option>
+                    <option value="1" th:selected="${trangThai != null and trangThai == 1}">Đã duyệt</option>
+                    <option value="2" th:selected="${trangThai != null and trangThai == 2}">Từ chối</option>
+                </select>
+            </div>
+
+            <!-- Nút tìm kiếm -->
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
             </div>
         </form>
-    </div>
-</main>
 
-<!-- Bootstrap Bundle with Popper -->
+        <!-- Bảng danh sách hoàn tiền -->
+        <div class="form-content table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-primary text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Người đặt</th>
+                    <th>SĐT</th>
+                    <th>Sân</th>
+                    <th>Ngày đặt</th>
+                    <th>Số tiền</th>
+                    <th>Lý do</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Loop Thymeleaf -->
+                <tr th:each="ht : ${dsHoanTien}" class="text-center">
+                    <td th:text="${ht.id}"></td>
+                    <td th:text="${ht.lichDatSan.taiKhoan.ho_ten}"></td>
+                    <td th:text="${ht.lichDatSan.taiKhoan.so_dien_thoai}"></td>
+                    <td th:text="${ht.lichDatSan.giaTheoKhungGio.sanBong.ten_san_bong}"></td>
+                    <td th:text="${#temporals.format(ht.lichDatSan.ngayDat, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${#numbers.formatDecimal(ht.soTien, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                    <td th:text="${ht.lyDo}"></td>
+                    <td>
+                        <span th:switch="${ht.trangThai}">
+                            <span th:case="0" class="badge bg-warning">Chờ duyệt</span>
+                            <span th:case="1" class="badge bg-success">Đã duyệt</span>
+                            <span th:case="2" class="badge bg-danger">Từ chối</span>
+                        </span>
+                    </td>
+                    <td>
+                        <!-- Nút duyệt -->
+                        <a th:href="@{/quan-ly-hoan-tien/duyet/{id}(id=${ht.id})}"
+                           th:if="${ht.trangThai ==0}"
+                           class="btn btn-sm btn-outline-success"
+                           onclick="return confirm('Bạn có chắc duệt không')">
+                            <i class="bi bi-check-circle"></i> Duyệt</a>
+
+                          <a th:href="@{/quan-ly-hoan-tien/tu-choi/{id}(id=${ht.id})}"
+                           th:if="${ht.trangThai ==0}"
+                           class="btn btn-sm btn-outline-danger"
+                           onclick="return confirm('Bạn có chắc từ chôi không')">
+                              <i class="bi bi-x-circle"></i> Từ chối</a>
+
+                    </td>
+                </tr>
+                <!-- Nếu rỗng -->
+                </tbody>
+                <tr th:if="${khongCoKetQua}">
+                    <td colspan="8" class="text-center text-muted">Không có yêu cầu hoàn tiền nào</td>
+                </tr>
+            </table>
+        </div>
+
+        <!--        phan trang-->
+        <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+            <ul class="pagination justify-content-center">
+                <!-- Nút Trước -->
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link"
+                       th:if="${isTimKiem}"
+                       th:href="@{/quan-ly-hoan-tien/tim-kiem(page=${currentPage - 1}, size=10,
+                            tenNguoiDat=${tenNguoiDat}, soDienThoai=${soDienThoai}, sanBongid=${sanBongId}, trangThai=${trangThai})}">
+                        Trước
+                    </a>
+                    <a class="page-link"
+                       th:if="${!isTimKiem}"
+                       th:href="@{/quan-ly-hoan-tien(page=${currentPage - 1}, size=10)}">
+                        Trước
+                    </a>
+                </li>
+
+                <!-- Các số trang -->
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link"
+                       th:if="${isTimKiem}"
+                       th:href="@{/quan-ly-hoan-tien/tim-kiem(page=${i}, size=10,
+                            tenNguoiDat=${tenNguoiDat}, soDienThoai=${soDienThoai}, sanBongid=${sanBongId}, trangThai=${trangThai})}"
+                       th:text="${i + 1}"></a>
+
+                    <a class="page-link"
+                       th:if="${!isTimKiem}"
+                       th:href="@{/quan-ly-hoan-tien(page=${i}, size=10)}"
+                       th:text="${i + 1}"></a>
+                </li>
+
+                <!-- Nút Tiếp -->
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link"
+                       th:if="${isTimKiem}"
+                       th:href="@{/quan-ly-hoan-tien/tim-kiem(page=${currentPage + 1}, size=10,
+                            tenNguoiDat=${tenNguoiDat}, soDienThoai=${soDienThoai}, sanBongid=${sanBongId}, trangThai=${trangThai})}">
+                        Tiếp
+                    </a>
+                    <a class="page-link"
+                       th:if="${!isTimKiem}"
+                       th:href="@{/quan-ly-hoan-tien(page=${currentPage + 1}, size=10)}">
+                        Tiếp
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<!--thông báo thanh công thất bai-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- dropdown khi ở dạng mobile-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let success = /*[[${success}]]*/ null;
+    let error = /*[[${error}]]*/ null;
+
+    if (success !== null) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: success,
+            timer: 2500,
+            showConfirmButton: false
+        });
+    }
+
+    if (error !== null) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Thất bại!',
+            text: error,
+            timer: 2500,
+            showConfirmButton: false
+        });
+    }
+    /*]]>*/
+</script>
 </body>
 </html>

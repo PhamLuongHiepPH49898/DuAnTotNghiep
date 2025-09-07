@@ -40,8 +40,6 @@ public class GiaTheoKhungGioService {
         }
     }
 
-
-
     public void sua(int id, BigDecimal giaThueMoi) {
 
         if (giaThueMoi == null || giaThueMoi.compareTo(BigDecimal.ZERO) <= 0) {

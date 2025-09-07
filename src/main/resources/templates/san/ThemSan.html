@@ -239,6 +239,8 @@
                     <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
                 </ul>
             </li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản lý hoàn tiền</a>
+
             <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i> Quản lý thanh
                 toán</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
@@ -253,7 +255,7 @@
 <main class="main-wrapper">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-semibold">Thêm sân bóng</h2>
+            <h2 class="mb-4 fw-bold text-primary">Thêm sân bóng</h2>
         </div>
 
         <form th:action="@{/them-san-bong}" th:object="${sanBong}" method="post" enctype="multipart/form-data"

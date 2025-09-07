@@ -36,10 +36,12 @@ public class QuanLyGiaTheoKhungGioController {
 
 
     @GetMapping("/quan-ly-gia-theo-khung-gio")
-    public String quanLyGiaTheoKhungGio(Model model) {
+    public String quanLyGiaTheoKhungGio(@RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "10") int size,
+            Model model) {
 
         List<GiaTheoKhungGio> dsGia = giaTheoKhungGioService.getGiaTheoKhungGio();
-        List<SanBong> dsSanBong = sanBongService.getSanBong();
+        Page<SanBong> dsSanBong = sanBongService.getSanBongPage(page, size);
 
         // Map<sânId, Map<khungGioId, Gia>>
         Map<Integer, Map<Integer, GiaTheoKhungGio>> bangGia = new HashMap<>();
@@ -58,10 +60,12 @@ public class QuanLyGiaTheoKhungGioController {
 
 
         model.addAttribute("dsSanBong", sanBongService.getSanBong());
-        model.addAttribute("dsSanBongHienThi", sanBongService.getSanBong());
+        model.addAttribute("dsSanBongHienThi", dsSanBong);
         model.addAttribute("dsKhungGio", khungGioRepo.findAll());
         model.addAttribute("bangGia", bangGia);
         model.addAttribute("bangGiaTheoSan", bangGiaTheoSan);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", dsSanBong.getTotalPages());
         model.addAttribute("isTimKiem", false);
 
 
@@ -118,8 +122,10 @@ public class QuanLyGiaTheoKhungGioController {
 
     @GetMapping("/quan-ly-gia-theo-khung-gio/tim-kiem")
     public String timKiem(@RequestParam(required = false) Integer sanBong,
+                          @RequestParam(defaultValue = "0") int page,
+                          @RequestParam(defaultValue = "10") int size,
                           Model model) {
-        List<SanBong> dsSanBong = sanBongService.getSanBong();
+
         List<GiaTheoKhungGio> dsGia = giaTheoKhungGioService.timKiem(sanBong);
 
         Map<Integer, Map<Integer, GiaTheoKhungGio>> bangGia = new HashMap<>();
@@ -130,22 +136,33 @@ public class QuanLyGiaTheoKhungGioController {
         }
 
         Map<Integer, List<GiaTheoKhungGio>> bangGiaTheoSan = new HashMap<>();
-        for (SanBong san : dsSanBong) {
-            List<GiaTheoKhungGio> giaList = giaTheoKhungGioRepo.findBySanBongId(san.getId_san_bong());
-            giaList.removeIf(Objects::isNull);
-            bangGiaTheoSan.put(san.getId_san_bong(), giaList);
-        }
-
 
         if (sanBong != null) {
+            // Tìm kiếm 1 sân cụ thể → không phân trang
             SanBong sb = sanBongService.findById(sanBong);
             if (sb != null) {
                 model.addAttribute("dsSanBongHienThi", List.of(sb));
-            } else {
-                model.addAttribute("dsSanBongHienThi", Collections.emptyList());
+                List<GiaTheoKhungGio> giaList = giaTheoKhungGioRepo.findBySanBongId(sb.getId_san_bong());
+                bangGiaTheoSan.put(sb.getId_san_bong(), giaList);
             }
+
+            model.addAttribute("currentPage", 0);
+            model.addAttribute("totalPages", 1);
+
         } else {
-            model.addAttribute("dsSanBongHienThi", sanBongService.findAll());
+
+
+            // Tìm tất cả sân → phân trang theo SanBong
+            Page<SanBong> pageSan = sanBongService.getSanBongPage(page, size);
+            List<SanBong> dsSanBongHienThi = pageSan.getContent();
+            for (SanBong san : dsSanBongHienThi) {
+                List<GiaTheoKhungGio> giaList = giaTheoKhungGioRepo.findBySanBongId(san.getId_san_bong());
+                bangGiaTheoSan.put(san.getId_san_bong(), giaList);
+            }
+            model.addAttribute("dsSanBongHienThi", dsSanBongHienThi);
+            model.addAttribute("currentPage", pageSan.getNumber());
+            model.addAttribute("totalPages", pageSan.getTotalPages());
+
         }
 
 
@@ -154,12 +171,9 @@ public class QuanLyGiaTheoKhungGioController {
         model.addAttribute("dsSanBong", sanBongService.getSanBong());
         model.addAttribute("dsKhungGio", khungGioRepo.findAll());
         model.addAttribute("sanBong", sanBong);
+
         model.addAttribute("khongCoKetQua", dsGia.isEmpty());
         model.addAttribute("isTimKiem", true);
-
-
-
-        model.addAttribute("sanBong", sanBong);
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);

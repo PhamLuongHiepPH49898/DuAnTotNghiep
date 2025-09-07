@@ -191,12 +191,14 @@
                 <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i> Quản lý thanh toán</a>
-        </li>
+
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản lý hoàn tiền</a>
+
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i> Quản lý thanh
+            toán</a></li>
         <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
         <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
             thống kê</a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bell"></i> Quản lý thông báo</a></li>
         <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay lại
             Trang chủ</a></li>
     </ul>
@@ -261,12 +263,14 @@
                     <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
                 </ul>
             </li>
+
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản lý hoàn tiền</a>
+
             <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i> Quản lý thanh
                 toán</a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
             <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
                 thống kê</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bell"></i> Quản lý thông báo</a></li>
             <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay
                 lại Trang chủ</a></li>
         </ul>
@@ -334,9 +338,9 @@
 
 
         <!-- Bảng danh sách đặt sân -->
-        <div class="table-responsive">
+        <div class="form-content table-responsive">
             <table class="table table-bordered table-hover align-middle">
-                <thead class="table-light">
+                <thead class="table-primary">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Ngày đặt sân</th>
@@ -402,6 +406,7 @@
 
                     </td>
 
+
                     <!-- Modal nhập lý do hủy-->
                     <div class="modal fade" th:id="'modalHuyLich_' + ${danhSachLichDatSan.id}" tabindex="-1">
                         <div class="modal-dialog">
@@ -409,22 +414,38 @@
                                 <input type="hidden" name="id" th:value="${danhSachLichDatSan.id}"/>
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Lý do hủy lịch đặt</h5>
+                                        <h5 class="modal-title">Hủy lịch đặt</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <textarea name="ghiChu" rows="4" class="form-control"
-                                                  placeholder="Nhập lý do hủy..." required></textarea>
+
+                                        <!-- Lý do hủy -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Lý do hủy</label>
+                                            <textarea name="ghiChu" rows="3" class="form-control"
+                                                      placeholder="Nhập lý do hủy..." required></textarea>
+                                        </div>
+
+                                        <!-- Có hoàn tiền hay không -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Hình thức xử lý</label>
+                                            <select name="hoanTien" class="form-select" required>
+                                                <option value="" disabled selected>-- Chọn --</option>
+                                                <option value="1">Hủy và HOÀN TIỀN</option>
+                                                <option value="0">Hủy KHÔNG hoàn tiền</option>
+                                            </select>
+                                        </div>
+
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
-                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
                     </div>
+
                 </tr>
                 </tbody>
             </table>
