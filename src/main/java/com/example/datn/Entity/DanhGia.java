@@ -33,10 +33,10 @@ public class DanhGia {
     @ManyToOne
     @JoinColumn(name = "id_san_bong")
     private SanBong sanBong;
-
-    @ManyToOne
-    @JoinColumn(name = "id_lich_dat_san")
-    private LichDatSan lichDatSan;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "id_lich_dat_san")
+//    private LichDatSan lichDatSan;
 
 
 }
