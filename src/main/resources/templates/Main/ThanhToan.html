@@ -67,7 +67,7 @@
 <script th:inline="javascript">
   // Lấy dữ liệu từ backend
   const idThanhToan = [[${thanhToan.idThanhToan}]];
-  const expireAt = new Date('[[${#temporals.format(thanhToan.hanThanhToan, "yyyy-MM-dd'T'HH:mm:ss")}]]').getTime();
+  const expireAt = new Date(/*[[${#temporals.format(thanhToan.hanThanhToan, "yyyy-MM-dd'T'HH:mm:ss")}]]*/ + "Z").getTime();
 
   // Countdown
   const countdownEl = document.getElementById("countdown");
@@ -121,8 +121,8 @@
     }
   }
 
-  // Tự động check mỗi 10 giây
-  setInterval(updateStatus, 10000);
+  // Tự động check mỗi 3 giây
+  setInterval(updateStatus, 3000);
 </script>
 
 </body>
