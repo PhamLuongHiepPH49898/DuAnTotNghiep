@@ -11,6 +11,10 @@ import com.example.datn.Repository.SanBongRepo;
 import com.example.datn.Repository.TaiKhoanRepo;
 import com.example.datn.Service.ThongTinNguoiDungService;
 import com.example.datn.Service.XacNhanDatLichService;
+import com.example.datn.Entity.LichDatSan;
+import com.example.datn.Entity.TaiKhoan;
+import com.example.datn.Repository.TaiKhoanRepo;
+import com.example.datn.Service.ThongTinNguoiDungService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,10 +32,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.stream.Collectors;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.security.Principal;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class ThongTinNguoiDungController {
@@ -54,6 +61,7 @@ public class ThongTinNguoiDungController {
                                            @RequestParam(defaultValue = "0") int page,
                                            @RequestParam(required = false) String keyword
                                            ) {
+
         String email = principal.getName();
         Optional<TaiKhoan> optionalTaiKhoan = taiKhoanRepo.findByEmail(email);
         if (optionalTaiKhoan.isEmpty()) {
@@ -63,7 +71,6 @@ public class ThongTinNguoiDungController {
         TaiKhoan taiKhoan = optionalTaiKhoan.get();
         Pageable pageable = PageRequest.of(page, 6, Sort.by("ngayDat").descending());
         Page<LichDatSan> lichSuPage = thongTinNguoiDungService.layLichSuDatSan((long) taiKhoan.getId(), pageable);
-
 
 
         List<LichDatSan> lichHomNay = thongTinNguoiDungService.timLichDatHomNay((long) taiKhoan.getId());
@@ -135,4 +142,5 @@ public String huyLichDat(@RequestParam("idLich") Integer idLich,
         thongTinNguoiDungService.suaLichDat(lichMoi);
         return "redirect:/thong-tin-nguoi-dung";
     }
+
 }

@@ -249,11 +249,11 @@
                         <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
                         <td th:text="${lich.ghiChu}"></td>
 
-<!--                        <td>-->
-<!--                            <a th:href="@{/lich-dat/sua(id=${lich.id})}" class="btn btn-warning btn-sm">✏️ Sửa</a>-->
-<!--                            <a th:href="@{/lich-dat/huy(id=${lich.id})}" class="btn btn-danger btn-sm"-->
-<!--                               onclick="return confirm('Bạn có chắc chắn muốn hủy lịch này?')">🗑️ Hủy</a>-->
-<!--                        </td>-->
+                        <!--                        <td>-->
+                        <!--                            <a th:href="@{/lich-dat/sua(id=${lich.id})}" class="btn btn-warning btn-sm">✏️ Sửa</a>-->
+                        <!--                            <a th:href="@{/lich-dat/huy(id=${lich.id})}" class="btn btn-danger btn-sm"-->
+                        <!--                               onclick="return confirm('Bạn có chắc chắn muốn hủy lịch này?')">🗑️ Hủy</a>-->
+                        <!--                        </td>-->
                         <td>
                             <button type="button" class="btn btn-danger btn-sm"
                                     th:onclick="'openCancelModal(' + ${lich.id} + ')'">🗑️ Hủy</button>

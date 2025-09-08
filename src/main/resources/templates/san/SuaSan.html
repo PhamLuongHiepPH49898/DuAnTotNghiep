@@ -260,11 +260,11 @@
 
             <input type="hidden" th:field="*{id_san_bong}">
 
-                <div class="mb-3 ">
-                    <label class="form-label">Tên sân bóng</label>
-                    <input type="text" class="form-control" th:field="*{ten_san_bong}" placeholder="Nhập tên sân bóng" >
-                    <div class="text-danger" th:if="${#fields.hasErrors('ten_san_bong')}" th:errors="*{ten_san_bong}"></div>
-                </div>
+            <div class="mb-3 ">
+                <label class="form-label">Tên sân bóng</label>
+                <input type="text" class="form-control" th:field="*{ten_san_bong}" placeholder="Nhập tên sân bóng" >
+                <div class="text-danger" th:if="${#fields.hasErrors('ten_san_bong')}" th:errors="*{ten_san_bong}"></div>
+            </div>
 
 
 

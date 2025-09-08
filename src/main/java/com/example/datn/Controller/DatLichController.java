@@ -37,14 +37,12 @@ public class DatLichController {
 
     @GetMapping("/datsan")
     public String hienThiTrangDatSan(@RequestParam("id") Integer idSan, Model model) {
-        SanBong san = datSanService.laySanTheoId(idSan); // <-- Lấy 1 sân
-        if (san == null)
-            return "redirect:/trang-chu";
+        SanBong san = datSanService.laySanTheoId(idSan);  // <-- Lấy 1 sân
+        if (san == null) return "redirect:/trang-chu";
 
         List<SanBong> sanList = datSanService.layDanhSachSan();
         List<KhungGio> khungGioList = datSanService.layDanhSachKhungGio();
-        List<GiaTheoKhungGio> danhSachGiaTheoKhungGio = datSanService.layDanhGiaTheoKhungGio(); // lấy danh sách giá
-                                                                                                // theo khung giờ
+        List<GiaTheoKhungGio> danhSachGiaTheoKhungGio = datSanService.layDanhGiaTheoKhungGio(); // lấy danh sách giá theo khung giờ
         List<String> cacSlotDaDat = datSanService.getAllSlotKeys();
         List<String> cacSlotTonTai = datSanService.getAllSlotKeysTonTai(); // dạng: "2025-07-07_Sân A_08:00-09:00"
         model.addAttribute("cacSlotTonTai", cacSlotTonTai);
@@ -72,6 +70,8 @@ public class DatLichController {
         System.out.println("KhungGio: " + khungGioList.size());
         System.out.println("BangGia: " + bangGia.size());
         System.out.println("BangGiaId: " + bangGiaId.size());
+        System.out.println("slotsDaDat: ");
+        cacSlotDaDat.forEach(System.out::println);
 
         return "Main/DatLich";
     }
@@ -108,5 +108,6 @@ public class DatLichController {
         }
         // redirect sang trang thanh toán, truyền idLichDatSan
         return "redirect:/thanh-toan?idLichDatSan=" + idLichDatDuocLuu.get(0);
+
     }
 }

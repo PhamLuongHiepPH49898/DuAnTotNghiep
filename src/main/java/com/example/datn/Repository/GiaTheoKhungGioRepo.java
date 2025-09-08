@@ -47,5 +47,4 @@ public interface GiaTheoKhungGioRepo extends JpaRepository<GiaTheoKhungGio, Inte
     @Query("SELECT g FROM GiaTheoKhungGio g WHERE g.sanBong.id_san_bong = :idSanBong")
     List<GiaTheoKhungGio> findBySanBongId(@Param("idSanBong") Integer idSanBong);
 
-
 }

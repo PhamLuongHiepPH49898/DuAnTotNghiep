@@ -280,20 +280,20 @@
             </div>
         </div>
         <div class="form-content table-responsive">
-        <table class="table table-bordered table-hover align-middle">
-            <thead class="table-primary text-center">
-            <tr>
-                <th>Sân</th>
-                <th th:each="kg : ${dsKhungGio}"
-                    th:text="${#temporals.format(kg.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(kg.gioKetThuc, 'HH:mm')}">
-                </th>
-                <th>Hành động</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="san : ${dsSanBongHienThi}">
-                <td th:text="${san.ten_san_bong}"></td>
-                <td th:each="kg : ${dsKhungGio}">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-primary text-center">
+                <tr>
+                    <th>Sân</th>
+                    <th th:each="kg : ${dsKhungGio}"
+                        th:text="${#temporals.format(kg.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(kg.gioKetThuc, 'HH:mm')}">
+                    </th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="san : ${dsSanBongHienThi}">
+                    <td th:text="${san.ten_san_bong}"></td>
+                    <td th:each="kg : ${dsKhungGio}">
                     <span th:with="gia = ${bangGia[san.id_san_bong]?.get(kg.id)}">
                         <span th:if="${gia != null}" class="justify-content-between align-items-center">
                             <span th:text="${#numbers.formatDecimal(gia.giaThue, 0, 'COMMA', 3, 'POINT')} + ' đ'"></span>
@@ -304,54 +304,54 @@
                         <span th:if="${gia == null}" class="text-muted ">Chưa có giá</span>
 
                     </span>
-                </td>
-                <td>
-                    <button class="btn btn-sm btn-outline-warning me-1"
-                            th:if="${bangGiaTheoSan[san.id_san_bong] != null and #lists.size(bangGiaTheoSan[san.id_san_bong]) > 0}"
-                            data-bs-toggle="modal"
-                            th:attr="data-bs-target='#modalSuaGia-' + ${san.id_san_bong}"><i class="bi bi-pencil-square"></i> Sửa
-                    </button>
-                </td>
-            </tr>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-warning me-1"
+                                th:if="${bangGiaTheoSan[san.id_san_bong] != null and #lists.size(bangGiaTheoSan[san.id_san_bong]) > 0}"
+                                data-bs-toggle="modal"
+                                th:attr="data-bs-target='#modalSuaGia-' + ${san.id_san_bong}"><i class="bi bi-pencil-square"></i> Sửa
+                        </button>
+                    </td>
+                </tr>
 
-            <!-- Modal sửa giá theo từng sân -->
-            <div th:each="san : ${dsSanBongHienThi}">
-                <div class="modal fade" th:id="'modalSuaGia-' + ${san.id_san_bong}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form method="post" th:action="@{/quan-ly-gia-theo-khung-gio/sua-gia}">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" th:text="'Sửa Giá - ' + ${san.ten_san_bong}"></h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-
-                                    <input type="hidden" name="idSanBong" th:value="${san.id_san_bong}"/>
-
-                                    <div th:each="gia : ${bangGiaTheoSan[san.id_san_bong]}" th:if="${gia != null}"
-                                         class="mb-3">
-                                        <label class="form-label"
-                                               th:text="${#temporals.format(gia.khungGio.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(gia.khungGio.gioKetThuc, 'HH:mm')}"></label>
-                                        <input type="hidden" name="ids" th:value="${gia.idGiaTheoKhungGio}"/>
-                                        <input type="number" name="giaThues" th:value="${gia.giaThue}"
-                                               class="form-control" required/>
+                <!-- Modal sửa giá theo từng sân -->
+                <div th:each="san : ${dsSanBongHienThi}">
+                    <div class="modal fade" th:id="'modalSuaGia-' + ${san.id_san_bong}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form method="post" th:action="@{/quan-ly-gia-theo-khung-gio/sua-gia}">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" th:text="'Sửa Giá - ' + ${san.ten_san_bong}"></h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
+                                    <div class="modal-body">
 
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Lưu</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
-                                    </button>
-                                </div>
-                            </form>
+                                        <input type="hidden" name="idSanBong" th:value="${san.id_san_bong}"/>
+
+                                        <div th:each="gia : ${bangGiaTheoSan[san.id_san_bong]}" th:if="${gia != null}"
+                                             class="mb-3">
+                                            <label class="form-label"
+                                                   th:text="${#temporals.format(gia.khungGio.gioBatDau, 'HH:mm')} + ' - ' + ${#temporals.format(gia.khungGio.gioKetThuc, 'HH:mm')}"></label>
+                                            <input type="hidden" name="ids" th:value="${gia.idGiaTheoKhungGio}"/>
+                                            <input type="number" name="giaThues" th:value="${gia.giaThue}"
+                                                   class="form-control" required/>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Lưu</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
         </div>
         <!-- Modal Thêm Giá -->
         <div class="modal fade" id="modalThemGia" tabindex="-1" aria-labelledby="modalThemGiaLabel" aria-hidden="true">

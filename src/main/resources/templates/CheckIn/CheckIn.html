@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết quả Check-in</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f7f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 24px;
+            color: #4ca1af;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .message {
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            line-height: 1.6;
+        }
+
+        .message.success {
+            background: #e0f4f1;
+            color: #2a6f69;
+            border-color: #88baca;
+        }
+        .btn-home {
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 16px;
+            color: #fff ;
+
+        }
+
+        .message.error {
+            background: #fdf2f2;
+            color: #b14444;
+            border-color: #c65f5f;
+        }
+        .btn-home.success {
+            background: #88baca;
+        }
+
+        .btn-home.success:hover {
+            background: #4ca1af;
+        }
+
+        .btn-home.error {
+            background: #d69b9b;
+        }
+
+        .btn-home.error:hover {
+            background: #b14444;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <p th:class="'message ' + (${message.contains('✅') ? 'success' : 'error'})"
+       th:utext="${message}"></p>
+    <a th:href="@{/user/trang-chu}"
+       th:class="'btn-home ' + (${message.contains('✅') ? 'success' : 'error'})">
+        Quay lại trang chủ
+    </a>
+</div>
+
+</body>
+
+</html>
+

@@ -1,5 +1,4 @@
-package com.example.datn.Sheduled;
-
+package com.example.datn.Scheduler;
 import com.example.datn.Entity.GiaTheoKhungGio;
 import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Repository.GiaTheoKhungGioRepo;
@@ -20,19 +19,18 @@ public class DatSanSheduled {
     @Autowired
     private GiaTheoKhungGioRepo giaTheoKhungGioRepo;
 
-     @Scheduled(cron = "*/30 * * * * ?") // test
-//    @Scheduled(cron = "0 0 0 * * ?") // chạy lúc 00:00 mỗi ngày
-
+    // @Scheduled(cron = "0 0 0 * * ?") // chạy lúc 00:00 mỗi ngày
+    @Scheduled(cron = "*/30 * * * * ?") // Tạm thời chạy mỗi 30 giây để test
     public void taoLichDatSanTruoc() {
         LocalDate ngay = LocalDate.now();
 
-        List<GiaTheoKhungGio> danhSachGiaTheoKhungGio = giaTheoKhungGioRepo
-                .findGiaTheoKhungGioByTrangThaiAndSanHoatDong(List.of(0));
+        List<GiaTheoKhungGio> danhSachGiaTheoKhungGio = giaTheoKhungGioRepo.findGiaTheoKhungGioByTrangThaiAndSanHoatDong(List.of(0));
+
 
         for (int i = 0; i < 30; i++) {
             LocalDate targetDate = ngay.plusDays(i);
             for (GiaTheoKhungGio gia : danhSachGiaTheoKhungGio) {
-                if (lichDatSanRepo.findByNgaySanKhungGio(targetDate, gia.getIdGiaTheoKhungGio()).isEmpty()) {
+                if (lichDatSanRepo.findByNgaySanKhungGio(targetDate, gia.getIdGiaTheoKhungGio()) == null) {
                     LichDatSan lichMoi = new LichDatSan();
                     lichMoi.setNgayDat(targetDate);
                     lichMoi.setGiaTheoKhungGio(gia);
@@ -41,14 +39,11 @@ public class DatSanSheduled {
                     lichMoi.setGiaApDung(null);
                     lichMoi.setNgayTao(LocalDateTime.now());
                     lichDatSanRepo.save(lichMoi);
-                    System.out.println("👉 Số lượng giá theo khung giờ: " + danhSachGiaTheoKhungGio.size());
-
                 } else {
                     System.out.println(" Đã có lịch cho ngày " + targetDate + " - ID Giá " + gia.getIdGiaTheoKhungGio() + " → Bỏ qua tạo mới.");
                 }
             }
         }
-
     }
 
     public void taoLichChoGia(GiaTheoKhungGio gia) {
@@ -67,5 +62,4 @@ public class DatSanSheduled {
             }
         }
     }
-
 }

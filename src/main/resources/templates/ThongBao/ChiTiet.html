@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Chi tiết thông báo</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0eafc, #cfdef3);
+      padding: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .notification-container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      width: 500px;
+      max-width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 25px;
+      font-size: 24px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f7f9fc;
+      font-size: 15px;
+      color: #333;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn-back {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 12px 20px;
+      background-color: #94c0cd;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      text-align: center;
+    }
+
+    .btn-back:hover {
+      background-color: #75a6b6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="notification-container">
+  <h1>Chi tiết thông báo</h1>
+
+  <form>
+    <label>Mã thông báo:</label>
+    <input type="text" th:value="${thongBao.idThongBao}" readonly>
+
+    <label>Tiêu đề:</label>
+    <input type="text" th:value="${thongBao.tieuDe}" readonly>
+
+    <label>Nội dung:</label>
+    <div style="white-space: pre-line; padding: 10px 12px; border: 1px solid #ccc; border-radius: 8px;
+            background-color: #f7f9fc; font-size: 15px; color: #333;"
+         th:utext="${#strings.replace(thongBao.noiDung, '\n', '<br/>')}"></div>
+
+    <label>Ngày tạo:</label>
+    <input type="text" th:value="${#temporals.format(thongBao.ngayTao, 'dd/MM/yyyy HH:mm')}" readonly>
+
+  </form>
+
+  <a th:href="@{/thong-bao/xem-thong-bao}" class="btn-back">Quay lại danh sách</a>
+</div>
+
+</body>
+</html>

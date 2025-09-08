@@ -2,7 +2,6 @@ package com.example.datn.Service;
 
 import com.example.datn.DTO.ChiTietDatLichDTO;
 import com.example.datn.DTO.XacNhanDatLichDTO;
-import com.example.datn.Entity.GiaTheoKhungGio;
 import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Entity.TaiKhoan;
 import com.example.datn.Repository.GiaTheoKhungGioRepo;
@@ -43,6 +42,7 @@ public class XacNhanDatLichService {
             System.out.println("🔍 Đang tìm lịch cho: Ngày = " + chiTiet.getNgayDat()
                                + ", ID Giá = " + chiTiet.getIdGiaTheoKhungGio());
 
+
             LichDatSan lichSan = lichDatSanRepository.findListLichTrongByNgaySanKhungGio(
                     chiTiet.getNgayDat(), chiTiet.getIdGiaTheoKhungGio()
             );
@@ -72,4 +72,6 @@ public class XacNhanDatLichService {
 
         return idLichCapNhat;
     }
+
 }
+

@@ -46,6 +46,8 @@ public interface SanBongRepo extends JpaRepository<SanBong, Integer>, JpaSpecifi
            "(:monTheThaoId IS NULL OR s.loaiMonTheThao.id = :monTheThaoId)")
     List<SanBong> findByDieuKien(String tenSan, Integer loaiSanId, Integer matSanId, Integer monTheThaoId);
 
+
     @Query("SELECT s FROM SanBong s WHERE s.trang_thai = 0")
     List<SanBong> findSanBongById();
+
 }

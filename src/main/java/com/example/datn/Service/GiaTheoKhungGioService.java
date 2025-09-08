@@ -6,7 +6,7 @@ import com.example.datn.Entity.SanBong;
 import com.example.datn.Repository.GiaTheoKhungGioRepo;
 import com.example.datn.Repository.KhungGioRepo;
 import com.example.datn.Repository.SanBongRepo;
-import com.example.datn.Sheduled.DatSanSheduled;
+import com.example.datn.Scheduler.DatSanSheduled;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -76,6 +76,7 @@ public class GiaTheoKhungGioService {
             giaTheoKhungGioRepo.save(gia);
             datSanSheduled.taoLichChoGia(gia);
 
+
         } else {
             throw new IllegalArgumentException("Không tìm thấy sân bóng hoặc khung giờ.");
         }
@@ -83,6 +84,7 @@ public class GiaTheoKhungGioService {
 
     public List<GiaTheoKhungGio> timKiem(Integer sanBong) {
         return giaTheoKhungGioRepo.findBySanAndKhungGio(List.of(0) , sanBong);
+
 
     }
 

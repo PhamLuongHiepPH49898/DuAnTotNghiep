@@ -21,7 +21,7 @@ public class LichDatSan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_lich_dat_san")
-    private Integer id;
+    private int id;
 
     @Column(name = "ngay_dat", nullable = false)
     private LocalDate ngayDat;
@@ -33,10 +33,17 @@ public class LichDatSan {
     private BigDecimal giaApDung;
 
     @Column(name = "ghi_chu", columnDefinition = "NVARCHAR(255)")
+
     private String ghiChu;
 
     @Column(name = "trang_thai", nullable = false)
     private Integer trangThai;
+
+    @Column(name = "trang_thai_check_in")
+    private Integer trangThaiCheckIn;
+
+    @Column(name = "thoi_gian_check_in")
+    private LocalDateTime  thoiGianCheckIn;
 
     @ManyToOne
     @JoinColumn(name = "id_tai_khoan")
@@ -47,8 +54,10 @@ public class LichDatSan {
     @JoinColumn(name = "id_san_bong")
     private SanBong sanBong;
 
+
     @ManyToOne
     @JoinColumn(name = "id_gia_theo_khung_gio")
     private GiaTheoKhungGio giaTheoKhungGio;
+
 
 }

@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -36,6 +35,7 @@ public class ThanhToan {
 
     @Column(name = "reference")
     private String reference;
+
 
     @ManyToOne
     @JoinColumn(name = "id_tai_khoan", nullable = false)

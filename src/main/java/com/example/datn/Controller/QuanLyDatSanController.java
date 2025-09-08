@@ -15,8 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,12 +84,16 @@ public class QuanLyDatSanController {
         }
 
 
+
+
         List<SanBong> danhSachSanLoc = sanBongService.timKiemSan(tenSan, loaiSanId, matSanId, monTheThaoId);
         Map<SanBong, List<LichDatSan>> lichDatMap = lichDatSanService.getLichDatSanTheoNgay(ngayDat, danhSachSanLoc);
         List<KhungGio> khungGios = lichDatSanService.getAllKhungGio();
 
+
         boolean khongCoKetQua = lichDatMap == null || lichDatMap.isEmpty()
                                 || lichDatMap.values().stream().allMatch(List::isEmpty);
+
 
         model.addAttribute("ngayDuocChon", ngayDat);
         model.addAttribute("lichDatMap", lichDatMap);
@@ -147,6 +149,7 @@ public class QuanLyDatSanController {
                 ht.setTrangThai(0); // 0 = chờ xử lý
                 hoanTienRepo.save(ht);
             }
+
             redirectAttributes.addFlashAttribute("success", "Đã hủy lịch thành công!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Hủy lịch thất bại!");

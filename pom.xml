@@ -28,7 +28,18 @@
             <version>2.10.1</version>
         </dependency>
 
-        <!-- Spring Data -->
+        <!-- Mail + Dotenv -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>java-dotenv</artifactId>
+            <version>5.2.2</version>
+        </dependency>
+
+        <!-- Data -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jdbc</artifactId>
@@ -146,5 +157,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

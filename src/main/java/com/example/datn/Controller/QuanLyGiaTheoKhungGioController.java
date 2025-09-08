@@ -19,6 +19,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.List;
+
 
 @Controller
 public class QuanLyGiaTheoKhungGioController {
@@ -38,7 +40,7 @@ public class QuanLyGiaTheoKhungGioController {
     @GetMapping("/quan-ly-gia-theo-khung-gio")
     public String quanLyGiaTheoKhungGio(@RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "10") int size,
-            Model model) {
+                                        Model model) {
 
         List<GiaTheoKhungGio> dsGia = giaTheoKhungGioService.getGiaTheoKhungGio();
         Page<SanBong> dsSanBong = sanBongService.getSanBongPage(page, size);
@@ -66,6 +68,7 @@ public class QuanLyGiaTheoKhungGioController {
         model.addAttribute("bangGiaTheoSan", bangGiaTheoSan);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", dsSanBong.getTotalPages());
+
         model.addAttribute("isTimKiem", false);
 
 
@@ -86,6 +89,7 @@ public class QuanLyGiaTheoKhungGioController {
         return "redirect:/quan-ly-gia-theo-khung-gio";
     }
 
+
     @PostMapping("/quan-ly-gia-theo-khung-gio/sua-gia")
     public String suaGia(@RequestParam("ids") List<Integer> ids,
                          @RequestParam("giaThues") List<BigDecimal> giaThues, RedirectAttributes redirectAttributes) {
@@ -103,6 +107,7 @@ public class QuanLyGiaTheoKhungGioController {
         }
         return "redirect:/quan-ly-gia-theo-khung-gio";
     }
+
 
     @PostMapping("/quan-ly-gia-theo-khung-gio/them-gia")
     public String themGia(@RequestParam("giaThue") BigDecimal giaThue,
@@ -150,8 +155,6 @@ public class QuanLyGiaTheoKhungGioController {
             model.addAttribute("totalPages", 1);
 
         } else {
-
-
             // Tìm tất cả sân → phân trang theo SanBong
             Page<SanBong> pageSan = sanBongService.getSanBongPage(page, size);
             List<SanBong> dsSanBongHienThi = pageSan.getContent();
@@ -165,7 +168,6 @@ public class QuanLyGiaTheoKhungGioController {
 
         }
 
-
         model.addAttribute("bangGia", bangGia);
         model.addAttribute("bangGiaTheoSan", bangGiaTheoSan);
         model.addAttribute("dsSanBong", sanBongService.getSanBong());
@@ -174,6 +176,7 @@ public class QuanLyGiaTheoKhungGioController {
 
         model.addAttribute("khongCoKetQua", dsGia.isEmpty());
         model.addAttribute("isTimKiem", true);
+
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);
