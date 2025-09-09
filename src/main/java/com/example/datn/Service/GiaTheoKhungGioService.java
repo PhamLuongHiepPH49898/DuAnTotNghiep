@@ -42,7 +42,7 @@ public class GiaTheoKhungGioService {
 
     public void sua(int id, Double giaThueMoi) {
 
-        if (giaThueMoi == null || giaThueMoi.compareTo(giaThueMoi) <= 0) {
+        if (giaThueMoi == null || giaThueMoi <= 0) {
             throw new IllegalArgumentException("Giá thuê phải lớn hơn 0");
         }
 
@@ -61,7 +61,7 @@ public class GiaTheoKhungGioService {
             throw new IllegalArgumentException("Giờ này đã được áp dụng cho sân bóng này!");
         }
 
-        if (giaThue == null || giaThue.compareTo(giaThue) <= 0) {
+        if (giaThue == null || giaThue <= 0) {
             throw new IllegalArgumentException("Giá thuê phải lớn hơn 0");
         }
 
