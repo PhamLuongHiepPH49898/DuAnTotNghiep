@@ -34,6 +34,12 @@ public class LichDatSanService {
         return lichDatSanRepo.findAllLichDatSan(ngayDat, pageable);
     }
 
+    public List<LichDatSan> findByIds(List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of(); // Trả về list rỗng nếu không có id
+        }
+        return lichDatSanRepo.findAllById(ids);
+    }
 
     public void duyet(int id) {
         LichDatSan lichDatSan = lichDatSanRepo.findById(id).orElse(null);

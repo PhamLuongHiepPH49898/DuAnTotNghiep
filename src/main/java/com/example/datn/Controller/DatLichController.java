@@ -50,7 +50,7 @@ public class DatLichController {
         Map<String, BigDecimal> bangGia = new HashMap<>();
         for (GiaTheoKhungGio gia : danhSachGiaTheoKhungGio) {
             String key = gia.getSanBong().getId_san_bong() + "_" + gia.getKhungGio().getId();
-            bangGia.put(key, gia.getGiaThue());
+            bangGia.put(key, BigDecimal.valueOf(gia.getGiaThue()));
         }
 
         // Map key = "idSan_idKhungGio" -> ID bảng giá
@@ -106,8 +106,18 @@ public class DatLichController {
         if (idLichDatDuocLuu.isEmpty()) {
             return "redirect:/xacnhan"; // nếu không có đơn nào
         }
-        // redirect sang trang thanh toán, truyền idLichDatSan
-        return "redirect:/thanh-toan?idLichDatSan=" + idLichDatDuocLuu.get(0);
 
+        // Ghép danh sách id thành query string: id=1&id=2&id=3
+        StringBuilder query = new StringBuilder();
+        for (Integer id : idLichDatDuocLuu) {
+            if (query.length() > 0) {
+                query.append("&");
+            }
+            query.append("id=").append(id);
+        }
+
+        // redirect sang trang thanh toán, truyền toàn bộ id
+        return "redirect:/thanh-toan?" + query;
     }
+
 }

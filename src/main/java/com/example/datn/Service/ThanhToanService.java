@@ -1,14 +1,15 @@
 package com.example.datn.Service;
 
+import com.example.datn.DTO.ThanhToanDTO;
 import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Entity.ThanhToan;
 import com.example.datn.Repository.LichDatSanRepo;
 import com.example.datn.Repository.ThanhToanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.http.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,49 +27,57 @@ public class ThanhToanService {
     private final String API_KEY = "76NFBDEZWTSE0NB0GF2YLVJ4OZUSA5ICAH69ODUKMRTPQZGYKLHNQDCXQVI4PBNI";
     private final String API_URL = "https://my.sepay.vn/userapi/transactions/list";
 
-    // ✅ Tạo giao dịch cho lịch đặt sân
-    public ThanhToan taoGiaoDichChoLichDat(Integer idLichDatSan) {
-        LichDatSan lich = lichDatSanRepo.findById(idLichDatSan)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy lịch đặt"));
-
-        String ref = "SAMBA" + idLichDatSan;
-
-        ThanhToan tt = new ThanhToan();
-        tt.setSoTien(lich.getGiaApDung());
-        tt.setReference(ref);
-        tt.setTrangThai(0);
-        tt.setLichDatSan(lich);
-
-        if (lich.getTaiKhoan() != null) {
-            tt.setTaiKhoan(lich.getTaiKhoan());
-        } else {
-            throw new RuntimeException("Lịch đặt chưa có tài khoản gắn với!");
+    /**
+     * ✅ Tạo giao dịch cho nhiều lịch đặt sân (một tài khoản đặt nhiều sân)
+     */
+    public ThanhToan taoGiaoDichChoNhieuLichDat(List<Integer> idLichDatSan) {
+        List<LichDatSan> lichList = lichDatSanRepo.findAllById(idLichDatSan);
+        if (lichList.isEmpty()) {
+            throw new RuntimeException("Không tìm thấy lịch đặt nào!");
         }
 
+        // Tổng tiền
+        double tongTien = lichList.stream().mapToDouble(LichDatSan::getGiaApDung).sum();
+
+        // Tham chiếu (dùng timestamp để đảm bảo unique)
+        String ref = "SAMBA" + System.currentTimeMillis();
+
+        ThanhToan tt = new ThanhToan();
+        tt.setSoTien(tongTien);
+        tt.setReference(ref);
+        tt.setTrangThai(0);
+        tt.setTaiKhoan(lichList.get(0).getTaiKhoan()); // lấy tài khoản của lịch đầu tiên
         tt.setHanThanhToan(LocalDateTime.now().plusMinutes(5));
 
-        return thanhToanRepo.save(tt);
+        // Gắn thanh toán vào từng lịch
+        for (LichDatSan lich : lichList) {
+            lich.setThanhToan(tt);
+        }
+
+        return thanhToanRepo.save(tt); // Cascade sẽ lưu luôn lichDatSans
     }
 
-    // ✅ Kiểm tra thanh toán bằng API SePay
-    public ThanhToan kiemTraThanhToan(Integer idThanhToan) {
+    /**
+     * ✅ Kiểm tra thanh toán qua API SePay
+     */
+    public ThanhToanDTO kiemTraThanhToan(Integer idThanhToan) {
         ThanhToan tt = thanhToanRepo.findById(idThanhToan).orElseThrow();
 
-        // Nếu đã quá hạn thì hủy
+        // Nếu đã quá hạn
         if (tt.getHanThanhToan() != null && LocalDateTime.now().isAfter(tt.getHanThanhToan()) && tt.getTrangThai() == 0) {
             tt.setTrangThai(-1);
             thanhToanRepo.save(tt);
 
-            // Hủy lịch đặt sân
-            LichDatSan lich = tt.getLichDatSan();
-            lich.setTrangThai(2);
-            lich.setGhiChu("Quá hạn thanh toán");
-            lichDatSanRepo.save(lich);
-
-            return tt;
+            // Hủy tất cả lịch liên quan
+            for (LichDatSan lich : tt.getLichDatSans()) {
+                lich.setTrangThai(2); // đã hủy
+                lich.setGhiChu("Quá hạn thanh toán");
+                lichDatSanRepo.save(lich);
+            }
+            return mapToDTO(tt);
         }
 
-        if (tt.getTrangThai() != 0) return tt;
+        if (tt.getTrangThai() != 0) return mapToDTO(tt); // Nếu đã thanh toán/hủy thì bỏ qua
 
         // 🚀 Gọi API SePay
         RestTemplate restTemplate = new RestTemplate();
@@ -93,30 +102,46 @@ public class ThanhToanService {
                     long amountIn = 0L;
                     try {
                         amountIn = new java.math.BigDecimal(amountInStr).longValue();
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
 
+                    // Kiểm tra mã tham chiếu + số tiền
                     if ((code != null && code.equalsIgnoreCase(tt.getReference())
                             || (content != null && content.contains(tt.getReference())))
-                            && amountIn == tt.getSoTien().longValue()) {
+                            && amountIn == tt.getSoTien()) {
+
                         tt.setTrangThai(1); // ✅ đã thanh toán
                         thanhToanRepo.save(tt);
 
-                        // Cập nhật lịch đặt
-                        LichDatSan lich = tt.getLichDatSan();
-                        lich.setTrangThai(1); // 1 = đã xác nhận
-                        lichDatSanRepo.save(lich);
+                        // Cập nhật tất cả lịch
+                        for (LichDatSan lich : tt.getLichDatSans()) {
+                            lich.setTrangThai(1); // 1 = đã xác nhận
+                            lichDatSanRepo.save(lich);
+                        }
 
-                        System.out.println("✅ Thanh toán thành công cho lichDatSan=" + lich.getId());
+                        System.out.println("✅ Thanh toán thành công cho ThanhToan ID=" + tt.getIdThanhToan());
                         break;
                     }
                 }
             }
         }
 
-        return tt;
+        return mapToDTO(tt);
     }
 
-    //Cron job: mỗi 30 giây
+    private ThanhToanDTO mapToDTO(ThanhToan tt) {
+        return new ThanhToanDTO(
+                tt.getIdThanhToan(),
+                tt.getSoTien(),
+                tt.getReference(),
+                tt.getTrangThai()
+        );
+    }
+
+
+    /**
+     * ✅ Cron job tự động check mỗi 30s
+     */
     @Scheduled(fixedDelay = 30000)
     public void autoCheckPayments() {
         List<ThanhToan> pending = thanhToanRepo.findByTrangThai(0);
@@ -124,7 +149,7 @@ public class ThanhToanService {
             try {
                 kiemTraThanhToan(tt.getIdThanhToan());
             } catch (Exception e) {
-                System.out.println("Lỗi khi kiểm tra id=" + tt.getIdThanhToan() + ": " + e.getMessage());
+                System.out.println("❌ Lỗi khi kiểm tra id=" + tt.getIdThanhToan() + ": " + e.getMessage());
             }
         }
     }

@@ -30,7 +30,7 @@ public class LichDatSan {
     private LocalDateTime ngayTao = LocalDateTime.now();
 
     @Column(name = "gia_ap_dung", nullable = false)
-    private BigDecimal giaApDung;
+    private Double giaApDung;
 
     @Column(name = "ghi_chu", columnDefinition = "NVARCHAR(255)")
 
@@ -59,5 +59,7 @@ public class LichDatSan {
     @JoinColumn(name = "id_gia_theo_khung_gio")
     private GiaTheoKhungGio giaTheoKhungGio;
 
-
+    @ManyToOne
+    @JoinColumn(name = "id_thanh_toan")
+    private ThanhToan thanhToan;
 }

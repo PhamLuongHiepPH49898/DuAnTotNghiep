@@ -10,7 +10,7 @@ public class ChiTietDatLichDTO {
     private LocalDate ngayDat;
     private String tenSan;
     private String thoiGian;
-    private BigDecimal gia;
+    private Double gia;
     private Integer idGiaTheoKhungGio;
 
     public Integer getIdGiaTheoKhungGio() {
@@ -45,11 +45,11 @@ public class ChiTietDatLichDTO {
         this.thoiGian = thoiGian;
     }
 
-    public BigDecimal getGia() {
+    public Double getGia() {
         return gia;
     }
 
-    public void setGia(BigDecimal gia) {
+    public void setGia(Double gia) {
         this.gia = gia;
     }
 }

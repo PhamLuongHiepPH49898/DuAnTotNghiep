@@ -92,11 +92,11 @@ public class QuanLyGiaTheoKhungGioController {
 
     @PostMapping("/quan-ly-gia-theo-khung-gio/sua-gia")
     public String suaGia(@RequestParam("ids") List<Integer> ids,
-                         @RequestParam("giaThues") List<BigDecimal> giaThues, RedirectAttributes redirectAttributes) {
+                         @RequestParam("giaThues") List<Double> giaThues, RedirectAttributes redirectAttributes) {
         try {
             for (int i = 0; i < ids.size(); i++) {
                 int id = ids.get(i);
-                BigDecimal giaMoi = giaThues.get(i);
+                Double giaMoi = giaThues.get(i);
                 giaTheoKhungGioService.sua(id, giaMoi);
                 redirectAttributes.addFlashAttribute("success", "Sửa giá thành công!");
             }
@@ -110,7 +110,7 @@ public class QuanLyGiaTheoKhungGioController {
 
 
     @PostMapping("/quan-ly-gia-theo-khung-gio/them-gia")
-    public String themGia(@RequestParam("giaThue") BigDecimal giaThue,
+    public String themGia(@RequestParam("giaThue") Double giaThue,
                           @RequestParam("idSanBong") int idSanBong,
                           @RequestParam("idKhungGio") int idKhungGio, Model model,
                           RedirectAttributes redirectAttributes) {

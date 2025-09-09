@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -143,7 +144,7 @@ public class QuanLyDatSanController {
             if (hoanTien == 1) {
                 HoanTien ht = new HoanTien();
                 ht.setLichDatSan(lich);
-                ht.setSoTien(lich.getGiaApDung());
+                ht.setSoTien(BigDecimal.valueOf(lich.getGiaApDung()));
                 ht.setLyDo(ghiChu);
                 ht.setNgayTao(LocalDateTime.now());
                 ht.setTrangThai(0); // 0 = chờ xử lý

@@ -106,7 +106,6 @@
         statusEl.className = "badge bg-success";
         clearInterval(timer);
 
-        // ✅ Sau 1.5s redirect sang Success.html
         setTimeout(() => {
           window.location.href = "/thanh-toan/thanh-cong";
         }, 1000);
@@ -115,6 +114,10 @@
         statusEl.innerText = "❌ Đã hủy (quá hạn)";
         statusEl.className = "badge bg-secondary";
         clearInterval(timer);
+
+        setTimeout(() => {
+          window.location.href = "/ve-trang-chu";
+        }, 1000);
       }
     } catch (e) {
       console.error("❌ Lỗi khi gọi API:", e);

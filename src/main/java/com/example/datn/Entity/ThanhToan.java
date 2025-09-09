@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,7 +24,7 @@ public class ThanhToan {
     private int idThanhToan;
 
     @Column(name = "so_tien", nullable = false)
-    private BigDecimal soTien;
+    private double soTien;
 
     @Column(name = "ngay_thanh_toan", nullable = false)
     private LocalDateTime ngayThanhToan = LocalDateTime.now();
@@ -41,7 +43,6 @@ public class ThanhToan {
     @JoinColumn(name = "id_tai_khoan", nullable = false)
     private TaiKhoan taiKhoan;
 
-    @ManyToOne
-    @JoinColumn(name = "id_lich_dat_san", nullable = false)
-    private LichDatSan lichDatSan;
+    @OneToMany(mappedBy = "thanhToan", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<LichDatSan> lichDatSans = new ArrayList<>();
 }
