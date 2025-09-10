@@ -4,47 +4,57 @@
     <meta charset="UTF-8">
     <title>Chi tiết sân bóng - Samba</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
     <link rel="icon" type="image/png" th:href="@{/image/logo.png}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Poppins', sans-serif; }
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
         body {
             background: linear-gradient(135deg, #eaf4fc, #ffffff);
             color: #333;
             margin: 0;
         }
+
         header {
             background: linear-gradient(90deg, #4ca1af, #c4e0e5);
             padding: 20px;
             color: white;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .menu a {
             color: white;
             margin: 0 15px;
             font-weight: 600;
             text-decoration: none;
         }
+
         .menu a:hover {
             text-decoration: underline;
             color: #e0f7ff;
         }
+
         .container {
             max-width: 960px;
             margin: 40px auto;
             background: white;
             padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
+
         h2 {
             text-align: center;
             color: #1e90ff;
             font-weight: 700;
             margin-bottom: 30px;
         }
+
         .detail-group {
             display: grid;
             grid-template-columns: 1fr 2fr;
@@ -52,21 +62,25 @@
             margin-bottom: 20px;
             align-items: center;
         }
+
         .detail-group img {
             width: 100%;
             border-radius: 16px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
+
         .detail-group div span {
             font-weight: 500;
             display: block;
             font-size: 1.1rem;
             margin-bottom: 8px;
         }
+
         .back-link {
             text-align: center;
             margin-top: 30px;
         }
+
         .back-link a {
             display: inline-block;
             margin: 10px;
@@ -78,10 +92,12 @@
             font-weight: 600;
             transition: all 0.3s;
         }
+
         .back-link a:hover {
             background: #155eab;
             transform: scale(1.05);
         }
+
         footer {
             margin-top: 60px;
             background: linear-gradient(90deg, #4ca1af, #c4e0e5);
@@ -89,24 +105,29 @@
             padding: 40px 20px;
             text-align: center;
         }
+
         footer .features {
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
             margin-bottom: 30px;
         }
+
         footer .features div {
             max-width: 200px;
         }
+
         footer .features i {
             font-size: 2rem;
             margin-bottom: 8px;
         }
+
         footer .social-icons a {
             color: white;
             margin: 0 10px;
             font-size: 1.4rem;
         }
+
         footer .btn {
             margin-top: 20px;
             border: 2px solid white;
@@ -114,19 +135,175 @@
             border-radius: 30px;
             color: white;
         }
+
         footer .btn:hover {
             background: white;
             color: #1e90ff;
         }
+
         @media (max-width: 768px) {
             .detail-group {
                 grid-template-columns: 1fr;
                 text-align: center;
             }
+
             .detail-group div span {
                 font-size: 1rem;
             }
         }
+
+        .review-box {
+            max-height: 250px;
+            overflow-y: auto;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .star {
+            color: #ffc107;
+            font-size: 1.2rem;
+        }
+
+        body {
+            background: linear-gradient(135deg, #eaf4fc, #ffffff);
+            color: #333;
+            margin: 0;
+        }
+
+        header {
+            background: linear-gradient(90deg, #4ca1af, #c4e0e5);
+            padding: 20px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu a {
+            color: white;
+            margin: 0 15px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .menu a:hover {
+            text-decoration: underline;
+            color: #e0f7ff;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #1e90ff;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .detail-group {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .detail-group img {
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-group div span {
+            font-weight: 500;
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .back-link a {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 24px;
+            background: #1e90ff;
+            color: white;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .back-link a:hover {
+            background: #155eab;
+            transform: scale(1.05);
+        }
+
+        footer {
+            margin-top: 60px;
+            background: linear-gradient(90deg, #4ca1af, #c4e0e5);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer .features {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        footer .features div {
+            max-width: 200px;
+        }
+
+        footer .features i {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        footer .social-icons a {
+            color: white;
+            margin: 0 10px;
+            font-size: 1.4rem;
+        }
+
+        footer .btn {
+            margin-top: 20px;
+            border: 2px solid white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: white;
+        }
+
+        footer .btn:hover {
+            background: white;
+            color: #1e90ff;
+        }
+
+        @media (max-width: 768px) {
+            .detail-group {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .detail-group div span {
+                font-size: 1rem;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -139,21 +316,104 @@
 </header>
 <div class="container">
     <h2>Chi tiết sân bóng</h2>
+
+    <!-- Thông báo thành công hoặc lỗi -->
+    <div th:if="${success}" class="alert alert-success text-center" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger text-center" th:text="${error}"></div>
+
+    <!-- Thông tin sân bóng -->
     <div class="detail-group">
         <img th:if="${#strings.startsWith(sanBongChiTiet.hinh_anh, 'anh')}"
              th:src="@{'/image/' + ${sanBongChiTiet.hinh_anh}}" alt="Ảnh sân">
         <img th:if="${!#strings.startsWith(sanBongChiTiet.hinh_anh, 'anh')}"
-             th:src="@{'/uploads/' + ${sanBongChiTiet.hinh_anh}}" alt="Ảnh người dùng upload">
+             th:src="@{'/uploads/' + ${sanBongChiTiet.hinh_anh}}" alt="Ảnh upload">
         <div>
             <span><strong>Tên sân:</strong> <span th:text="${sanBongChiTiet.ten_san_bong}"></span></span>
             <span><strong>Loại sân:</strong> <span th:text="${sanBongChiTiet.loaiSan.ten_loai_san}"></span></span>
             <span><strong>Địa chỉ:</strong> <span th:text="${sanBongChiTiet.dia_chi}"></span></span>
-            <span><strong>Môn thể thao:</strong> <span th:text="${sanBongChiTiet.loaiMonTheThao.ten_mon_the_thao}"></span></span>
+            <span><strong>Môn thể thao:</strong> <span
+                    th:text="${sanBongChiTiet.loaiMonTheThao.ten_mon_the_thao}"></span></span>
             <span><strong>Ghi chú:</strong> <span th:text="${sanBongChiTiet.mo_ta}"></span></span>
-
+            <span><strong>Trung bình sao:</strong> <span th:text="${trungBinhSao}"></span> ⭐</span>
         </div>
-
     </div>
+
+    <!-- Nút mở modal đánh giá: chỉ hiện khi đăng nhập -->
+    <div class="text-center my-4" th:if="${#authentication?.name != null}">
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalDanhGia">
+            <i class="bi bi-star"></i> Đánh giá sân
+        </button>
+    </div>
+
+    <!-- Modal đánh giá -->
+    <div class="modal fade" id="modalDanhGia" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" th:action="@{/danh-gia/them}" th:object="${danhGia}">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Đánh giá sân</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id_san_bong" th:value="${sanBongChiTiet.id_san_bong}"/>
+                        <label>Số sao:</label>
+                        <select th:field="*{sao}" class="form-control" required>
+                            <option value="" disabled selected>Chọn số sao</option>
+                            <option value="1">1 sao</option>
+                            <option value="2">2 sao</option>
+                            <option value="3">3 sao</option>
+                            <option value="4">4 sao</option>
+                            <option value="5">5 sao</option>
+                        </select>
+
+                        <label class="mt-2">Nội dung:</label>
+                        <textarea th:field="*{noiDung}" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <hr>
+    <h5 id="danh-gia" class="mt-4">Đánh giá từ người dùng</h5>
+    <div th:if="${#lists.isEmpty(danhSachDanhGia)}">
+        <i>Chưa có đánh giá nào cho sân này.</i>
+    </div>
+
+    <!-- Lọc theo sao -->
+    <div class="mb-3">
+        <label for="filterStar" class="form-label">Lọc theo số sao:</label>
+        <select id="filterStar" class="form-select">
+            <option value="all" selected>Tất cả</option>
+            <option value="5">5 sao</option>
+            <option value="4">4 sao</option>
+            <option value="3">3 sao</option>
+            <option value="2">2 sao</option>
+            <option value="1">1 sao</option>
+        </select>
+    </div>
+
+    <!-- Danh sách đánh giá -->
+    <div id="reviewContainer" class="review-box">
+        <div th:each="dg : ${danhSachDanhGia}" class="review-item border rounded p-2 my-1 bg-white"
+             th:attr="data-sao=${dg.sao}">
+            <p>
+                <strong th:text="${dg.taiKhoan.ho_ten}">Tên người dùng</strong> -
+                <span>
+                    <span th:each="i : ${#numbers.sequence(1, dg.sao)}" class="star">★</span>
+                </span>
+                <small class="text-muted float-end"
+                       th:text="${#temporals.format(dg.ngayDanhGia, 'dd/MM/yyyy')}">Ngày</small>
+            </p>
+            <p th:text="${dg.noiDung}">Nội dung đánh giá</p>
+        </div>
+    </div>
+
+
     <div class="back-link">
         <a href="/ve-trang-chu">🏠 Về Trang Chủ</a>
         <a th:href="@{'/datsan?id=' + ${sanBongChiTiet.id_san_bong}}">⚽ Đặt sân ngay</a>
@@ -175,11 +435,23 @@
     </div>
     <a href="#" class="btn">Lên đầu trang</a>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.querySelector('.btn').addEventListener('click', function(e) {
+    // Lọc đánh giá theo số sao
+    const filter = document.getElementById('filterStar');
+    const reviews = document.querySelectorAll('#reviewContainer .review-item');
+
+    filter.addEventListener('change', () => {
+        const value = filter.value;
+        reviews.forEach(r => {
+            r.style.display = (value === 'all' || r.getAttribute('data-sao') === value) ? 'block' : 'none';
+        });
+    });
+    document.querySelector('.btn').addEventListener('click', function (e) {
         e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({top: 0, behavior: 'smooth'});
     });
 </script>
 </body>
 </html>
+

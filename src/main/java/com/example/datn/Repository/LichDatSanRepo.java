@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
@@ -20,8 +19,7 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
            "JOIN FETCH l.giaTheoKhungGio g " +
            "JOIN FETCH g.khungGio kg " +
            "WHERE l.ngayDat = :ngayDat " +
-           "AND l.trangThai <> 3" +
-           "ORDER BY l.ngayTao DESC")
+           "AND l.trangThai <> 3")
     Page<LichDatSan> findAllLichDatSan(@Param("ngayDat") LocalDate ngayDat, Pageable pageable);
 
     @Query("SELECT l FROM LichDatSan l " +
@@ -29,8 +27,7 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
            "AND (:ngayDat IS NULL OR l.ngayDat = :ngayDat) " +
            "AND (:sanBong IS NULL OR l.giaTheoKhungGio.sanBong.id_san_bong = :sanBong) " +
            "AND (:trangThai IS NULL OR l.trangThai = :trangThai)" +
-           "AND l.trangThai <> 3" +
-           "ORDER BY l.ngayTao DESC")
+           "AND l.trangThai <> 3")
     Page<LichDatSan> timKiem(@Param("keyword") String keyword,
                              @Param("ngayDat") LocalDate ngayDat,
                              @Param("sanBong") Integer sanBong,
@@ -40,10 +37,13 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
     // dùng cho hiển thị lịch đặt sân
     @Query("SELECT l FROM LichDatSan l " +
            "JOIN FETCH l.giaTheoKhungGio g " +
-           "JOIN FETCH g.khungGio " +
+           "JOIN FETCH g.khungGio k " +
            "JOIN FETCH g.sanBong s " +
            "WHERE l.ngayDat = :ngayDat AND " +
-           "l.trangThai <> 2")
+           "l.trangThai <> 2 AND " +
+           "g.trangThai <> 3 AND " +
+           "s.trang_thai <>3" +
+           "ORDER BY k.gioBatDau ASC")
     List<LichDatSan> findByNgay(@Param("ngayDat") LocalDate ngayDat);
 
     @Query("SELECT l FROM LichDatSan l WHERE l.taiKhoan.id = :idTaiKhoan")
@@ -72,6 +72,14 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
     LichDatSan findListLichTrongByNgaySanKhungGio(@Param("ngayDat") LocalDate ngayDat,
                                      @Param("idGiaTheoKhungGio") Integer idGiaTheoKhungGio);
 
+
+    @Query("SELECT l FROM LichDatSan l WHERE l.trangThai = 3 AND l.ngayDat = :ngay")
+    List<LichDatSan> findLichConTrongTheoNgay(@Param("ngay") LocalDate ngay);
+
+    List<LichDatSan> findByNgayDat(LocalDate ngayDat);
+
+    // Dùng cho thông báo
+    List<LichDatSan> findByNgayDatAndTaiKhoanIsNotNullAndTrangThai(LocalDate ngayDat, int trangThai);
 
 
 }

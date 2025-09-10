@@ -173,7 +173,6 @@
 <div class="sidebar-logo d-none d-md-flex">
     <img src="/image/logo.png" alt="Logo">
 </div>
-
 <!-- Sidebar (Desktop) -->
 <nav class="sidebar d-none d-md-block">
     <ul class="nav flex-column mt-3">
@@ -191,12 +190,15 @@
                 <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Quản lý thanh toán</a>
-        </li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản lý
+            hoàn tiền</a>
+
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i>
+            Quản lý thanh
+            toán</a></li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
         <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
             thống kê</a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bell"></i> Quản lý thông báo</a></li>
         <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay lại
             Trang chủ</a></li>
     </ul>
@@ -261,22 +263,24 @@
                     <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
                 </ul>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Quản lý thanh
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản
+                lý hoàn tiền</a>
+
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i>
+                Quản lý thanh
                 toán</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
             <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
                 thống kê</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bell"></i> Quản lý thông báo</a></li>
             <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay
                 lại Trang chủ</a></li>
         </ul>
     </div>
 </div>
-
 <main class="main-wrapper">
     <div class="container-fluid">
         <div class="align-items-center justify-content-between flex-wrap gap-3 mb-4">
-            <h2 class="fw-bold mb-3">Quản lý đặt sân</h2>
+            <h2 class="mb-4 fw-bold text-primary">Quản lý đặt sân</h2>
 
             <form method="get" th:action="@{/quan-ly-lich-dat}" class="row g-2">
                 <div class="col-md-2">
@@ -316,48 +320,75 @@
             <div class="container mt-4">
                 <div th:each="entry : ${lichDatMap.entrySet()}" th:if="${!#lists.isEmpty(entry.value)}">
                     <h5 th:text="'Sân ' + ${entry.key.ten_san_bong}"></h5>
-                    <div class="row">
+                    <div class="row flex-nowrap overflow-auto">
                         <div class="col-md-2 mb-3" th:each="lich : ${entry.value}">
                             <div class="card h-100 border">
                                 <div class="card-body">
-                                    <!-- Ca (khung giờ) -->
-                                    <h6 class="card-title text-center">Ca <span
-                                            th:text="${lich.giaTheoKhungGio.khungGio.id}"></span></h6>
+                                    <!-- môn thể thao -->
+                                    <h6 class="card-title text-center "><span
+                                            th:text="${lich.giaTheoKhungGio.sanBong.loaiMonTheThao.ten_mon_the_thao}"></span>
+                                    </h6>
 
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <span th:text="${lich.giaTheoKhungGio.sanBong.loaiSan.ten_loai_san}"></span>
+                                        <span th:text="${lich.giaTheoKhungGio.sanBong.loaiMatSan.ten_loai_mat_san}"></span>
+                                    </div>
                                     <!-- Ngày -->
-                                    <p><i class="bi bi-calendar3"></i>
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <div style="width: 25px; height: 25px; background-color: #0d6efd;"
+                                             class="rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-calendar3 text-white"></i>
+                                        </div>
                                         <span th:text="${#temporals.format(lich.ngayDat, 'yyyy-MM-dd')}"></span>
-                                    </p>
+                                    </div>
+
 
                                     <!-- Giờ -->
-                                    <p><i class="bi bi-clock"></i>
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <div style="width: 25px; height: 25px; background-color: #0d6efd;"
+                                             class="rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-clock text-white"></i>
+                                        </div>
                                         <span th:text="${#temporals.format(lich.giaTheoKhungGio.khungGio.gioBatDau, 'HH:mm')}"></span>
                                         -
                                         <span th:text="${#temporals.format(lich.giaTheoKhungGio.khungGio.gioKetThuc, 'HH:mm')}"></span>
-                                    </p>
+                                    </div>
 
                                     <!-- Giá -->
-                                    <p><i class="bi bi-currency-dollar"></i>
+                                    <div class="d-flex align-items-center gap-2 mb-3">
+                                        <div style="width: 25px; height: 25px; background-color: #0d6efd;"
+                                             class="rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-currency-dollar text-white"></i>
+                                        </div>
                                         <span th:if="${lich.giaApDung != null}"
                                               th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></span>
                                         <span th:if="${lich.giaApDung == null and lich.giaTheoKhungGio != null}"
                                               th:text="${#numbers.formatDecimal(lich.giaTheoKhungGio.giaThue, 0, 'COMMA', 3, 'POINT')} + ' đ'"></span>
-                                    </p>
+                                    </div>
                                     <td th:if="${lich.trangThai == 1}">
-                                        <span class="btn btn-success w-100">Đã duyệt</span>
+                                        <span class="btn btn-success w-100">Đã thanh toán</span>
                                     </td>
 
-                                    <td th:if="${lich.trangThai == 3}">
-                                        <span th:if="${lich.giaTheoKhungGio.sanBong.trang_thai == 0}"
-                                              class="btn btn-primary w-100">Trống</span>
-                                        <span th:if="${lich.giaTheoKhungGio.sanBong.trang_thai == 2}"
-                                              class="badge bg-warning text-dark w-100  ">Bảo trì</span>
-                                        <span th:if="${lich.giaTheoKhungGio.sanBong.trang_thai == 1}"
-                                              class="badge bg-danger w-100">Khóa</span>
-                                    </td>
+                                    <th:block
+                                            th:with="batDau=${T(java.time.LocalDateTime).of(lich.ngayDat, lich.giaTheoKhungGio.khungGio.gioBatDau)}">
 
-                                    <td th:if="${lich.trangThai == 0}">
-                                        <span class="btn btn-warning w-100">Chờ duyệt</span>
+                                        <td th:if="${lich.trangThai == 3 and batDau.isBefore(thoiGianHienTai)}">
+                                            <span class="btn btn-danger w-100">Quá giờ đặt</span>
+                                        </td>
+
+                                        <td th:if="${lich.trangThai == 3 and !batDau.isBefore(thoiGianHienTai)}">
+                                            <span th:if="${lich.giaTheoKhungGio.sanBong.trang_thai == 0}"
+                                                  class="btn btn-primary w-100">Trống</span>
+                                            <span th:if="${lich.giaTheoKhungGio.sanBong.trang_thai == 2}"
+                                                  class="btn btn-warning text-dark w-100  ">Bảo trì</span>
+                                            <span th:if="${lich.giaTheoKhungGio.sanBong.trang_thai == 1}"
+                                                  class="btn btn-danger w-100">Khóa</span>
+                                        </td>
+
+                                    </th:block>
+
+                                    <td th:if="${lich.trangThai == 0} or lich.giaTheoKhungGio == null">
+                                        <span class="btn btn-warning w-100">Chờ thanh toán</span>
                                     </td>
 
                                 </div>
@@ -367,7 +398,7 @@
                 </div>
             </div>
             <!-- Trường hợp không có dữ liệu -->
-            <div th:if=" ${khongCoKetQua}" class="alert alert-info">
+            <div th:if="${khongCoKetQua}" class="alert alert-info">
                 Không tìm thấy kết quả phù hợp với điều kiện tìm kiếm.
             </div>
         </div>

@@ -36,7 +36,6 @@ public interface SanBongRepo extends JpaRepository<SanBong, Integer>, JpaSpecifi
                                    @Param("loaiSan") Integer loaiSan,
                                    @Param("monTheThao") Integer monTheThao, Pageable pageable);
 
-
     @Query("SELECT s FROM SanBong s WHERE s.trang_thai = 0") // chỉ lấy sân đang hoạt động
     List<SanBong> findAllHoatDong();
 
@@ -46,5 +45,9 @@ public interface SanBongRepo extends JpaRepository<SanBong, Integer>, JpaSpecifi
            "(:matSanId IS NULL OR s.loaiMatSan.id = :matSanId) AND " +
            "(:monTheThaoId IS NULL OR s.loaiMonTheThao.id = :monTheThaoId)")
     List<SanBong> findByDieuKien(String tenSan, Integer loaiSanId, Integer matSanId, Integer monTheThaoId);
+
+
+    @Query("SELECT s FROM SanBong s WHERE s.trang_thai = 0")
+    List<SanBong> findSanBongById();
 
 }

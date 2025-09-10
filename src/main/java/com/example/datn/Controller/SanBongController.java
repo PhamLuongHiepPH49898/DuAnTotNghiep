@@ -1,5 +1,9 @@
+
 package com.example.datn.Controller;
 
+
+
+import com.example.datn.Entity.DanhGia;
 
 import com.example.datn.Entity.SanBong;
 import com.example.datn.Entity.TaiKhoan;
@@ -8,8 +12,16 @@ import com.example.datn.Repository.LoaiMonTheThaoRepo;
 import com.example.datn.Repository.LoaiSanRepo;
 import com.example.datn.Repository.TaiKhoanRepo;
 import com.example.datn.Security.CustomUserDetails;
+
+import com.example.datn.Service.DanhGiaService;
 import com.example.datn.Service.SanBongService;
 import com.example.datn.Service.TaiKhoanService;
+
+import com.example.datn.Service.SanBongService;
+import com.example.datn.Service.TaiKhoanService;
+import com.example.datn.Service.ThongBaoService;
+import jakarta.servlet.http.HttpServletRequest;
+
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -31,7 +43,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -43,15 +57,21 @@ public class SanBongController {
     private final LoaiMonTheThaoRepo loaiMonTheThaoRepo;
     private final TaiKhoanService taiKhoanService;
     private final TaiKhoanRepo taiKhoanRepo;
+    private final DanhGiaService danhGiaService;
+    private final ThongBaoService thongBaoService;
 
 
-    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo, TaiKhoanService taiKhoanService, TaiKhoanRepo taiKhoanRepo1) {
+    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo, TaiKhoanService taiKhoanService, TaiKhoanRepo taiKhoanRepo1, DanhGiaService danhGiaService, ThongBaoService thongBaoService) {
+
         this.sanBongService = sanBongService;
         this.loaiMatSanRepo = loaiMatSanRepo;
         this.loaiSanRepo = loaiSanRepo;
         this.loaiMonTheThaoRepo = loaiMonTheThaoRepo;
         this.taiKhoanService = taiKhoanService;
         this.taiKhoanRepo = taiKhoanRepo1;
+        this.danhGiaService = danhGiaService;
+        this.thongBaoService = thongBaoService;
+
     }
 
     @GetMapping("/")
@@ -187,11 +207,20 @@ public class SanBongController {
     public String trangChu_nguoiDung(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("username", auth.getName());
+
         List<SanBong> danhSachSan = sanBongService.findAll();
         model.addAttribute("danhSachSan", danhSachSan);
 
-        String hoTen = taiKhoanService.getHoTenDangNhap();
-        model.addAttribute("hoTen", hoTen);
+        // Gửi map danh sách đánh giá từng sân
+        Map<Integer, List<DanhGia>> mapDanhGia = new HashMap<>();
+        for (SanBong san : danhSachSan) {
+            List<DanhGia> danhGias = danhGiaService.layDanhGiaTheoSan(san.getId_san_bong());
+            mapDanhGia.put(san.getId_san_bong(), danhGias);
+        }
+        model.addAttribute("mapDanhGia", mapDanhGia);
+        model.addAttribute("danhGiaMoi", new DanhGia()); // để gửi đánh giá mới
+        model.addAttribute("hoTen", taiKhoanService.getHoTenDangNhap());
+
         populateModel(model);
         return "/Main/TrangChu_NguoiDung";
     }
@@ -225,7 +254,7 @@ public class SanBongController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated()
-            && !authentication.getPrincipal().equals("anonymousUser")) {
+                && !authentication.getPrincipal().equals("anonymousUser")) {
 
             if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_QUAN_TRI"))) {
                 return "redirect:/admin/trang-chu";
@@ -267,14 +296,28 @@ public class SanBongController {
         return "/Main/TimKiem";
     }
 
+    //    @GetMapping("/chi-tiet/{id}")
+//    public String chiTietSan(@PathVariable("id") int id, Model model) {
+//        SanBong san = sanBongService.findById(id);
+//        if (san == null) {
+//            return "redirect:/trang-chu"; // Chuyển hướng về trang chủ nếu không tìm thấy
+//        }
+//        model.addAttribute("sanBongChiTiet", san);
+//        return "Main/ChiTietSan"; // 👉 trang riêng biệt
+//    }
+
     @GetMapping("/chi-tiet/{id}")
     public String chiTietSan(@PathVariable("id") int id, Model model) {
         SanBong san = sanBongService.findById(id);
         if (san == null) {
-            return "redirect:/trang-chu"; // Chuyển hướng về trang chủ nếu không tìm thấy
+            return "redirect:/trang-chu"; // Không tìm thấy sân thì về trang chủ
         }
+
         model.addAttribute("sanBongChiTiet", san);
-        return "Main/ChiTietSan"; // 👉 trang riêng biệt
+        model.addAttribute("danhSachDanhGia", danhGiaService.layDanhGiaTheoSan(id));
+        model.addAttribute("danhGia", new DanhGia()); // form đánh giá cần dòng này
+
+        return "Main/ChiTietSan";
     }
 
     @GetMapping("/quan-ly-san")
@@ -477,3 +520,7 @@ public class SanBongController {
     }
 
 }
+
+
+
+

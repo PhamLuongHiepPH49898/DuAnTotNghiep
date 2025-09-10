@@ -126,7 +126,6 @@
             background-color: #75a6b6;
         }
 
-
     </style>
 </head>
 <body>
@@ -212,10 +211,13 @@
         const isPast = checkDate < today;
         toggleBookingCells(!isPast, isPast);
     }
+
     //fix lại để check ko đặt đc h đã qua
+
     function toggleBookingCells(enable, isPast) {
         const cells = document.querySelectorAll("#bookingTable td[data-price]");
         const dateKey = getCurrentDateKey();
+
 
         const now = new Date();
         const isToday = currentDate.toDateString() === now.toDateString();
@@ -263,7 +265,6 @@
 
         updateTotal();
     }
-
 
     function selectSlot(cell, dateKey) {
         if (cell.classList.contains("disabled")) return;
@@ -320,3 +321,4 @@
 
 </body>
 </html>
+

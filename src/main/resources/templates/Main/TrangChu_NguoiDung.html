@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
   <link rel="icon" type="image/png" th:href="@{/image/logo.png}">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!--them cho phan thong bao-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     * {
       font-family: 'Poppins', sans-serif;
@@ -184,6 +188,20 @@
       <a class="nav-link" th:href="@{/ve-trang-chu}">Trang chủ</a>
       <a class="nav-link" href="/tim-kiem">Tìm kiếm</a>
       <a class="nav-link" href="/login" th:if="${username == null}">Đăng nhập</a>
+
+      <form th:action="@{/thong-bao/xem-thong-bao}" method="post" style="position: relative;">
+        <button type="submit" style="background: none; border: none; cursor: pointer; position: relative;">
+          <!-- Icon chuông -->
+          <i class="fas fa-bell" style="font-size: 24px; color: #333;"></i>
+
+          <!-- Số thông báo mới (hiển thị như badge) -->
+          <span th:if="${soLuongThongBaoMoi > 0}"
+                th:text="${soLuongThongBaoMoi}"
+                style="background-color: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; position: absolute; top: -8px; right: -8px;"></span>
+        </button>
+      </form>
+
+
       <div class="user-dropdown" th:if="${username != null}">
         <span class="user-toggle text-white d-flex align-items-center gap-2" onclick="toggleMenu()">
           <i class="bi bi-person-circle fs-5"></i>
@@ -199,13 +217,16 @@
 
   </div>
 </header>
+
 <div class="banner">
   <img src="/image/anh7.jpg" alt="Banner">
 </div>
+
 <div class="intro">
   <h2>Đặt sân nhanh chóng - Tiện lợi - Chính xác</h2>
   <p>Trải nghiệm hệ thống đặt sân bóng hiện đại, thuận tiện và đáng tin cậy.</p>
 </div>
+
 <div class="san-container">
   <h2>Danh sách sân bóng nổi bật</h2>
   <div class="san-grid">
@@ -213,33 +234,39 @@
       <img th:if="${#strings.startsWith(san.hinh_anh, 'anh')}" th:src="@{'/image/' + ${san.hinh_anh}}" alt="Sân bóng">
       <img th:if="${!#strings.startsWith(san.hinh_anh, 'anh')}" th:src="@{'/uploads/' + ${san.hinh_anh}}" alt="Sân bóng">
       <div class="info">
+        <!-- Sửa link chi tiết sân dùng id_san_bong -->
         <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" th:text="${san.ten_san_bong}"></a>
         <p><strong>Thể thao:</strong> <span th:text="${san.loaiMonTheThao.ten_mon_the_thao}"></span></p>
         <p><strong>Địa chỉ:</strong> <span th:text="${san.dia_chi}"></span></p>
-      </div>
-      <a th:href="@{'/datsan?id=' + ${san.id_san_bong}}">⚽ Đặt sân ngay</a>
 
+        <!-- Hiển thị đánh giá nếu có -->
+        <div th:if="${san.danhGias != null}">
+          <div th:if="${!san.danhGias.isEmpty()}">
+            <div th:each="danhGia : ${san.danhGias}">
+              <p>
+                <i class="bi bi-star-fill text-warning"></i>
+                <span th:text="${danhGia.sao} + ' sao - ' + ${danhGia.noiDung}"></span>
+              </p>
+            </div>
+          </div>
+          <div th:if="${san.danhGias.isEmpty()}">
+            <p><i>Chưa có đánh giá.</i></p>
+          </div>
+        </div>
+      </div>
+      <!-- Sửa link đặt sân dùng id_san_bong -->
+      <a th:href="@{'/datsan?id=' + ${san.id_san_bong}}" class="datsan-btn">⚽ Đặt sân ngay</a>
     </div>
   </div>
 </div>
+
 <footer>
   <div class="features">
-    <div>
-      <i class="bi bi-search"></i>
-      <h5>Tìm kiếm sân</h5>
-    </div>
-    <div>
-      <i class="bi bi-calendar-check"></i>
-      <h5>Đặt sân nhanh</h5>
-    </div>
-    <div>
-      <i class="bi bi-clock-history"></i>
-      <h5>Lịch sử đặt</h5>
-    </div>
-    <div>
-      <i class="bi bi-star-half"></i>
-      <h5>Đánh giá sân</h5>
-    </div>
+    <div><i class="bi bi-search"></i><h5>Tìm kiếm sân</h5></div>
+    <div><i class="bi bi-calendar-check"></i><h5>Đặt sân nhanh</h5></div>
+    <div><i class="bi bi-clock-history"></i><h5>Lịch sử đặt</h5></div>
+    <div><i class="bi bi-star-half"></i><h5>Đánh giá sân</h5></div>
+
   </div>
   <p>Email: support@sambabooking.vn | Hotline: 1800-1234</p>
   <p>Địa chỉ: Đâu đó trên thế giới</p>
@@ -252,6 +279,7 @@
     <a href="#" class="btn btn-outline-light">Lên đầu trang</a>
   </div>
 </footer>
+
 <script>
   function toggleMenu() {
     const dropdown = document.querySelector('.user-dropdown');
@@ -270,3 +298,4 @@
 </script>
 </body>
 </html>
+

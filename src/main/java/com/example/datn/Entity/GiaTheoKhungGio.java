@@ -21,7 +21,7 @@ public class GiaTheoKhungGio {
     private int idGiaTheoKhungGio;
 
     @Column(name = "gia_thue", nullable = false)
-    private BigDecimal giaThue;
+    private Double giaThue;
 
     @Column(name = "trang_thai", nullable = false)
     private Integer trangThai;

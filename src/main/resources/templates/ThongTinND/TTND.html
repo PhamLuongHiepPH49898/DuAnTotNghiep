@@ -151,6 +151,51 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .btn {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+            border: none;
+        }
+
+        .btn-sm {
+            font-size: 0.75rem;
+            padding: 0.35rem 0.7rem;
+        }
+
+        .btn-warning {
+            background-color: #fbbf24;
+            color: #1f2937;
+        }
+
+        .btn-warning:hover {
+            background-color: #f59e0b;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+        .btn + .btn {
+            margin-left: 0.5rem; /* Khoảng cách giữa hai nút */
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
     </style>
 </head>
 <body>
@@ -184,14 +229,14 @@
         <div class="card">
             <h2>Lịch sử đặt sân</h2>
             <div class="inner-tabs">
-                <button class="tab-button active" onclick="showInnerTab('tab1', this)">⏳ Chờ xác nhận</button>
-                <button class="tab-button" onclick="showInnerTab('tab2', this)">✅ Đã xác nhận</button>
+                <button class="tab-button active" onclick="showInnerTab('tab1', this)">⏳ Chờ thanh toán</button>
+                <button class="tab-button" onclick="showInnerTab('tab2', this)">✅ Đã thanh toán</button>
                 <button class="tab-button" onclick="showInnerTab('tab3', this)">❌ Đã hủy</button>
             </div>
             <div id="tab1" class="tab-content inner-tab active">
                 <table>
                     <thead>
-                    <tr><th>STT</th><th>Tên sân</th><th>Ngày đặt</th><th>Khung giờ</th><th>Giá</th><th>Ghi chú</th></tr>
+                    <tr><th>STT</th><th>Tên sân</th><th>Ngày đặt</th><th>Khung giờ</th><th>Giá</th><th>Ghi chú</th><th>Thanh toán</th></tr>
                     </thead>
                     <tbody>
                     <tr th:each="lich, iterStat : ${lichChoXacNhan}">
@@ -203,6 +248,19 @@
                         <td th:text="${lich.giaTheoKhungGio.khungGio.gioBatDau + ' - ' + lich.giaTheoKhungGio.khungGio.gioKetThuc}"></td>
                         <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
                         <td th:text="${lich.ghiChu}"></td>
+
+                        <!--                        <td>-->
+                        <!--                            <a th:href="@{/lich-dat/sua(id=${lich.id})}" class="btn btn-warning btn-sm">✏️ Sửa</a>-->
+                        <!--                            <a th:href="@{/lich-dat/huy(id=${lich.id})}" class="btn btn-danger btn-sm"-->
+                        <!--                               onclick="return confirm('Bạn có chắc chắn muốn hủy lịch này?')">🗑️ Hủy</a>-->
+                        <!--                        </td>-->
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm"
+                                    th:onclick="'openCancelModal(' + ${lich.id} + ')'">🗑️ Hủy</button>
+
+                        </td>
+
+
                     </tr>
                     </tbody>
                 </table>
@@ -262,5 +320,31 @@
         btn.classList.add('active');
     }
 </script>
+<!-- Modal nhập lý do hủy -->
+<!-- Modal nhập lý do hủy -->
+<div id="cancelModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1000;">
+    <div style="background:white; width:400px; margin:100px auto; padding:20px; border-radius:10px; text-align:center;">
+        <h3>Nhập lý do hủy</h3>
+        <form method="post" action="/lich-dat/huy">
+            <input type="hidden" name="idLich" id="cancelId">
+            <textarea name="ghiChu" required placeholder="Nhập lý do..." style="width:100%;height:80px;"></textarea>
+            <br><br>
+            <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+            <button type="button" class="btn btn-secondary" onclick="closeCancelModal()">Đóng</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openCancelModal(id) {
+        document.getElementById("cancelId").value = id;
+        document.getElementById("cancelModal").style.display = "block";
+    }
+    function closeCancelModal() {
+        document.getElementById("cancelModal").style.display = "none";
+    }
+</script>
+
+
 </body>
 </html>

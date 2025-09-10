@@ -6,13 +6,10 @@ import com.example.datn.Entity.SanBong;
 import com.example.datn.Repository.GiaTheoKhungGioRepo;
 import com.example.datn.Repository.KhungGioRepo;
 import com.example.datn.Repository.SanBongRepo;
+import com.example.datn.Scheduler.DatSanSheduler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,10 +21,11 @@ public class GiaTheoKhungGioService {
     private SanBongRepo sanBongRepo;
     @Autowired
     private KhungGioRepo khungGioRepo;
+    @Autowired
+    private DatSanSheduler datSanSheduled;
 
-    public Page<GiaTheoKhungGio> getGiaTheoKhungGio(int page, int size) {
-        Pageable pageable = PageRequest.of(page,size);
-        return giaTheoKhungGioRepo.findAllByTrangThaiOrderByTenSanBong(List.of(0),pageable);
+    public List<GiaTheoKhungGio> getGiaTheoKhungGio() {
+        return giaTheoKhungGioRepo.findAllByTrangThaiOrderByTenSanBong(List.of(0));
     }
 
     public void xoa(int id) {
@@ -38,27 +36,28 @@ public class GiaTheoKhungGioService {
         }
     }
 
-    public void sua(int id, BigDecimal giaThueMoi) {
+    public void sua(int id, Double giaThueMoi) {
 
-        if (giaThueMoi == null || giaThueMoi.compareTo(BigDecimal.ZERO) <= 0) {
+        if (giaThueMoi == null || giaThueMoi <= 0) {
             throw new IllegalArgumentException("Giá thuê phải lớn hơn 0");
         }
 
-        GiaTheoKhungGio giaTheoKhungGio = giaTheoKhungGioRepo.findById(id).orElse(null);
+        GiaTheoKhungGio giaTheoKhungGio = giaTheoKhungGioRepo.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("Không tìm thấy giá với ID: " + id));
         if (giaTheoKhungGio != null) {
             giaTheoKhungGio.setGiaThue(giaThueMoi);
             giaTheoKhungGioRepo.save(giaTheoKhungGio);
         }
     }
 
-    public void them(BigDecimal giaThue, int idSanBong, int idKhungGio) {
+    public void them(Double giaThue, int idSanBong, int idKhungGio) {
 
         Optional<GiaTheoKhungGio> giaTonTai = giaTheoKhungGioRepo.findBySanBongAndKhungGio(idSanBong, idKhungGio);
         if (giaTonTai.isPresent()) {
             throw new IllegalArgumentException("Giờ này đã được áp dụng cho sân bóng này!");
         }
 
-        if (giaThue == null || giaThue.compareTo(BigDecimal.ZERO) <= 0) {
+        if (giaThue == null || giaThue <= 0) {
             throw new IllegalArgumentException("Giá thuê phải lớn hơn 0");
         }
 
@@ -71,14 +70,17 @@ public class GiaTheoKhungGioService {
             gia.setKhungGio(khungGio);
             gia.setTrangThai(0);
             giaTheoKhungGioRepo.save(gia);
+            datSanSheduled.taoLichChoGia(gia);
+
+
         } else {
             throw new IllegalArgumentException("Không tìm thấy sân bóng hoặc khung giờ.");
         }
     }
 
-    public Page<GiaTheoKhungGio> timKiem(Integer sanBong, Integer khungGio, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return giaTheoKhungGioRepo.findBySanAndKhungGio(sanBong, khungGio, pageable);
+    public List<GiaTheoKhungGio> timKiem(Integer sanBong) {
+        return giaTheoKhungGioRepo.findBySanAndKhungGio(List.of(0) , sanBong);
+
 
     }
 

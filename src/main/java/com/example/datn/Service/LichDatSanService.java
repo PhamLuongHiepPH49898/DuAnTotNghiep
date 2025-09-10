@@ -26,18 +26,33 @@ public class LichDatSanService {
     private SanBongRepo sanBongRepo;
     @Autowired
     private KhungGioRepo khungGioRepo;
+    @Autowired
+    private ThongBaoService thongBaoService;
 
     public Page<LichDatSan> getLichDatSan(LocalDate ngayDat, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return lichDatSanRepo.findAllLichDatSan(ngayDat, pageable);
     }
 
+    public List<LichDatSan> findByIds(List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of(); // Trả về list rỗng nếu không có id
+        }
+        return lichDatSanRepo.findAllById(ids);
+    }
 
     public void duyet(int id) {
         LichDatSan lichDatSan = lichDatSanRepo.findById(id).orElse(null);
         if (lichDatSan != null) {
             lichDatSan.setTrangThai(1);
             lichDatSanRepo.save(lichDatSan);
+            //duyet -> gui thongbao
+            try {
+                KhungGio khungGio = lichDatSan.getGiaTheoKhungGio().getKhungGio();
+                thongBaoService.taoThongBaoXacNhan(khungGio, lichDatSan);
+            } catch (Exception e) {
+                System.err.println("[WARN] Gửi thông báo thất bại" + e.getMessage());
+            }
         }
     }
 
@@ -54,10 +69,16 @@ public class LichDatSanService {
             lichMoi.setGiaTheoKhungGio(lichDatSan.getGiaTheoKhungGio());
             lichMoi.setTrangThai(3); // trống
             lichMoi.setGhiChu("Tạo lại sau khi hủy");
-            lichMoi.setNgayTao(LocalDate.now());
+            lichMoi.setNgayTao(LocalDateTime.now());
             lichMoi.setGiaApDung(null);
             lichMoi.setTaiKhoan(null);
             lichDatSanRepo.save(lichMoi);
+
+        }try {
+            KhungGio khungGio = lichDatSan.getGiaTheoKhungGio().getKhungGio();
+            thongBaoService.taoThongBaoHuy(lichDatSan, khungGio);
+        } catch (Exception e) {
+            System.err.println("[WARN] Gửi thông báo HUỶ thất bại: " + e.getMessage());
         }
     }
 

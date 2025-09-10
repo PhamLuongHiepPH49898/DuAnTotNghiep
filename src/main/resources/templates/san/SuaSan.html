@@ -165,12 +165,13 @@
                 <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Quản lý thanh toán</a>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản lý
+            hoàn tiền</a>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i> Quản lý thanh toán</a>
         </li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
         <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
             thống kê</a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bell"></i> Quản lý thông báo</a></li>
         <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay lại
             Trang chủ</a></li>
     </ul>
@@ -235,12 +236,13 @@
                     <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
                 </ul>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Quản lý thanh
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản lý hoàn tiền</a>
+
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i> Quản lý thanh
                 toán</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
             <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
                 thống kê</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-bell"></i> Quản lý thông báo</a></li>
             <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay
                 lại Trang chủ</a></li>
         </ul>
@@ -250,7 +252,7 @@
 <main class="main-wrapper">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-semibold">Sửa sân bóng</h2>
+            <h2 class="mb-4 fw-bold text-primary">Sửa sân bóng</h2>
         </div>
 
         <form th:action="@{/sua-san-bong/{id}(id=${sanBong.id_san_bong})}" th:object="${sanBong}" method="post"
@@ -258,11 +260,11 @@
 
             <input type="hidden" th:field="*{id_san_bong}">
 
-                <div class="mb-3 ">
-                    <label class="form-label">Tên sân bóng</label>
-                    <input type="text" class="form-control" th:field="*{ten_san_bong}" placeholder="Nhập tên sân bóng" >
-                    <div class="text-danger" th:if="${#fields.hasErrors('ten_san_bong')}" th:errors="*{ten_san_bong}"></div>
-                </div>
+            <div class="mb-3 ">
+                <label class="form-label">Tên sân bóng</label>
+                <input type="text" class="form-control" th:field="*{ten_san_bong}" placeholder="Nhập tên sân bóng" >
+                <div class="text-danger" th:if="${#fields.hasErrors('ten_san_bong')}" th:errors="*{ten_san_bong}"></div>
+            </div>
 
 
 
