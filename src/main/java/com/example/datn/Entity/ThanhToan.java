@@ -43,6 +43,7 @@ public class ThanhToan {
     @JoinColumn(name = "id_tai_khoan", nullable = false)
     private TaiKhoan taiKhoan;
 
-    @OneToMany(mappedBy = "thanhToan", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "thanhToan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LichDatSan> lichDatSans = new ArrayList<>();
+
 }

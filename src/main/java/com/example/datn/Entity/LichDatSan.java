@@ -62,4 +62,5 @@ public class LichDatSan {
     @ManyToOne
     @JoinColumn(name = "id_thanh_toan")
     private ThanhToan thanhToan;
+
 }
