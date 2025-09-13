@@ -26,10 +26,14 @@ public class ThongBaoService {
     // Gửi thông báo xác nhận đặt sân
     public void taoThongBaoXacNhan(KhungGio khungGio, LichDatSan lichDatSan) {
         String tenSan = lichDatSan.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
+        String diaChi = lichDatSan.getGiaTheoKhungGio().getSanBong().getDia_chi();
+
         String noiDung = "<div style='font-family:sans-serif; color:#000;'>"
                 + "<p>Xin chào " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
                 + "<p>Chúng tôi xác nhận bạn đã <strong>đặt sân thành công</strong> tại sân <strong>" + tenSan + "</strong>.</p>"
-                + "<p><strong>📅 Thời gian:</strong> " + lichDatSan.getNgayDat()
+                + "<p><strong> Mã đơn:</strong> " + lichDatSan.getId() + "</p>"
+                + "<p><strong> Địa chỉ sân:</strong> " + diaChi + "</p>"
+                + "<p><strong> Thời gian:</strong> " + lichDatSan.getNgayDat()
                 + " từ <strong>" + khungGio.getGioBatDau() + "</strong> đến <strong>" + khungGio.getGioKetThuc() + "</strong></p>"
                 + "<p>Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi.</p>"
                 + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Đội ngũ sân bóng</strong></p>"
@@ -50,14 +54,16 @@ public class ThongBaoService {
     // Gửi thông báo nhắc lịch
     public void taoThongBaoNhacLich(LichDatSan lichDatSan, KhungGio khungGio) {
         String tenSan = lichDatSan.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
+        String diaChi = lichDatSan.getGiaTheoKhungGio().getSanBong().getDia_chi();
+
         String checkInUrl = "http://localhost:8080/check-in/" + lichDatSan.getId();
 
         String noiDung = "<div style='font-family:sans-serif; color:#000;'>"
                 + "<p>Xin chào " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
                 + "<p>Đây là lời nhắc về lịch đặt sân sắp tới của bạn tại sân <strong>" + tenSan + "</strong>.</p>"
-                + "<p><strong>📅 Thời gian:</strong> " + lichDatSan.getNgayDat()
+                + "<p><strong> Thời gian:</strong> " + lichDatSan.getNgayDat()
                 + " từ <strong>" + khungGio.getGioBatDau() + "</strong> đến <strong>" + khungGio.getGioKetThuc() + "</strong></p>"
-                + "<p>🎯 <strong>Link Check-in:</strong> <a href=\"" + checkInUrl + "\" style='color:#1a73e8; text-decoration:none;'>Bấm vào đây để check-in</a></p>"
+                + "<p> <strong>Link Check-in:</strong> <a href=\"" + checkInUrl + "\" style='color:#1a73e8; text-decoration:none;'>Bấm vào đây để check-in</a></p>"
 
                 + "<p>Chúc bạn có một trận đấu thật vui vẻ và hiệu quả!</p>"
                 + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Đội ngũ sân bóng</strong></p>"
@@ -80,14 +86,17 @@ public class ThongBaoService {
     //
     public void taoThongBaoNhacLichTruoc1h(LichDatSan lichDatSan, KhungGio khungGio) {
         String tenSan = lichDatSan.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
+        String diaChi = lichDatSan.getGiaTheoKhungGio().getSanBong().getDia_chi();
+
         String checkInUrl = "http://localhost:8080/check-in/" + lichDatSan.getId();
 
         String noiDung = "<div style='font-family:sans-serif; color:#000;'>"
                 + "<p>Xin chào " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
                 + "<p>Đây là lời nhắc về lịch đặt sân sắp tới của bạn tại sân <strong>" + tenSan + "</strong>.</p>"
-                + "<p><strong>📅 Thời gian:</strong> " + lichDatSan.getNgayDat()
+                + "<p><strong> Địa chỉ sân:</strong> " + diaChi + "</p>"
+                + "<p><strong> Thời gian:</strong> " + lichDatSan.getNgayDat()
                 + " từ <strong>" + khungGio.getGioBatDau() + "</strong> đến <strong>" + khungGio.getGioKetThuc() + "</strong></p>"
-                + "<p><strong>🎯 Link Check-in:</strong> "
+                + "<p><strong> Link Check-in:</strong> "
                 + "<a href=\"" + checkInUrl + "\" style='color:#1a73e8; text-decoration:none;'>Bấm vào đây để check-in</a></p>"
                 + "<p>Chúc bạn có một trận đấu thật vui vẻ và hiệu quả!</p>"
                 + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Đội ngũ sân bóng</strong></p>"
@@ -112,12 +121,13 @@ public class ThongBaoService {
     // Gửi thông báo HUỶ đơn
     public void taoThongBaoHuy(LichDatSan lichDatSan, KhungGio khungGio) {
         String tenSan = lichDatSan.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
+        String diaChi = lichDatSan.getGiaTheoKhungGio().getSanBong().getDia_chi();
         String noiDung = "<div style='font-family:sans-serif; color:#000;'>"
                 + "<p>Kính gửi: " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
-                + "<p>Chúng tôi xin thông báo rằng đơn đặt sân tại <strong>\"" + tenSan + "\"</strong> vào ngày <strong>"
-                + lichDatSan.getNgayDat() + "</strong> trong khung giờ <strong>"
-                + khungGio.getGioBatDau() + " - " + khungGio.getGioKetThuc() + "</strong> đã bị <strong>hủy</strong> bởi quản trị viên.</p>"
-                + "<p><strong>Lý do hủy:</strong> " + (lichDatSan.getGhiChu() != null ? lichDatSan.getGhiChu() : "Không có") + "</p>"
+                + "<p>Chúng tôi xin thông báo rằng đơn đặt sân tại <strong>\"" + tenSan + "</strong>.</p>"
+                + "<p><strong> Địa chỉ sân:</strong> " + diaChi + "</p>"
+                + "<p><strong> Thời gian:</strong> " + lichDatSan.getNgayDat()
+                + " từ <strong>" + khungGio.getGioBatDau() + "</strong> đến <strong>" + khungGio.getGioKetThuc() + "</strong></p>"                + "<p><strong>Lý do hủy:</strong> " + (lichDatSan.getGhiChu() != null ? lichDatSan.getGhiChu() : "Không có") + "</p>"
                 + "<p>Chúng tôi rất tiếc vì sự bất tiện này. Nếu bạn cần hỗ trợ, vui lòng liên hệ qua email: "
                 + "<a href=\"mailto:sambasport.booking@gmail.com\">sambasport.booking@gmail.com</a></p>"
                 + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Ban quản trị Sân bóng Samba</strong></p>"

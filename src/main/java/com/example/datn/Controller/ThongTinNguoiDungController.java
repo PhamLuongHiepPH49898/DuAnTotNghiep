@@ -69,7 +69,7 @@ public class ThongTinNguoiDungController {
         }
 
         TaiKhoan taiKhoan = optionalTaiKhoan.get();
-        Pageable pageable = PageRequest.of(page, 6, Sort.by("ngayDat").descending());
+        Pageable pageable = PageRequest.of(page, 100, Sort.by("ngayDat").descending());
         Page<LichDatSan> lichSuPage = thongTinNguoiDungService.layLichSuDatSan((long) taiKhoan.getId(), pageable);
 
 

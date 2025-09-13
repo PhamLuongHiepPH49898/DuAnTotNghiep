@@ -4,119 +4,160 @@
     <meta charset="UTF-8">
     <title>Xác nhận đặt lịch</title>
     <style>
-        body { font-family: Arial; padding: 20px; }
-        h2 { color: #75a6b6; }
-        .section { margin-top: 20px; }
-        label { font-weight: bold; }
-        input, textarea { width: 100%; padding: 8px; margin: 5px 0; }
-
-        button {
-            padding: 10px 20px;
-            margin: 10px 10px 0 0;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            padding: 20px;
+            margin: 0;
+            background: #f7f9fb;
+            color: #333;
         }
 
-        .confirm-btn { background-color: #75a6b6; color: white; }
-        .cancel-btn { background-color: #e8646c; color: white; }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
+        h2 {
+            color: #2f4858;
             text-align: center;
-            word-break: break-word;
-            overflow-wrap: break-word;
-            white-space: normal;
+            margin-bottom: 25px;
         }
 
-        thead {
-            background: linear-gradient(90deg, #4ca1af, #c4e0e5);
-            color: white;
+        h3 {
+            color: #357376;
+            margin-bottom: 15px;
+            border-left: 4px solid #4ca1af;
+            padding-left: 8px;
         }
 
         .info-container {
             display: flex;
-            gap: 30px;
-            margin-top: 20px;
-            align-items: stretch;
+            gap: 25px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
-        .info-container .section {
+        .section {
             flex: 1;
-            background-color: #f9f9f9;
-            padding: 15px 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            color: #444;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
             border-radius: 6px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            background: #fdfdfd;
         }
 
-        .personal-info {
-            min-height: 300px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         }
 
-        .booking-info {
-            overflow-x: auto; /* thêm cuộn ngang nếu cần */
+        thead {
+            background: linear-gradient(90deg, #4ca1af, #0072bc); /* Gradient giống thanh menu */
+            color: white;
+            font-weight: bold;
         }
 
-        .booking-info table th:nth-child(2),
-        .booking-info table td:nth-child(2) {
-            width: 120px;
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #eaeaea;
+            font-size: 0.95rem;
+            color: #2f4858;
+        }
+        th {
+            color: white;
         }
 
-        .booking-info table th:nth-child(3),
-        .booking-info table td:nth-child(3) {
-            width: 160px;
+        tbody tr:hover {
+            background-color: #f1f8fc;
         }
 
-        .booking-info table th:last-child,
-        .booking-info table td:last-child {
-            width: 80px;
-        }
-
-        .booking-info button {
+        .booking-info table td button {
             padding: 6px 12px;
-            font-size: 14px;
-            background-color: snow;
-            color: black;
-            border: none;
+            font-size: 13px;
+            background-color: #f8f8f8;
+            border: 1px solid #ccc;
             border-radius: 4px;
             cursor: pointer;
-            white-space: nowrap;
         }
 
-        .booking-info button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .booking-info table td button:hover:not(:disabled) {
+            background: #d9e2ec;
+            color: #2f4858;
+        }
+
+        .summary {
+            margin-top: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #2f4858;
         }
 
         iframe {
-            margin-top: 20px;
-            border-radius: 8px;
-        }
-        .booking-info table {
-            table-layout: fixed;
+            margin: 20px 0;
+            border-radius: 10px;
             width: 100%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         }
 
-        .booking-info table td {
-            word-break: break-word;
-            white-space: normal;
-            max-width: 160px;
+        .btn-group {
+            text-align: center;
+            margin-top: 20px;
         }
 
-        .booking-info table td * {
-            white-space: normal !important;
-            word-break: break-word !important;
+        button {
+            padding: 12px 25px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
+        .confirm-btn {
+            background: linear-gradient(90deg, #4ca1af, #0072bc); /* Gradient như menu */
+            color: white;
+        }
 
+        .confirm-btn:hover {
+            background: linear-gradient(90deg, #0072bc, #005b99); /* Đậm hơn khi hover */
+            transform: translateY(-2px);
+        }
+
+        .cancel-btn {
+            background: #d9e2ec;
+            color: #2f4858;
+        }
+
+        .cancel-btn:hover {
+            background: #bcccdc;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .info-container {
+                flex-direction: column;
+            }
+        }
     </style>
+
 
 </head>
 <body>

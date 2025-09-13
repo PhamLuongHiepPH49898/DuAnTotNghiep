@@ -5,23 +5,33 @@
     <title>Đặt Sân Bóng</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             padding: 20px;
+            margin: 0;
+            background: #f7f9fb;
+            color: #333;
         }
+
+        h1 {
+            text-align: center;
+            color: #2f4858;
+            margin-bottom: 25px;
+        }
+
         .controls {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 20px;
-            font-family: 'Segoe UI', sans-serif;
-            font-size: 1.5rem;
-            margin-top: 20px;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
         }
 
         .arrow {
             color: #4ca1af;
             cursor: pointer;
             font-weight: bold;
+            font-size: 1.5rem;
             transition: color 0.3s;
         }
 
@@ -31,20 +41,100 @@
 
         #dateDisplay {
             font-weight: 600;
-            color: #75a6b6;
-
-            min-width: 150px;
+            color: #2f4858;
+            font-size: 1.1rem;
+            min-width: 200px;
             text-align: center;
         }
 
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
         #bookingTable thead tr {
-            background: linear-gradient(90deg, #4ca1af, #c4e0e5);
+            background: linear-gradient(90deg, #4ca1af, #0072bc); /* ✅ màu mới giống menu */
+            color: white; /* ✅ chữ trắng */
+        }
+
+        th {
             color: white;
             font-weight: bold;
         }
 
-        /* Responsive - nút xếp dọc trên điện thoại */
-        @media (max-width: 480px) {
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        td {
+            color: #2f4858;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        td:hover:not(.disabled):not(.selected) {
+            background: #eef7f9;
+            transform: scale(1.03);
+        }
+
+        td.selected {
+            background-color: #418ecc;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        td.disabled {
+            background-color: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+            font-style: italic;
+        }
+
+        .summary {
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .summary span {
+            font-weight: bold;
+            color: #2f4858;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-style {
+            padding: 12px 25px;
+            background: linear-gradient(90deg, #4ca1af, #0072bc); /* ✅ đồng bộ với menu */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-style:hover {
+            background: linear-gradient(90deg, #0072bc, #005b99); /* ✅ hover đậm hơn */
+            transform: translateY(-2px);
+        }
+
+        /* Responsive - mobile */
+        @media (max-width: 600px) {
             .controls {
                 flex-direction: column;
                 gap: 12px;
@@ -52,142 +142,78 @@
 
             #dateDisplay {
                 min-width: unset;
+                font-size: 1rem;
+            }
+
+            table {
+                font-size: 0.9rem;
             }
         }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ccc;
-        }
-        th, td {
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-        }
-        td.selected {
-            background-color: #6db1bf;
-        }
-        td.disabled {
-            background-color: #f0f0f0;
-            color: #999;
-            cursor: not-allowed;
-        }
-        .controls {
-            margin-bottom: 15px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #75a6b6;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #75a6b6;
-        }
-        #dateDisplay {
-            font-weight: bold;
-            font-size: 1.2em;
-            margin: 0 10px;
-            user-select: none;
-        }
-        a{
-            text-decoration: none;
-        }
-        .button-group {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .btn-style {
-            padding: 10px 20px;
-            background-color: #75a6b6;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .btn-style:hover {
-            background-color: #75a6b6;
-        }
-
     </style>
+
 </head>
 <body>
-
-
-
 <div class="controls">
     <span class="arrow" onclick="changeDate(-1)"><</span>
-    <span id="dateDisplay"></span>
+    <span id="dateDisplay">Tuần hiện tại</span>
     <span class="arrow" onclick="changeDate(1)">></span>
 </div>
+
 <table id="bookingTable" aria-label="Bảng đặt sân bóng">
     <thead>
     <tr>
         <th>Giờ</th>
-        <th th:each="san : ${danhSachSan}" th:text="${san.ten_san_bong}">Tên sân</th>
+        <th th:each="date : ${weekDates}" th:text="${#temporals.format(date, 'EEEE dd/MM')}" class="text-center">Ngày</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="khungGio : ${danhSachKhungGio}">
-        <td th:text="${khungGio.gioBatDau} + '-' + ${khungGio.gioKetThuc}"></td>
-        <td th:each="san : ${danhSachSan}"
-            th:with="key=${san.id_san_bong + '_' + khungGio.id}, gia=${bangGia[key]}, idgia=${bangGiaId[key]}"
+        <td th:text="${khungGio.gioBatDau} + '-' + ${khungGio.gioKetThuc}">07:00-08:00</td>
+        <td th:each="date, index : ${weekDates}"
+            th:with="
+            san=${danhSachSan[0]},
+            key=${san.id_san_bong + '_' + khungGio.id},
+            gia=${bangGia[key]},
+            idgia=${bangGiaId[key]},
+            dateStr=${#temporals.format(date, 'yyyy-MM-dd')},
+            timeSlot=${#temporals.format(khungGio.gioBatDau, 'HH:mm') + '-' + #temporals.format(khungGio.gioKetThuc, 'HH:mm')}
+        "
             th:data-idgia="${bangGiaId[san.id_san_bong + '_' + khungGio.id]}"
             th:data-price="${bangGia[san.id_san_bong + '_' + khungGio.id] != null ? bangGia[san.id_san_bong + '_' + khungGio.id] : 0}"
             th:data-court="${san.ten_san_bong}"
             th:data-status="${san.trang_thai}"
-            th:data-time="${#temporals.format(khungGio.gioBatDau, 'HH:mm') + '-' + #temporals.format(khungGio.gioKetThuc, 'HH:mm')}">//ép tg cùng 1 kiểu
-            <span th:text="${#numbers.formatDecimal(bangGia[san.id_san_bong + '_' + khungGio.id], 1, 'COMMA', 0, 'POINT')}">0</span>
+            th:data-date="${dateStr}"
+            th:data-time="${timeSlot}"
+            class="booking-cell"
+        >
         </td>
     </tr>
     </tbody>
+
 </table>
+
 <p>Đã chọn <span id="slotCount">0</span> lịch</p>
 <p>Tổng tiền: <strong><span id="totalPrice">0</span> đ</strong></p>
+
 <div class="button-group">
     <a class="btn-style" onclick="submitBooking()">Đặt lịch</a>
     <a th:href="@{/ve-trang-chu}" class="btn-style">Trang chủ</a>
 </div>
 
-
 <script th:inline="javascript">
     let selectedSlots = [];
-    let currentDate = new Date();
     let slotsDaDat = /*[[${cacSlotDaDat}]]*/ [];
     let slotsTonTai = /*[[${cacSlotTonTai}]]*/ [];
+    let weekDates = /*[[${weekDates}]]*/ [];
+    let offset = /*[[${offset}]]*/ 0;
 
-
-
-    function formatDate(date) {
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-        return `${day} tháng ${month} ${year}`;
-    }
-    //fix để ngày hoạt động đúng
     function formatDateKey(date) {
         const localDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         const year = localDate.getFullYear();
         const month = String(localDate.getMonth() + 1).padStart(2, '0');
         const day = String(localDate.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;   }
+        return `${year}-${month}-${day}`;
+    }
 
     function formatPrice(price) {
         const num = Number(price);
@@ -195,38 +221,39 @@
         return num.toLocaleString('vi-VN');
     }
 
-    function getCurrentDateKey() {
-        return formatDateKey(currentDate);
-    }
-
-    function loadToday() {
-        // Hiển thị ngày
-        document.getElementById('dateDisplay').textContent = formatDate(currentDate);
-
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const checkDate = new Date(currentDate);
-        checkDate.setHours(0, 0, 0, 0);
-
-        const isPast = checkDate < today;
-        toggleBookingCells(!isPast, isPast);
-    }
-
-    //fix lại để check ko đặt đc h đã qua
-
-    function toggleBookingCells(enable, isPast) {
-        const cells = document.querySelectorAll("#bookingTable td[data-price]");
-        const dateKey = getCurrentDateKey();
-
+    function loadWeek() {
+        document.getElementById("dateDisplay").textContent = `Tuần từ ${formatDisplayDate(weekDates[0])} đến ${formatDisplayDate(weekDates[6])}`;
+        const cells = document.querySelectorAll("td.booking-cell");
 
         const now = new Date();
-        const isToday = currentDate.toDateString() === now.toDateString();
-        const currentMinutes = now.getHours() * 60 + now.getMinutes(); // Tổng số phút hiện tại
+        const todayStr = formatDateKey(now);
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
         cells.forEach(cell => {
-            const slotId = `${dateKey}_${cell.dataset.court}_${cell.dataset.time}`;
             const price = Number(cell.dataset.price || 0);
             const status = parseInt(cell.dataset.status || "0", 10);
+            const date = cell.dataset.date;
+            const court = cell.dataset.court;
+            const time = cell.dataset.time;
+            const idgia = cell.dataset.idgia;
+
+            const slotId = `${date}_${court}_${time}`;
+            const isToday = date === todayStr;
+
+            const [startStr] = time.split('-');
+            const [startHour, startMinute] = startStr.split(':').map(Number);
+            const startMinutes = startHour * 60 + startMinute;
+
+            const dateObj = new Date(date);
+            const now = new Date();
+
+            const dateOnly = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+            const nowDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+            const isPastDate = dateOnly < nowDateOnly;
+            const isExpiredToday = isToday && currentMinutes >= startMinutes;
+
+            const isExpired = isPastDate || isExpiredToday;
             const isDaDat = slotsDaDat.includes(slotId);
             const isTonTai = slotsTonTai.includes(slotId);
 
@@ -234,28 +261,20 @@
             cell.onclick = null;
             cell.style.cursor = "pointer";
 
-            // Tách giờ bắt đầu + kết thúc
-            const [startStr, endStr] = cell.dataset.time.split('-');
-            const [startHour, startMinute] = startStr.split(':').map(Number);
-
-            const startMinutes = startHour * 60 + startMinute;
-
-            const isExpired = isToday && currentMinutes >= startMinutes;
-            if (!isTonTai || isPast || price <= 0 || isDaDat || isExpired || status !== 0) {
+            if (!isTonTai || price <= 0 || isDaDat || isExpired || status !== 0) {
                 cell.textContent =
-                    status === 1 ? "Sân đang khóa"
-                        : status === 2 ? "Sân bảo trì"
-                            : !isTonTai ? "Chưa có lịch"
+                    status === 1 ? "Khóa"
+                        : status === 2 ? "Bảo trì"
+                            : !isTonTai ? " "
                                 : isDaDat ? "Đã đặt"
-                                    : isPast ? "Đã qua"
-                                        : isExpired ? "Đã qua"
-                                            : (price <= 0 ? "Chưa có lịch" : "");
+                                    : isExpired ? "Đã qua"
+                                        : "Không hợp lệ";
 
                 cell.classList.add("disabled");
                 cell.style.cursor = "not-allowed";
             } else {
                 cell.textContent = formatPrice(price);
-                cell.onclick = () => selectSlot(cell, dateKey);
+                cell.onclick = () => selectSlot(cell, date);
             }
 
             if (selectedSlots.find(s => s.id === slotId)) {
@@ -264,6 +283,13 @@
         });
 
         updateTotal();
+    }
+
+    function formatDisplayDate(dateStr) {
+        const date = new Date(dateStr);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        return `${day}/${month}`;
     }
 
     function selectSlot(cell, dateKey) {
@@ -282,8 +308,7 @@
                 date: dateKey,
                 court: cell.dataset.court,
                 time: cell.dataset.time,
-                idgia:Number(cell.dataset.idgia || 0)
-
+                idgia: Number(cell.dataset.idgia || 0)
             });
             cell.classList.add("selected");
         }
@@ -298,27 +323,24 @@
     }
 
     function submitBooking() {
-        if(selectedSlots.length === 0) {
+        if (selectedSlots.length === 0) {
             alert('Vui lòng chọn ít nhất 1 khung giờ đặt sân!');
             return;
         }
-        // Lưu dữ liệu chọn vào localStorage (có thể dùng sessionStorage)
         localStorage.setItem("chiTietDatLichList", JSON.stringify(selectedSlots));
-        // Chuyển sang trang xác nhận đặt lịch
         window.location.href = "/xacnhan";
     }
 
-    // Thêm hàm thay đổi ngày
-    function changeDate(days) {
-        currentDate.setDate(currentDate.getDate() + days);
-        loadToday();
+    function changeDate(weekOffset) {
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentOffset = parseInt(urlParams.get('offset') || "0");
+        currentOffset += weekOffset;
+        urlParams.set("offset", currentOffset);
+        window.location.search = urlParams.toString();
     }
 
-    window.onload = loadToday;
+    window.onload = loadWeek;
 </script>
-
-
-
 </body>
-</html>
 
+</html>
