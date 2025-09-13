@@ -29,4 +29,6 @@ public class TaiKhoanNganHang {
     @Column(name = "bank_code", length = 50)
     private String bankCode;
 
+    @Column(name = "active", nullable = false)
+    private Boolean active = false;
 }

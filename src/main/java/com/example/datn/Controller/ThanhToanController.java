@@ -3,6 +3,7 @@ package com.example.datn.Controller;
 import com.example.datn.DTO.ThanhToanDTO;
 import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Entity.TaiKhoan;
+import com.example.datn.Entity.TaiKhoanNganHang;
 import com.example.datn.Entity.ThanhToan;
 import com.example.datn.Service.LichDatSanService;
 import com.example.datn.Service.TaiKhoanNganHangService;
@@ -30,18 +31,26 @@ public class ThanhToanController {
      * Trang thanh toán (cho nhiều lịch đặt sân → 1 giao dịch)
      */
     @GetMapping("/thanh-toan")
-    public String hienThiTrangThanhToan(@RequestParam("id") List<Integer> idLichDatSan, Model model) {
-        // Tạo giao dịch cho nhiều lịch
+    public String hienThiTrangThanhToan(
+            @RequestParam("id") List<Integer> idLichDatSan,
+            @RequestParam(value = "accId", required = false) Integer accId,
+            Model model) {
+
         ThanhToan tt = thanhToanService.taoGiaoDichChoNhieuLichDat(idLichDatSan);
 
-        // Lấy danh sách lịch để hiển thị trong giao diện
+        // Tài khoản nhận tiền: theo accId (nếu truyền), nếu không thì lấy mặc định
+        TaiKhoanNganHang acc = taiKhoanNganHangService.getByIdOrDefault(accId);
+
+        // (tuỳ bạn) danh sách lịch để hiển thị
         List<LichDatSan> lichList = lichDatSanService.findByIds(idLichDatSan);
 
         model.addAttribute("thanhToan", tt);
         model.addAttribute("dsLichDat", lichList);
+        model.addAttribute("acc", acc);  // << quan trọng
 
         return "Main/ThanhToan";
     }
+
 
     /**
      * API trả về trạng thái JSON (AJAX gọi để cập nhật trạng thái realtime)

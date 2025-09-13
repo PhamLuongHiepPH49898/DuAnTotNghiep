@@ -40,11 +40,22 @@
   <p><strong>Số tiền:</strong> <span th:text="${thanhToan.soTien}"></span> VND</p>
   <p><strong>Nội dung chuyển khoản:</strong> <span th:text="${thanhToan.reference}"></span></p>
 
-  <!-- QR Code -->
+  <!-- Hiển thị thông tin tài khoản -->
+  <p><strong>Ngân hàng:</strong> <span th:text="${acc.tenNganHang}"></span></p>
+  <p><strong>Số tài khoản:</strong> <span th:text="${acc.soTaiKhoan}"></span></p>
+  <p><strong>Chủ tài khoản:</strong> <span th:text="${acc.chuTaiKhoan}"></span></p>
+
+  <!-- QR động (SePay) -->
   <div class="text-center my-3">
-    <img th:src="@{'https://qr.sepay.vn/img?acc=929233&bank=mbbank&amount=' + ${thanhToan.soTien} + '&des=' + ${thanhToan.reference}}"
-         alt="QR Code Thanh Toán" class="img-fluid border rounded p-2">
+    <img th:src="@{https://qr.sepay.vn/img(
+                  acc=${acc.soTaiKhoan},
+                  bank=${acc.bankCode},
+                  amount=${thanhToan.soTien},
+                  des=${thanhToan.reference})}"
+         alt="QR Code Thanh Toán"
+         class="img-fluid border rounded p-2">
   </div>
+
 
   <p class="text-muted text-center">Vui lòng quét mã QR và chuyển khoản với <strong>đúng nội dung</strong> trên.</p>
 
