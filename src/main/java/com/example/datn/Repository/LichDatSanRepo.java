@@ -19,7 +19,8 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
            "JOIN FETCH l.giaTheoKhungGio g " +
            "JOIN FETCH g.khungGio kg " +
            "WHERE l.ngayDat = :ngayDat " +
-           "AND l.trangThai <> 3")
+           "AND l.trangThai <> 3 " +
+           "ORDER BY l.ngayTao DESC")
     Page<LichDatSan> findAllLichDatSan(@Param("ngayDat") LocalDate ngayDat, Pageable pageable);
 
     @Query("SELECT l FROM LichDatSan l " +
@@ -27,7 +28,8 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
            "AND (:ngayDat IS NULL OR l.ngayDat = :ngayDat) " +
            "AND (:sanBong IS NULL OR l.giaTheoKhungGio.sanBong.id_san_bong = :sanBong) " +
            "AND (:trangThai IS NULL OR l.trangThai = :trangThai)" +
-           "AND l.trangThai <> 3")
+           "AND l.trangThai <> 3 " +
+           "ORDER BY l.ngayTao DESC")
     Page<LichDatSan> timKiem(@Param("keyword") String keyword,
                              @Param("ngayDat") LocalDate ngayDat,
                              @Param("sanBong") Integer sanBong,

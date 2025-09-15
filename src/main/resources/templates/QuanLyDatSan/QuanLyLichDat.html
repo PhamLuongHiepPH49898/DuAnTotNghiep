@@ -164,6 +164,43 @@
             font-weight: bold;
             color: #dc3545;
         }
+
+        .san-container {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-lich {
+            border-radius: 16px;
+            transition: all 0.2s ease;
+            border: none;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-lich:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .icon-circle {
+            width: 28px;
+            height: 28px;
+            background-color: #1995AD;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .status-btn {
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 6px;
+        }
     </style>
 </head>
 
@@ -196,7 +233,8 @@
         <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i>
             Quản lý thanh
             toán</a></li>
-        <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người
+            dùng</a></li>
         <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
             thống kê</a></li>
         <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay lại
@@ -269,7 +307,8 @@
             <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i>
                 Quản lý thanh
                 toán</a></li>
-            <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý
+                người dùng</a></li>
             <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
                 thống kê</a></li>
             <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay
@@ -318,36 +357,42 @@
 
 
             <div class="container mt-4">
-                <div th:each="entry : ${lichDatMap.entrySet()}" th:if="${!#lists.isEmpty(entry.value)}">
-                    <h5 th:text="'Sân ' + ${entry.key.ten_san_bong}"></h5>
+                <div th:each="entry : ${lichDatMap.entrySet()}" th:if="${!#lists.isEmpty(entry.value)}"
+                     class="san-container">
+                    <!-- Tên sân -->
+                    <div class="mb-3">
+                        <h5 class="fw-bold">
+                            <i class="bi bi-building me-2 text-primary"></i>
+                            <span th:text="'Sân ' + ${entry.key.ten_san_bong}"></span>
+                        </h5>
+                        <small class="text-muted">
+                            <span th:text="${entry.key.loaiSan.ten_loai_san}"></span> |
+                            <span th:text="${entry.key.loaiMatSan.ten_loai_mat_san}"></span>
+                        </small>
+                    </div>
+
+                    <!-- Danh sách ca -->
                     <div class="row flex-nowrap overflow-auto">
-                        <div class="col-md-2 mb-3" th:each="lich : ${entry.value}">
-                            <div class="card h-100 border">
+                        <div class="col-md-2 col-10 mb-3" th:each="lich : ${entry.value}">
+                            <div class="card card-lich h-100">
                                 <div class="card-body">
-                                    <!-- môn thể thao -->
-                                    <h6 class="card-title text-center "><span
-                                            th:text="${lich.giaTheoKhungGio.sanBong.loaiMonTheThao.ten_mon_the_thao}"></span>
+                                    <!-- Môn thể thao -->
+                                    <h6 class="text-center text-primary fw-semibold mb-3"
+                                        th:text="${lich.giaTheoKhungGio.sanBong.loaiMonTheThao.ten_mon_the_thao}">
                                     </h6>
 
-                                    <div class="d-flex align-items-center gap-2 mb-1">
-                                        <span th:text="${lich.giaTheoKhungGio.sanBong.loaiSan.ten_loai_san}"></span>
-                                        <span th:text="${lich.giaTheoKhungGio.sanBong.loaiMatSan.ten_loai_mat_san}"></span>
-                                    </div>
                                     <!-- Ngày -->
-                                    <div class="d-flex align-items-center gap-2 mb-1">
-                                        <div style="width: 25px; height: 25px; background-color: #0d6efd;"
-                                             class="rounded-circle d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-calendar3 text-white"></i>
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <div class="icon-circle  text-white">
+                                            <i class="bi bi-calendar3"></i>
                                         </div>
                                         <span th:text="${#temporals.format(lich.ngayDat, 'yyyy-MM-dd')}"></span>
                                     </div>
 
-
                                     <!-- Giờ -->
-                                    <div class="d-flex align-items-center gap-2 mb-1">
-                                        <div style="width: 25px; height: 25px; background-color: #0d6efd;"
-                                             class="rounded-circle d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-clock text-white"></i>
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <div class="icon-circle  text-white">
+                                            <i class="bi bi-clock"></i>
                                         </div>
                                         <span th:text="${#temporals.format(lich.giaTheoKhungGio.khungGio.gioBatDau, 'HH:mm')}"></span>
                                         -
@@ -356,50 +401,44 @@
 
                                     <!-- Giá -->
                                     <div class="d-flex align-items-center gap-2 mb-3">
-                                        <div style="width: 25px; height: 25px; background-color: #0d6efd;"
-                                             class="rounded-circle d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-currency-dollar text-white"></i>
+                                        <div class="icon-circle  text-white">
+                                            <i class="bi bi-currency-dollar"></i>
                                         </div>
                                         <span th:if="${lich.giaApDung != null}"
                                               th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></span>
                                         <span th:if="${lich.giaApDung == null and lich.giaTheoKhungGio != null}"
                                               th:text="${#numbers.formatDecimal(lich.giaTheoKhungGio.giaThue, 0, 'COMMA', 3, 'POINT')} + ' đ'"></span>
                                     </div>
-                                    <td th:if="${lich.trangThai == 1}">
-                                        <span class="btn btn-success w-100">Đã thanh toán</span>
-                                    </td>
 
-                                    <th:block
-                                            th:with="batDau=${T(java.time.LocalDateTime).of(lich.ngayDat, lich.giaTheoKhungGio.khungGio.gioBatDau)}">
+                                    <!-- Trạng thái -->
+                                    <div>
+                                        <span th:if="${lich.trangThai == 1}" class="btn btn-secondary w-100 status-btn">Đã thanh toán</span>
 
-                                        <td th:if="${lich.trangThai == 3 and batDau.isBefore(thoiGianHienTai)}">
-                                            <span class="btn btn-danger w-100">Quá giờ đặt</span>
-                                        </td>
+                                        <th:block
+                                                th:with="batDau=${T(java.time.LocalDateTime).of(lich.ngayDat, lich.giaTheoKhungGio.khungGio.gioBatDau)}">
+                                <span th:if="${lich.trangThai == 3 and batDau.isBefore(thoiGianHienTai)}"
+                                      class="btn btn-danger w-100 status-btn">Quá giờ đặt</span>
 
-                                        <td th:if="${lich.trangThai == 3 and !batDau.isBefore(thoiGianHienTai)}">
-                                            <span th:if="${lich.giaTheoKhungGio.sanBong.trang_thai == 0}"
-                                                  class="btn btn-primary w-100">Trống</span>
-                                            <span th:if="${lich.giaTheoKhungGio.sanBong.trang_thai == 2}"
-                                                  class="btn btn-warning text-dark w-100  ">Bảo trì</span>
-                                            <span th:if="${lich.giaTheoKhungGio.sanBong.trang_thai == 1}"
-                                                  class="btn btn-danger w-100">Khóa</span>
-                                        </td>
+                                            <span th:if="${lich.trangThai == 3 and !batDau.isBefore(thoiGianHienTai) and lich.giaTheoKhungGio.sanBong.trang_thai == 0}"
+                                                  class="btn btn-success w-100 status-btn" style="background-color: #2C7873">Trống</span>
+                                            <span th:if="${lich.trangThai == 3 and !batDau.isBefore(thoiGianHienTai) and lich.giaTheoKhungGio.sanBong.trang_thai == 2}"
+                                                  class="btn btn-warning text-dark w-100 status-btn">Bảo trì</span>
+                                            <span th:if="${lich.trangThai == 3 and !batDau.isBefore(thoiGianHienTai) and lich.giaTheoKhungGio.sanBong.trang_thai == 1}"
+                                                  class="btn btn-danger w-100 status-btn">Khóa</span>
+                                        </th:block>
 
-                                    </th:block>
-
-                                    <td th:if="${lich.trangThai == 0} or lich.giaTheoKhungGio == null">
-                                        <span class="btn btn-warning w-100">Chờ thanh toán</span>
-                                    </td>
-
+                                        <span th:if="${lich.trangThai == 0} or lich.giaTheoKhungGio == null"
+                                              class="btn btn-warning w-100 status-btn">Chờ thanh toán</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Trường hợp không có dữ liệu -->
-            <div th:if="${khongCoKetQua}" class="alert alert-info">
-                Không tìm thấy kết quả phù hợp với điều kiện tìm kiếm.
+                <!-- Trường hợp không có dữ liệu -->
+                <div th:if="${khongCoKetQua}" class="alert alert-info">
+                    Không tìm thấy kết quả phù hợp với điều kiện tìm kiếm.
+                </div>
             </div>
         </div>
     </div>

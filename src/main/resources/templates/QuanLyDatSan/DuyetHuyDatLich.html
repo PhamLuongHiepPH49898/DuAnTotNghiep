@@ -196,7 +196,8 @@
         <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i>
             Quản lý thanh
             toán</a></li>
-        <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người
+            dùng</a></li>
         <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
             thống kê</a></li>
         <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay lại
@@ -269,7 +270,8 @@
             <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i>
                 Quản lý thanh
                 toán</a></li>
-            <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý
+                người dùng</a></li>
             <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
                 thống kê</a></li>
             <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay
@@ -295,7 +297,8 @@
 
                         <div class="col-6 col-md-2">
                             <label class="form-label">Ngày đặt sân</label>
-                            <input type="date" name="ngayDat" class="form-control" th:value="${ngayDat}" onchange="this.form.submit()">
+                            <input type="date" name="ngayDat" class="form-control" th:value="${ngayDat}"
+                                   onchange="this.form.submit()">
                         </div>
 
                         <div class="col-12 col-md-3">
@@ -354,64 +357,65 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="danhSachLichDatSan, stat : ${danhSachLichDatSan}">
+                <tr th:each="lich, stat : ${danhSachLichDatSan}">
                     <td th:text="${currentPage * pageSize + stat.index + 1}"></td>
-                    <td th:text="${danhSachLichDatSan.ngayDat}"></td>
-                    <td th:text="${danhSachLichDatSan.giaTheoKhungGio.khungGio.gioBatDau} + ' - ' + ${danhSachLichDatSan.giaTheoKhungGio.khungGio.gioKetThuc}"></td>
+                    <td th:text="${lich.ngayDat}"></td>
+                    <td th:text="${lich.giaTheoKhungGio.khungGio.gioBatDau} + ' - ' + ${lich.giaTheoKhungGio.khungGio.gioKetThuc}"></td>
                     <td>
-                        <span th:text="${danhSachLichDatSan.giaTheoKhungGio.sanBong.ten_san_bong}"></span>
-                        <span th:if="${danhSachLichDatSan.giaTheoKhungGio.sanBong.trang_thai == 3}" class="text-danger fw-bold"> (Đã xóa)</span>
+                        <span th:text="${lich.giaTheoKhungGio.sanBong.ten_san_bong}"></span>
+                        <span th:if="${lich.giaTheoKhungGio.sanBong.trang_thai == 3}"
+                              class="text-danger fw-bold"> (Đã xóa)</span>
                     </td>
-                    <td th:text="${danhSachLichDatSan.taiKhoan.ho_ten}"></td>
-                    <td th:text="${#numbers.formatDecimal(danhSachLichDatSan.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
+                    <td th:text="${lich.taiKhoan.ho_ten}"></td>
+                    <td th:text="${#numbers.formatDecimal(lich.giaApDung, 0, 'COMMA', 3, 'POINT')} + ' đ'"></td>
 
-                    <td th:if="${danhSachLichDatSan.trangThai == 0}">
-                        <span th:text="${danhSachLichDatSan.ghiChu}"></span>
+                    <td th:if="${lich.trangThai == 0}">
+                        <span th:text="${lich.ghiChu}"></span>
                     </td>
-                    <td th:if="${danhSachLichDatSan.trangThai == 1}">
-                        <span th:text="${danhSachLichDatSan.ghiChu}"></span>
+                    <td th:if="${lich.trangThai == 1}">
+                        <span th:text="${lich.ghiChu}"></span>
                     </td>
-                    <td th:if="${danhSachLichDatSan.trangThai == 2}">
-                        <strong>Lý do hủy:</strong> <span th:text="${danhSachLichDatSan.ghiChu}"></span>
+                    <td th:if="${lich.trangThai == 2}">
+                        <strong>Lý do hủy:</strong> <span th:text="${lich.ghiChu}"></span>
                     </td>
 
                     <td>
-                        <span th:if="${danhSachLichDatSan.trangThai == 0}" class="badge bg-info">Chờ thanh toán</span>
-                        <span th:if="${danhSachLichDatSan.trangThai == 1}" class="badge bg-success">Đã thanh toán</span>
-                        <span th:if="${danhSachLichDatSan.trangThai == 2}"
+                        <span th:if="${lich.trangThai == 0}" class="badge bg-info">Chờ thanh toán</span>
+                        <span th:if="${lich.trangThai == 1}" class="badge bg-success">Đã thanh toán</span>
+                        <span th:if="${lich.trangThai == 2}"
                               class="badge bg-secondary">Đã hủy</span>
-                        <span th:if="${danhSachLichDatSan.trangThai != 0 and danhSachLichDatSan.trangThai != 1 and danhSachLichDatSan.trangThai != 2 and danhSachLichDatSan.trangThai != 3}"
+                        <span th:if="${lich.trangThai != 0 and lich.trangThai != 1 and lich.trangThai != 2 and lich.trangThai != 3}"
                               class="badge bg-warning">Không xác định</span>
                     </td>
                     <td>
                         <!-- Nút duyệt -->
-                        <a th:href="@{/duyet/{id}(id=${danhSachLichDatSan.id})}"
-                           th:if="${danhSachLichDatSan.trangThai ==0}"
+                        <a th:href="@{/duyet/{id}(id=${lich.id})}"
+                           th:if="${lich.trangThai ==0}"
                            class="btn btn-sm btn-outline-success"
                            onclick="return confirm('Bạn có chắc duyệt không')">Duyệt</a>
 
                         <!-- Nút hủy -->
-                        <th:block th:with="startDateTime=${T(java.time.LocalDateTime).of(danhSachLichDatSan.ngayDat, danhSachLichDatSan.giaTheoKhungGio.khungGio.gioBatDau)}">
+                        <th:block
+                                th:with="endDateTime=${T(java.time.LocalDateTime).of(lich.ngayDat, lich.giaTheoKhungGio.khungGio.gioKetThuc)}">
                             <button
-                                    th:if="(${danhSachLichDatSan.trangThai == 0} or ${danhSachLichDatSan.trangThai == 1}) and ${startDateTime.isAfter(T(java.time.LocalDateTime).now())}"
+                                    th:if="(${lich.trangThai == 0} or ${lich.trangThai == 1}) and ${endDateTime.isAfter(T(java.time.LocalDateTime).now())}"
                                     type="button"
                                     class="btn btn-sm btn-outline-danger"
                                     data-bs-toggle="modal"
-                                    th:attr="data-bs-target='#modalHuyLich_' + ${danhSachLichDatSan.id}">
+                                    th:attr="data-bs-target='#modalHuyLich_' + ${lich.id}">
                                 Hủy
                             </button>
                         </th:block>
-
 
 
                     </td>
 
 
                     <!-- Modal nhập lý do hủy-->
-                    <div class="modal fade" th:id="'modalHuyLich_' + ${danhSachLichDatSan.id}" tabindex="-1">
+                    <div class="modal fade" th:id="'modalHuyLich_' + ${lich.id}" tabindex="-1">
                         <div class="modal-dialog">
                             <form th:action="@{/huy}" method="post">
-                                <input type="hidden" name="id" th:value="${danhSachLichDatSan.id}"/>
+                                <input type="hidden" name="id" th:value="${lich.id}"/>
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title">Hủy lịch đặt</h5>
@@ -431,15 +435,19 @@
                                             <label class="form-label">Hình thức xử lý</label>
                                             <select name="hoanTien" class="form-select" required>
                                                 <option value="" disabled selected>-- Chọn --</option>
-                                                <option value="1">Hủy và HOÀN TIỀN</option>
-                                                <option value="0">Hủy KHÔNG hoàn tiền</option>
+                                                <option value="0">Hủy không hoàn tiền</option>
+                                                <th:block
+                                                        th:if="${lich.thanhToan != null and lich.thanhToan.trangThai == 1}">
+                                                    <option value="1">Hủy và hoàn tiền 100%</option>
+                                                </th:block>
                                             </select>
                                         </div>
 
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
+                                        </button>
                                     </div>
                                 </div>
                             </form>

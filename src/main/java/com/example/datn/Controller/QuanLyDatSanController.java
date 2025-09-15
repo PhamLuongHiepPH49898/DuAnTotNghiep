@@ -2,12 +2,14 @@ package com.example.datn.Controller;
 
 import com.example.datn.Entity.*;
 import com.example.datn.Repository.*;
+import com.example.datn.Service.HoanTienService;
 import com.example.datn.Service.LichDatSanService;
 import com.example.datn.Service.SanBongService;
 import com.example.datn.Service.TaiKhoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,11 +40,13 @@ public class QuanLyDatSanController {
     private LichDatSanRepo lichDatSanRepo;
     @Autowired
     private HoanTienRepo hoanTienRepo;
+    @Autowired
+    private HoanTienService hoanTienService;
+
 
 
     @GetMapping("/duyet-huy-lich")
     public String quanLyDatSan(
-            @RequestParam(name = "ngayTao", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayDat,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -80,8 +84,8 @@ public class QuanLyDatSanController {
     ) {
         if (ngayDat == null) {
             ngayDat = LocalDate.now();
-        } if (tenSan != null) {
-            tenSan = tenSan.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
+        }if (tenSan != null) {
+            tenSan = tenSan.trim();
         }
 
 
@@ -141,16 +145,9 @@ public class QuanLyDatSanController {
         try {
             LichDatSan lich = lichDatSanRepo.findById(id).orElseThrow();
             lichDatSanService.huy(id, ghiChu);
-            if (hoanTien == 1) {
-                HoanTien ht = new HoanTien();
-                ht.setLichDatSan(lich);
-                ht.setSoTien(BigDecimal.valueOf(lich.getGiaApDung()));
-                ht.setLyDo(ghiChu);
-                ht.setNgayTao(LocalDateTime.now());
-                ht.setTrangThai(0); // 0 = chờ xử lý
-                hoanTienRepo.save(ht);
+            if (hoanTien == 1  && lich.getThanhToan().getTrangThai() == 1) {
+                hoanTienService.taoHoanTienAdmin(lich, ghiChu);
             }
-
             redirectAttributes.addFlashAttribute("success", "Đã hủy lịch thành công!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Hủy lịch thất bại!");

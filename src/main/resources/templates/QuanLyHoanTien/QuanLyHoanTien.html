@@ -334,7 +334,9 @@
                     <th>SĐT</th>
                     <th>Sân</th>
                     <th>Ngày đặt</th>
-                    <th>Số tiền</th>
+                    <th>Số tiền đã thanh toán</th>
+                    <th>phần trăm hoàn</th>
+                    <th>Số tiền hoàn</th>
                     <th>Lý do</th>
                     <th>Trạng thái</th>
                     <th>Hành động</th>
@@ -348,7 +350,9 @@
                     <td th:text="${ht.lichDatSan.taiKhoan.so_dien_thoai}"></td>
                     <td th:text="${ht.lichDatSan.giaTheoKhungGio.sanBong.ten_san_bong}"></td>
                     <td th:text="${#temporals.format(ht.lichDatSan.ngayDat, 'dd/MM/yyyy')}"></td>
-                    <td th:text="${#numbers.formatDecimal(ht.soTien, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                    <td th:text="${#numbers.formatDecimal(ht.soTienDaThanhToan, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                    <td th:text="${#numbers.formatDecimal(ht.phanTramHoan * 100, 1, 2)} + ' %'"></td>
+                    <td th:text="${#numbers.formatDecimal(ht.soTienHoan, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
                     <td th:text="${ht.lyDo}"></td>
                     <td>
                         <span th:switch="${ht.trangThai}">
