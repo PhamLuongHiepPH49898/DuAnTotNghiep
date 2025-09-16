@@ -20,7 +20,7 @@ public class DatSanSheduled {
     private GiaTheoKhungGioRepo giaTheoKhungGioRepo;
 
     // @Scheduled(cron = "0 0 0 * * ?") // chạy lúc 00:00 mỗi ngày
-    @Scheduled(cron = "*/30 * * * * ?") // Tạm thời chạy mỗi 30 giây để test
+    @Scheduled(cron = "0 0 0 * * ?") // Tạm thời chạy mỗi 30 giây để test
     public void taoLichDatSanTruoc() {
         LocalDate ngay = LocalDate.now();
 

@@ -115,7 +115,7 @@ public class ThongTinNguoiDungController {
             redirectAttributes.addFlashAttribute("success",
                     "Lịch đã được hủy thành công (không được hoàn tiền vì chưa thanh toán)");
         }
-        lichDatSanService.huy(idLichDatSan, lyDoLuu);
+        lichDatSanService.huyPhiaUser(idLichDatSan, lyDoLuu);
 
         return "redirect:/thong-tin-nguoi-dung";
     }

@@ -1,5 +1,6 @@
 package com.example.datn.Service;
 
+import com.example.datn.Entity.HoanTien;
 import com.example.datn.Entity.KhungGio;
 import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Entity.ThongBao;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +25,7 @@ public class ThongBaoService {
 
     private final ThongBaoRepo thongBaoRepository;
     private final JavaMailSender javaMailSender;
+    private final HoanTienService hoanTienService;
 
     // Gửi thông báo xác nhận đặt sân
     public void taoThongBaoXacNhan(KhungGio khungGio, LichDatSan lichDatSan) {
@@ -133,6 +137,50 @@ public class ThongBaoService {
 
         sendEmail(lichDatSan.getTaiKhoan().getEmail(), thongBao.getTieuDe(), noiDung);
     }
+
+    // Gửi thông báo HUỶ đơn từ phía người dùng (có hoàn tiền)
+// Gửi thông báo HUỶ đơn từ phía người dùng (có hoàn tiền)
+    public void taoThongBaoHuyNguoiDung(LichDatSan lichDatSan, KhungGio khungGio, String lyDoHuy) {
+        String tenSan = lichDatSan.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
+
+        // Gọi service hoàn tiền để tạo bản ghi HoanTien
+        HoanTien hoanTien = hoanTienService.taoHoanTien(lichDatSan, lyDoHuy);
+
+        BigDecimal phanTramHoanTien = hoanTien.getPhanTramHoan().multiply(BigDecimal.valueOf(100));
+        BigDecimal soTienHoan = hoanTien.getSoTienHoan();
+
+        String noiDung = "<div style='font-family:sans-serif; color:#000;'>"
+                + "<p>Kính gửi: " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
+                + "<p>Bạn đã <strong>hủy đơn đặt sân</strong> tại sân <strong>\"" + tenSan + "\"</strong> "
+                + "ngày <strong>" + lichDatSan.getNgayDat() + "</strong> trong khung giờ "
+                + "<strong>" + khungGio.getGioBatDau() + " - " + khungGio.getGioKetThuc() + "</strong>.</p>"
+
+                + "<p><strong>Thông tin hoàn tiền:</strong></p>"
+                + "<ul>"
+                + "<li>Tỉ lệ hoàn tiền: <strong>" + phanTramHoanTien.stripTrailingZeros().toPlainString() + "%</strong></li>"
+                + "<li>Số tiền hoàn dự kiến: <strong>" + soTienHoan + " VNĐ</strong></li>"
+                + "<li>Lý do hủy: <strong>" + lyDoHuy + "</strong></li>"
+                + "</ul>"
+
+                + "<p>Khoản hoàn tiền sẽ được xử lý theo phương thức thanh toán bạn đã sử dụng.</p>"
+                + "<p>Nếu có thắc mắc, vui lòng liên hệ qua email: "
+                + "<a href=\"mailto:sambasport.booking@gmail.com\">sambasport.booking@gmail.com</a></p>"
+                + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Ban quản trị Sân bóng Samba</strong></p>"
+                + "</div>";
+
+        ThongBao thongBao = new ThongBao();
+        thongBao.setTieuDe("Xác nhận hủy đơn & hoàn tiền");
+        thongBao.setNoiDung(noiDung);
+        thongBao.setNgayTao(LocalDateTime.now());
+        thongBao.setTrangThai(0);
+        thongBao.setTaiKhoan(lichDatSan.getTaiKhoan());
+        thongBao.setLichDatSan(lichDatSan);
+
+        thongBaoRepository.save(thongBao);
+
+        sendEmail(lichDatSan.getTaiKhoan().getEmail(), thongBao.getTieuDe(), noiDung);
+    }
+
 
     private void sendEmail(String to, String subject, String content) {
         try {
