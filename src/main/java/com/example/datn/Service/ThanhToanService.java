@@ -1,6 +1,7 @@
 package com.example.datn.Service;
 
 import com.example.datn.DTO.ThanhToanDTO;
+import com.example.datn.Entity.KhungGio;
 import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Entity.ThanhToan;
 import com.example.datn.Repository.LichDatSanRepo;
@@ -23,6 +24,9 @@ public class ThanhToanService {
 
     @Autowired
     private LichDatSanRepo lichDatSanRepo;
+
+    @Autowired
+    private ThongBaoService thongBaoService;
 
     private final String API_KEY = "76NFBDEZWTSE0NB0GF2YLVJ4OZUSA5ICAH69ODUKMRTPQZGYKLHNQDCXQVI4PBNI";
     private final String API_URL = "https://my.sepay.vn/userapi/transactions/list";
@@ -73,6 +77,23 @@ public class ThanhToanService {
                 lich.setTrangThai(2); // đã hủy
                 lich.setGhiChu("Quá hạn thanh toán");
                 lichDatSanRepo.save(lich);
+                //Tạo lịch mới
+                LichDatSan lichMoi = new LichDatSan();
+                lichMoi.setNgayDat(lich.getNgayDat());
+                lichMoi.setGiaTheoKhungGio(lich.getGiaTheoKhungGio());
+                lichMoi.setTrangThai(3); // 3 = trống
+                lichMoi.setGhiChu("Tạo lại sau khi huỷ quá hạn");
+                lichMoi.setNgayTao(LocalDateTime.now());
+                lichMoi.setGiaApDung(null);
+                lichMoi.setTaiKhoan(null);
+                lichDatSanRepo.save(lichMoi);
+                //huy -> gui thongbao
+                try {
+                    KhungGio khungGio = lich.getGiaTheoKhungGio().getKhungGio();
+                    thongBaoService.taoThongBaoHuy(lich, khungGio);
+                } catch (Exception e) {
+                    System.err.println("[WARN] Gửi thông báo HUỶ thất bại: " + e.getMessage());
+                }
             }
             return mapToDTO(tt);
         }
@@ -117,6 +138,13 @@ public class ThanhToanService {
                         for (LichDatSan lich : tt.getLichDatSans()) {
                             lich.setTrangThai(1); // 1 = đã xác nhận
                             lichDatSanRepo.save(lich);
+                            //duyet -> gui thongbao
+                            try {
+                                KhungGio khungGio = lich.getGiaTheoKhungGio().getKhungGio();
+                                thongBaoService.taoThongBaoXacNhan(khungGio, lich);
+                            } catch (Exception e) {
+                                System.err.println("[WARN] Gửi thông báo thất bại cho lịch ID=" + lich.getId() + ": " + e.getMessage());
+                            }
                         }
 
                         System.out.println("✅ Thanh toán thành công cho ThanhToan ID=" + tt.getIdThanhToan());

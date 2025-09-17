@@ -204,12 +204,23 @@ public class SanBongController {
     }
 
     @GetMapping("/user/trang-chu")
-    public String trangChu_nguoiDung(Model model) {
+    public String trangChu_nguoiDung(Model model, HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("username", auth.getName());
 
         List<SanBong> danhSachSan = sanBongService.findAll();
         model.addAttribute("danhSachSan", danhSachSan);
+        // Lấy thông tin tài khoản từ SecurityContext
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+        TaiKhoan taiKhoan = userDetails.getTaiKhoan();
+
+        //  Set idTaiKhoan vào session để sử dụng cho thông báo
+        request.getSession().setAttribute("idTaiKhoan", taiKhoan.getId());
+        danhSachSan = sanBongService.findAll();
+        model.addAttribute("danhSachSan", danhSachSan);
+        //
+        int soLuongThongBaoMoi = thongBaoService.demThongBaoChuaDoc(taiKhoan.getId());
+        model.addAttribute("soLuongThongBaoMoi", soLuongThongBaoMoi);
 
         // Gửi map danh sách đánh giá từng sân
         Map<Integer, List<DanhGia>> mapDanhGia = new HashMap<>();

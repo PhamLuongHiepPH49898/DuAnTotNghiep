@@ -89,9 +89,6 @@
             background-color: #f7f9fc; font-size: 15px; color: #333;"
          th:utext="${#strings.replace(thongBao.noiDung, '\n', '<br/>')}"></div>
 
-    <label>Ngày tạo:</label>
-    <input type="text" th:value="${#temporals.format(thongBao.ngayTao, 'dd/MM/yyyy HH:mm')}" readonly>
-
   </form>
 
   <a th:href="@{/thong-bao/xem-thong-bao}" class="btn-back">Quay lại danh sách</a>

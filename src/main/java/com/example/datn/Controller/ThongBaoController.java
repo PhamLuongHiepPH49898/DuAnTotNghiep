@@ -46,7 +46,6 @@ public class ThongBaoController {
         System.out.println(EnvUtil.get("MAIL_PASSWORD"));
 
         if (idTaiKhoan == null) {
-            model.addAttribute("error", "Bạn chưa đăng nhập, vui lòng truy cập trang chủ.");
             model.addAttribute("thongBaoList", List.of());
             return "ThongBao/ThongBao";
         }

@@ -6,14 +6,10 @@ import com.example.datn.Entity.SanBong;
 import com.example.datn.Repository.GiaTheoKhungGioRepo;
 import com.example.datn.Repository.KhungGioRepo;
 import com.example.datn.Repository.SanBongRepo;
-import com.example.datn.Scheduler.DatSanSheduled;
+import com.example.datn.Scheduler.DatSanSheduler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +22,7 @@ public class GiaTheoKhungGioService {
     @Autowired
     private KhungGioRepo khungGioRepo;
     @Autowired
-    private DatSanSheduled datSanSheduled;
+    private DatSanSheduler datSanSheduled;
 
     public List<GiaTheoKhungGio> getGiaTheoKhungGio() {
         return giaTheoKhungGioRepo.findAllByTrangThaiOrderByTenSanBong(List.of(0));

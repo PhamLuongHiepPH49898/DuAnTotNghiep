@@ -2,9 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <meta charset="UTF-8" />
-    <title>Đặt lịch thành công</title>
+    <title>Kết quả đặt lịch</title>
     <style>
-        /* Reset cơ bản */
         * {
             margin: 0;
             padding: 0;
@@ -39,8 +38,6 @@
             color: #75a6b6;
         }
 
-
-
         p {
             font-size: 1.1rem;
             margin-bottom: 30px;
@@ -72,9 +69,26 @@
 </head>
 <body>
 <div class="container" role="main">
-    <h2>Đặt lịch thành công!</h2>
-    <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>
+    <!-- Tiêu đề -->
+    <h2 th:if="${ketQua == 'success'}">Đặt lịch thành công!</h2>
+    <h2 th:if="${ketQua == 'partial'}">Một số lịch không hợp lệ</h2>
+    <h2 th:if="${ketQua == 'fail'}">Đặt lịch thất bại</h2>
+
+    <!-- Nội dung mô tả -->
+    <p th:if="${ketQua == 'success'}">
+        Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.
+    </p>
+    <p th:if="${ketQua == 'partial'}">
+        Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.Tuy nhiên có một số lịch không hợp lệ.
+        Vui lòng kiểm tra lại.    </p>
+    <p th:if="${ketQua == 'fail'}">
+        Rất tiếc, lich của bạn không hợp lệ. Vui lòng thử lại.
+    </p>
+
+    <!-- Các nút điều hướng -->
     <a th:href="@{/ve-trang-chu}" role="button" aria-label="Quay lại trang chủ">Quay lại trang chủ</a>
+    <a th:if="${ketQua != 'success'}" th:href="@{/datsan(id=1)}" role="button" aria-label="Đặt lại">Thử đặt lại</a>
 </div>
+
 </body>
 </html>
