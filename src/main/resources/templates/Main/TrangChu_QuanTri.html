@@ -236,6 +236,22 @@
                 <a th:href="@{'/chi-tiet/' + ${san.id_san_bong}}" th:text="${san.ten_san_bong}"></a>
                 <p><strong>Thể thao:</strong> <span th:text="${san.loaiMonTheThao.ten_mon_the_thao}"></span></p>
                 <p><strong>Địa chỉ:</strong> <span th:text="${san.dia_chi}"></span></p>
+
+                <!-- Hiển thị đánh giá -->
+                <div th:if="${san.danhGias != null}">
+                    <div th:if="${!san.danhGias.isEmpty()}">
+                        <div th:each="danhGia : ${san.danhGias}">
+                            <p>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                <span th:text="${danhGia.sao} + ' sao - ' + ${danhGia.noiDung}"></span>
+                            </p>
+                        </div>
+                    </div>
+                    <div th:if="${san.danhGias.isEmpty()}">
+                        <p><i>Chưa có đánh giá.</i></p>
+                    </div>
+                </div>
+
             </div>
             <a th:href="@{'/datsan?id=' + ${san.id_san_bong}}">⚽ Đặt sân ngay</a>
         </div>

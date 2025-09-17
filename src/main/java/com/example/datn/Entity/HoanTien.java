@@ -14,15 +14,21 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name="hoan_tien")
+@Table(name = "hoan_tien")
 public class HoanTien {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "so_tien", nullable = false)
-    private BigDecimal soTien;
+    @Column(name = "so_tien_hoan", nullable = false)
+    private BigDecimal soTienHoan;
+
+    @Column(name = "so_tien_da_thanh_toan", nullable = false)
+    private BigDecimal soTienDaThanhToan;
+
+    @Column(name = "phan_tram_hoan", nullable = false)
+    private BigDecimal phanTramHoan;
 
     @Column(name = "ly_do", columnDefinition = "NVARCHAR(255)")
     private String lyDo;
@@ -30,8 +36,8 @@ public class HoanTien {
     @Column(name = "trang_thai", nullable = false)
     private Integer trangThai; // 0: chờ xử lý, 1: đã hoàn, 2: từ chối
 
-    @Column(name = "ngay_tao")
-    private LocalDateTime ngayTao;
+    @Column(name = "ngay_huy", nullable = false)
+    private LocalDateTime ngayHuy;
 
     @Column(name = "ngay_cap_nhat")
     private LocalDateTime ngayCapNhat;

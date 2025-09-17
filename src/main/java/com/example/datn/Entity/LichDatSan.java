@@ -27,7 +27,7 @@ public class LichDatSan {
     private LocalDate ngayDat;
 
     @Column(name = "ngay_tao", nullable = false)
-    private LocalDateTime ngayTao = LocalDateTime.now();
+    private LocalDateTime ngayTao ;
 
     @Column(name = "gia_ap_dung", nullable = false)
     private Double giaApDung;

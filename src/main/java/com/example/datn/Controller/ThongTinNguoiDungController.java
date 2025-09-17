@@ -1,16 +1,12 @@
 package com.example.datn.Controller;
 
 
-import com.example.datn.Entity.GiaTheoKhungGio;
-import com.example.datn.Entity.LichDatSan;
-import com.example.datn.Entity.SanBong;
-import com.example.datn.Entity.TaiKhoan;
+import com.example.datn.Entity.*;
 import com.example.datn.Repository.GiaTheoKhungGioRepo;
 import com.example.datn.Repository.LichDatSanRepo;
 import com.example.datn.Repository.SanBongRepo;
 import com.example.datn.Repository.TaiKhoanRepo;
-import com.example.datn.Service.ThongTinNguoiDungService;
-import com.example.datn.Service.XacNhanDatLichService;
+import com.example.datn.Service.*;
 import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Entity.TaiKhoan;
 import com.example.datn.Repository.TaiKhoanRepo;
@@ -54,13 +50,17 @@ public class ThongTinNguoiDungController {
     private SanBongRepo sanBongRepo;
     @Autowired
     private GiaTheoKhungGioRepo giaTheoKhungGioRepo;
+    @Autowired
+    private HoanTienService hoanTienService;
+    @Autowired
+    private LichDatSanService lichDatSanService;
 
     @GetMapping("/thong-tin-nguoi-dung")
     public String hienThiThongTinNguoiDung(Model model,
                                            Principal principal,
                                            @RequestParam(defaultValue = "0") int page,
                                            @RequestParam(required = false) String keyword
-                                           ) {
+    ) {
 
         String email = principal.getName();
         Optional<TaiKhoan> optionalTaiKhoan = taiKhoanRepo.findByEmail(email);
@@ -90,30 +90,36 @@ public class ThongTinNguoiDungController {
 
         return "ThongTinND/TTND";
     }
-//    @GetMapping("/lich-dat/huy")
-//    public String huyLichDat(@RequestParam("id") Integer idLich/*,@RequestParam("ghiChu") String ghiChu*/) {
-//        thongTinNguoiDungService.huyLichDat(idLich/*, ghiChu*/);
-//        return "redirect:/thong-tin-nguoi-dung";
-//    }
-@PostMapping("/lich-dat/huy")
-public String huyLichDat(@RequestParam("idLich") Integer idLich,
-                         @RequestParam("ghiChu") String ghiChu,
-                         RedirectAttributes redirectAttributes) {
-    try {
-        LichDatSan lich = lichDatSanRepo.findById(idLich)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy lịch đặt"));
 
-        // Cập nhật trạng thái và ghi chú
-        lich.setTrangThai(2); // 2 = Đã hủy
-        lich.setGhiChu(ghiChu);
-        lichDatSanRepo.save(lich);
 
-        return "redirect:/huyLichThanhCong";
-    } catch (Exception e) {
-        redirectAttributes.addFlashAttribute("error", "Có lỗi khi hủy lịch!");
+    @PostMapping("/lich-dat/huy-lich")
+    public String huyLichDaThanhToan(@RequestParam int idLichDatSan,
+                          @RequestParam String lyDoHuy,
+                          @RequestParam(required = false) String nhapLyDoHuy,
+                          RedirectAttributes redirectAttributes) {
+
+        LichDatSan lich = lichDatSanRepo.findById(idLichDatSan)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy lịch"));
+
+        String lyDoLuu = "Khác".equals(lyDoHuy) && nhapLyDoHuy != null && !nhapLyDoHuy.isBlank()
+                ? nhapLyDoHuy
+                : lyDoHuy;
+
+        // chỉ tạo hoàn tiền nếu lịch đã thanh toán
+        if (lich.getThanhToan() != null && lich.getThanhToan().getTrangThai() == 1) {
+            HoanTien hoanTien = hoanTienService.taoHoanTien(lich, lyDoLuu);
+
+            redirectAttributes.addFlashAttribute("success",
+                    "Hủy lịch thành công và số tiền được hoàn: (" + hoanTien.getSoTienHoan() + " đ)");
+        }else {
+            redirectAttributes.addFlashAttribute("success",
+                    "Lịch đã được hủy thành công (không được hoàn tiền vì chưa thanh toán)");
+        }
+        lichDatSanService.huyPhiaUser(idLichDatSan, lyDoLuu);
+
         return "redirect:/thong-tin-nguoi-dung";
     }
-}
+
 
     @GetMapping("/huyLichThanhCong")
     public String huyLichThanhCong() {
@@ -137,6 +143,7 @@ public String huyLichDat(@RequestParam("idLich") Integer idLich,
         // Có thể thêm dữ liệu khác như danh sách khung giờ/sân bóng nếu cần chọn lại
         return "ThongTinND/SuaLich"; // Tên file form bạn sẽ tạo
     }
+
     @PostMapping("/lich-dat/cap-nhat")
     public String capNhatLich(@ModelAttribute("lichDatSan") LichDatSan lichMoi) {
         thongTinNguoiDungService.suaLichDat(lichMoi);

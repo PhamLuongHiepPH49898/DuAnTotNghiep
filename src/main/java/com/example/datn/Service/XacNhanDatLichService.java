@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -143,6 +144,7 @@ public class XacNhanDatLichService {
             lichSan.setGhiChu("");
             lichSan.setTaiKhoan(taiKhoan);
             lichSan.setSanBong(lichSan.getGiaTheoKhungGio().getSanBong());
+            lichSan.setNgayTao(LocalDateTime.now());
 
             lichDatSanRepository.save(lichSan);
             idLichCapNhat.add(lichSan.getId());
