@@ -63,8 +63,9 @@ public class SanBong {
     @JoinColumn(name = "id_tai_khoan")
     private TaiKhoan taiKhoan;
 
-    @OneToMany(mappedBy = "sanBong", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sanBong", fetch = FetchType.EAGER)
     private List<DanhGia> danhGias;
+
 
     @Transient
     private MultipartFile file; // dùng để bind file upload, không lưu DB
