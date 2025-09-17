@@ -89,7 +89,6 @@ public class HoanTienService {
         );
         long hoursDiff = ChronoUnit.HOURS.between(LocalDateTime.now(), gioBatDau);
 
-
         if (hoursDiff > 24) return BigDecimal.valueOf(1.0).setScale(2, RoundingMode.HALF_UP);  // 100%
         if (hoursDiff >= 12) return BigDecimal.valueOf(0.8).setScale(2, RoundingMode.HALF_UP); // 80%
         if (hoursDiff >= 4) return BigDecimal.valueOf(0.5).setScale(2, RoundingMode.HALF_UP); // 50%

@@ -31,13 +31,13 @@ public class ThongBaoService {
     public void taoThongBaoXacNhan(KhungGio khungGio, LichDatSan lichDatSan) {
         String tenSan = lichDatSan.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
         String noiDung = "<div style='font-family:sans-serif; color:#000;'>"
-                + "<p>Xin chào " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
-                + "<p>Chúng tôi xác nhận bạn đã <strong>đặt sân thành công</strong> tại sân <strong>" + tenSan + "</strong>.</p>"
-                + "<p><strong>📅 Thời gian:</strong> " + lichDatSan.getNgayDat()
-                + " từ <strong>" + khungGio.getGioBatDau() + "</strong> đến <strong>" + khungGio.getGioKetThuc() + "</strong></p>"
-                + "<p>Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi.</p>"
-                + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Đội ngũ sân bóng</strong></p>"
-                + "</div>";
+                         + "<p>Xin chào " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
+                         + "<p>Chúng tôi xác nhận bạn đã <strong>đặt sân thành công</strong> tại sân <strong>" + tenSan + "</strong>.</p>"
+                         + "<p><strong>📅 Thời gian:</strong> " + lichDatSan.getNgayDat()
+                         + " từ <strong>" + khungGio.getGioBatDau() + "</strong> đến <strong>" + khungGio.getGioKetThuc() + "</strong></p>"
+                         + "<p>Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi.</p>"
+                         + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Đội ngũ sân bóng</strong></p>"
+                         + "</div>";
 
         ThongBao thongBao = new ThongBao();
         thongBao.setTieuDe("Xác nhận đặt sân thành công");
@@ -57,16 +57,15 @@ public class ThongBaoService {
         String checkInUrl = "http://localhost:8080/check-in/" + lichDatSan.getId();
 
         String noiDung = "<div style='font-family:sans-serif; color:#000;'>"
-                + "<p>Xin chào " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
-                + "<p>Đây là lời nhắc về lịch đặt sân sắp tới của bạn tại sân <strong>" + tenSan + "</strong>.</p>"
-                + "<p><strong>📅 Thời gian:</strong> " + lichDatSan.getNgayDat()
-                + " từ <strong>" + khungGio.getGioBatDau() + "</strong> đến <strong>" + khungGio.getGioKetThuc() + "</strong></p>"
-                + "<p>🎯 <strong>Link Check-in:</strong> <a href=\"" + checkInUrl + "\" style='color:#1a73e8; text-decoration:none;'>Bấm vào đây để check-in</a></p>"
+                         + "<p>Xin chào " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
+                         + "<p>Đây là lời nhắc về lịch đặt sân sắp tới của bạn tại sân <strong>" + tenSan + "</strong>.</p>"
+                         + "<p><strong>📅 Thời gian:</strong> " + lichDatSan.getNgayDat()
+                         + " từ <strong>" + khungGio.getGioBatDau() + "</strong> đến <strong>" + khungGio.getGioKetThuc() + "</strong></p>"
+                         + "<p>🎯 <strong>Link Check-in:</strong> <a href=\"" + checkInUrl + "\" style='color:#1a73e8; text-decoration:none;'>Bấm vào đây để check-in</a></p>"
 
-                + "<p>Chúc bạn có một trận đấu thật vui vẻ và hiệu quả!</p>"
-                + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Đội ngũ sân bóng</strong></p>"
-                + "</div>";
-
+                         + "<p>Chúc bạn có một trận đấu thật vui vẻ và hiệu quả!</p>"
+                         + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Đội ngũ sân bóng</strong></p>"
+                         + "</div>";
 
 
         ThongBao thongBao = new ThongBao();
@@ -87,17 +86,15 @@ public class ThongBaoService {
         String checkInUrl = "http://localhost:8080/check-in/" + lichDatSan.getId();
 
         String noiDung = "<div style='font-family:sans-serif; color:#000;'>"
-                + "<p>Xin chào " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
-                + "<p>Đây là lời nhắc về lịch đặt sân sắp tới của bạn tại sân <strong>" + tenSan + "</strong>.</p>"
-                + "<p><strong>📅 Thời gian:</strong> " + lichDatSan.getNgayDat()
-                + " từ <strong>" + khungGio.getGioBatDau() + "</strong> đến <strong>" + khungGio.getGioKetThuc() + "</strong></p>"
-                + "<p><strong>🎯 Link Check-in:</strong> "
-                + "<a href=\"" + checkInUrl + "\" style='color:#1a73e8; text-decoration:none;'>Bấm vào đây để check-in</a></p>"
-                + "<p>Chúc bạn có một trận đấu thật vui vẻ và hiệu quả!</p>"
-                + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Đội ngũ sân bóng</strong></p>"
-                + "</div>";
-
-
+                         + "<p>Xin chào " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
+                         + "<p>Đây là lời nhắc về lịch đặt sân sắp tới của bạn tại sân <strong>" + tenSan + "</strong>.</p>"
+                         + "<p><strong>📅 Thời gian:</strong> " + lichDatSan.getNgayDat()
+                         + " từ <strong>" + khungGio.getGioBatDau() + "</strong> đến <strong>" + khungGio.getGioKetThuc() + "</strong></p>"
+                         + "<p><strong>🎯 Link Check-in:</strong> "
+                         + "<a href=\"" + checkInUrl + "\" style='color:#1a73e8; text-decoration:none;'>Bấm vào đây để check-in</a></p>"
+                         + "<p>Chúc bạn có một trận đấu thật vui vẻ và hiệu quả!</p>"
+                         + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Đội ngũ sân bóng</strong></p>"
+                         + "</div>";
 
 
         ThongBao thongBao = new ThongBao();
@@ -117,15 +114,15 @@ public class ThongBaoService {
     public void taoThongBaoHuy(LichDatSan lichDatSan, KhungGio khungGio) {
         String tenSan = lichDatSan.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
         String noiDung = "<div style='font-family:sans-serif; color:#000;'>"
-                + "<p>Kính gửi: " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
-                + "<p>Chúng tôi xin thông báo rằng đơn đặt sân tại <strong>\"" + tenSan + "\"</strong> vào ngày <strong>"
-                + lichDatSan.getNgayDat() + "</strong> trong khung giờ <strong>"
-                + khungGio.getGioBatDau() + " - " + khungGio.getGioKetThuc() + "</strong> đã bị <strong>hủy</strong> bởi quản trị viên.</p>"
-                + "<p><strong>Lý do hủy:</strong> " + (lichDatSan.getGhiChu() != null ? lichDatSan.getGhiChu() : "Không có") + "</p>"
-                + "<p>Chúng tôi rất tiếc vì sự bất tiện này. Nếu bạn cần hỗ trợ, vui lòng liên hệ qua email: "
-                + "<a href=\"mailto:sambasport.booking@gmail.com\">sambasport.booking@gmail.com</a></p>"
-                + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Ban quản trị Sân bóng Samba</strong></p>"
-                + "</div>";
+                         + "<p>Kính gửi: " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
+                         + "<p>Chúng tôi xin thông báo rằng đơn đặt sân tại <strong>\"" + tenSan + "\"</strong> vào ngày <strong>"
+                         + lichDatSan.getNgayDat() + "</strong> trong khung giờ <strong>"
+                         + khungGio.getGioBatDau() + " - " + khungGio.getGioKetThuc() + "</strong> đã bị <strong>hủy</strong> bởi quản trị viên.</p>"
+                         + "<p><strong>Lý do hủy:</strong> " + (lichDatSan.getGhiChu() != null ? lichDatSan.getGhiChu() : "Không có") + "</p>"
+                         + "<p>Chúng tôi rất tiếc vì sự bất tiện này. Nếu bạn cần hỗ trợ, vui lòng liên hệ qua email: "
+                         + "<a href=\"mailto:sambasport.booking@gmail.com\">sambasport.booking@gmail.com</a></p>"
+                         + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Ban quản trị Sân bóng Samba</strong></p>"
+                         + "</div>";
 
         ThongBao thongBao = new ThongBao();
         thongBao.setTieuDe("Thông báo hủy đơn đặt sân");
@@ -143,33 +140,49 @@ public class ThongBaoService {
     public void taoThongBaoHuyNguoiDung(LichDatSan lichDatSan, KhungGio khungGio, String lyDoHuy) {
         String tenSan = lichDatSan.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
 
-        // Gọi service hoàn tiền để tạo bản ghi HoanTien
-        HoanTien hoanTien = hoanTienService.taoHoanTien(lichDatSan, lyDoHuy);
+        HoanTien hoanTien = null;
+        if (lichDatSan.getThanhToan() != null && lichDatSan.getThanhToan().getTrangThai() == 1) {
+            // Chỉ tạo hoàn tiền nếu đã thanh toán
+            hoanTien = hoanTienService.taoHoanTien(lichDatSan, lyDoHuy);
+        }
 
-        BigDecimal phanTramHoanTien = hoanTien.getPhanTramHoan().multiply(BigDecimal.valueOf(100));
-        BigDecimal soTienHoan = hoanTien.getSoTienHoan();
+        String noiDung;
+        if (hoanTien != null) {
+            BigDecimal phanTramHoanTien = hoanTien.getPhanTramHoan().multiply(BigDecimal.valueOf(100));
+            BigDecimal soTienHoan = hoanTien.getSoTienHoan();
 
-        String noiDung = "<div style='font-family:sans-serif; color:#000;'>"
-                + "<p>Kính gửi: " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
-                + "<p>Bạn đã <strong>hủy đơn đặt sân</strong> tại sân <strong>\"" + tenSan + "\"</strong> "
-                + "ngày <strong>" + lichDatSan.getNgayDat() + "</strong> trong khung giờ "
-                + "<strong>" + khungGio.getGioBatDau() + " - " + khungGio.getGioKetThuc() + "</strong>.</p>"
-
-                + "<p><strong>Thông tin hoàn tiền:</strong></p>"
-                + "<ul>"
-                + "<li>Tỉ lệ hoàn tiền: <strong>" + phanTramHoanTien.stripTrailingZeros().toPlainString() + "%</strong></li>"
-                + "<li>Số tiền hoàn dự kiến: <strong>" + soTienHoan + " VNĐ</strong></li>"
-                + "<li>Lý do hủy: <strong>" + lyDoHuy + "</strong></li>"
-                + "</ul>"
-
-                + "<p>Khoản hoàn tiền sẽ được xử lý theo phương thức thanh toán bạn đã sử dụng.</p>"
-                + "<p>Nếu có thắc mắc, vui lòng liên hệ qua email: "
-                + "<a href=\"mailto:sambasport.booking@gmail.com\">sambasport.booking@gmail.com</a></p>"
-                + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Ban quản trị Sân bóng Samba</strong></p>"
-                + "</div>";
+            noiDung = "<div style='font-family:sans-serif; color:#000;'>"
+                      + "<p>Kính gửi: " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
+                      + "<p>Bạn đã <strong>hủy đơn đặt sân</strong> tại sân <strong>\"" + tenSan + "\"</strong> "
+                      + "ngày <strong>" + lichDatSan.getNgayDat() + "</strong> trong khung giờ "
+                      + "<strong>" + khungGio.getGioBatDau() + " - " + khungGio.getGioKetThuc() + "</strong>.</p>"
+                      + "<p><strong>Thông tin hoàn tiền:</strong></p>"
+                      + "<ul>"
+                      + "<li>Tỉ lệ hoàn tiền: <strong>" + phanTramHoanTien.stripTrailingZeros().toPlainString() + "%</strong></li>"
+                      + "<li>Số tiền hoàn dự kiến: <strong>" + soTienHoan + " VNĐ</strong></li>"
+                      + "<li>Lý do hủy: <strong>" + lyDoHuy + "</strong></li>"
+                      + "</ul>"
+                      + "<p>Khoản hoàn tiền sẽ được xử lý theo phương thức thanh toán bạn đã sử dụng.</p>"
+                      + "<p>Nếu có thắc mắc, vui lòng liên hệ qua email: "
+                      + "<a href=\"mailto:sambasport.booking@gmail.com\">sambasport.booking@gmail.com</a></p>"
+                      + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Ban quản trị Sân bóng Samba</strong></p>"
+                      + "</div>";
+        } else {
+            // Trường hợp chưa thanh toán, không hiển thị thông tin hoàn tiền
+            noiDung = "<div style='font-family:sans-serif; color:#000;'>"
+                      + "<p>Kính gửi: " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
+                      + "<p>Bạn đã <strong>hủy đơn đặt sân</strong> tại sân <strong>\"" + tenSan + "\"</strong> "
+                      + "ngày <strong>" + lichDatSan.getNgayDat() + "</strong> trong khung giờ "
+                      + "<strong>" + khungGio.getGioBatDau() + " - " + khungGio.getGioKetThuc() + "</strong>.</p>"
+                      + "<p>Vì đơn hàng của bạn chưa thanh toán nên không phát sinh hoàn tiền.</p>"
+                      + "<p>Nếu có thắc mắc, vui lòng liên hệ qua email: "
+                      + "<a href=\"mailto:sambasport.booking@gmail.com\">sambasport.booking@gmail.com</a></p>"
+                      + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Ban quản trị Sân bóng Samba</strong></p>"
+                      + "</div>";
+        }
 
         ThongBao thongBao = new ThongBao();
-        thongBao.setTieuDe("Xác nhận hủy đơn & hoàn tiền");
+        thongBao.setTieuDe(hoanTien != null ? "Xác nhận hủy đơn & hoàn tiền" : "Xác nhận hủy đơn");
         thongBao.setNoiDung(noiDung);
         thongBao.setNgayTao(LocalDateTime.now());
         thongBao.setTrangThai(0);
@@ -177,7 +190,6 @@ public class ThongBaoService {
         thongBao.setLichDatSan(lichDatSan);
 
         thongBaoRepository.save(thongBao);
-
         sendEmail(lichDatSan.getTaiKhoan().getEmail(), thongBao.getTieuDe(), noiDung);
     }
 
@@ -202,9 +214,11 @@ public class ThongBaoService {
     public List<ThongBao> layThongBaoTheoTaiKhoan(Integer idTaiKhoan) {
         return thongBaoRepository.findThongBaoUuTienChuaDoc(idTaiKhoan);
     }
+
     public int demThongBaoChuaDoc(Integer taiKhoanId) {
         return thongBaoRepository.countByTaiKhoanIdAndTrangThai(taiKhoanId, 0);
     }
+
     @Transactional
     public void danhDauThongBaoDaDoc(Integer idThongBao) {
         thongBaoRepository.danhDauDaDoc(idThongBao);

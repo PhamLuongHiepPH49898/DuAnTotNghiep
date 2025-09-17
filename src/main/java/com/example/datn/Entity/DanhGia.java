@@ -19,7 +19,7 @@ public class DanhGia {
     private Integer id;
     @Column(name = "so_sao")
     private Integer sao;
-    @Column(name = "noi_dung")
+    @Column(name = "noi_dung", columnDefinition = "NVARCHAR(255)")
     private String noiDung;
     @Column(name = "ngay_danh_gia")
     private LocalDate ngayDanhGia;
@@ -33,10 +33,6 @@ public class DanhGia {
     @ManyToOne
     @JoinColumn(name = "id_san_bong")
     private SanBong sanBong;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "id_lich_dat_san")
-//    private LichDatSan lichDatSan;
 
 
 }
