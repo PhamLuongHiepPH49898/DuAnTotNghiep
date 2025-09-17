@@ -1,7 +1,6 @@
 package com.example.datn.DTO;
 
 public interface DoanhThuSanProjection {
-    Integer getIdSan();
 
     String getTenSan();
 

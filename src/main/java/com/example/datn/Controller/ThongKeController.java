@@ -5,64 +5,53 @@ import com.example.datn.Service.ThongKeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.YearMonth;
 import java.util.List;
-import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/thongke")
 public class ThongKeController {
 
     private final ThongKeService thongKeService;
 
-    @GetMapping("/thongke/doanhthu")
+    @GetMapping("/doanhthu")
     public String doanhThuTheoSan(
-            @RequestParam(required = false) String monthYear,
-            Model model) {
+            @RequestParam(required = false) String monthYear, // dạng "yyyy-MM"
+            Model model
+    ) {
+        // 1) Xác định tháng/năm
+        YearMonth ym = StringUtils.hasText(monthYear) ? YearMonth.parse(monthYear) : YearMonth.now();
 
-        // Tính tháng/năm (yyyy-MM)
-        YearMonth ym = (monthYear == null || monthYear.isBlank())
-                ? YearMonth.now()
-                : YearMonth.parse(monthYear);
-        int month = ym.getMonthValue();
-        int year  = ym.getYear();
+        // 2) Lấy dữ liệu tổng hợp
+        var kq = thongKeService.thongKeTheoThang(ym.getMonthValue(), ym.getYear());
 
-        // Lấy dữ liệu bảng
-        List<DoanhThuSanProjection> list = thongKeService.tongHopTheoSan(month, year);
-        // DoanhThuSanRow { String tenSan; long soLuotDat; Double tongDoanhThu; }
-
-        // Tổng
-        double total = list.stream()
-                .map(DoanhThuSanProjection::getTongDoanhThu)
-                .filter(Objects::nonNull)
-                .mapToDouble(Double::doubleValue)
-                .sum();
-
-        // >>> DỮ LIỆU BIỂU ĐỒ
-        List<String> labels = list.stream()
+        // 3) Chuẩn bị dữ liệu cho Chart.js
+        List<String> labels = kq.list().stream()
                 .map(DoanhThuSanProjection::getTenSan)
                 .toList();
 
-        List<Double> values = list.stream()
-                .map(DoanhThuSanProjection::getTongDoanhThu)
-                .map(v -> v == null ? 0d : v)
+        List<Double> values = kq.list().stream()
+                .map(p -> p.getTongDoanhThu() == null ? 0d : p.getTongDoanhThu())
                 .toList();
 
-        // Add vào model (BẮT BUỘC có)
-        model.addAttribute("list", list);
-        model.addAttribute("total", total);
+        // 4) Đưa vào model cho Thymeleaf (BẮT BUỘC có labels/values)
+        model.addAttribute("list", kq.list());
+        model.addAttribute("total", kq.tongTatCa());
         model.addAttribute("labels", labels);
         model.addAttribute("values", values);
 
-        // Phục vụ phần header/lọc
-        model.addAttribute("month", month);
-        model.addAttribute("year", year);
+        // Phục vụ phần tiêu đề/lọc tháng
+        model.addAttribute("month", kq.month());
+        model.addAttribute("year", kq.year());
         model.addAttribute("monthYear", ym.toString()); // "yyyy-MM"
 
-        return "thongke/doanhthu"; // KHÔNG redirect
+        // LƯU Ý: Render trực tiếp view, đừng redirect (redirect sẽ mất model)
+        return "ThongKe/DoanhThuTheoSan";
     }
-
 }
