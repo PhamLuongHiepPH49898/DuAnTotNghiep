@@ -81,6 +81,35 @@ public class LichDatSanService {
             System.err.println("[WARN] Gửi thông báo HUỶ thất bại: " + e.getMessage());
         }
     }
+    public void huyPhiaUser(int id, String ghiChu) {
+        LichDatSan lichDatSan = lichDatSanRepo.findById(id).orElse(null);
+        if (lichDatSan != null) {
+
+            lichDatSan.setTrangThai(2);
+            lichDatSan.setGhiChu(ghiChu);
+            lichDatSanRepo.save(lichDatSan);
+
+            LichDatSan lichMoi = new LichDatSan();
+            lichMoi.setNgayDat(lichDatSan.getNgayDat());
+            lichMoi.setGiaTheoKhungGio(lichDatSan.getGiaTheoKhungGio());
+            lichMoi.setTrangThai(3); // trống
+            lichMoi.setGhiChu("Tạo lại sau khi hủy");
+            lichMoi.setNgayTao(LocalDateTime.now());
+            lichMoi.setGiaApDung(null);
+            lichMoi.setTaiKhoan(null);
+            lichDatSanRepo.save(lichMoi);
+
+        }try {
+            KhungGio khungGio = lichDatSan.getGiaTheoKhungGio().getKhungGio();
+            thongBaoService.taoThongBaoHuyNguoiDung(
+                    lichDatSan,
+                    khungGio,
+                    lichDatSan.getGhiChu() != null ? lichDatSan.getGhiChu() : "Không có"
+            );
+        } catch (Exception e) {
+            System.err.println("[WARN] Gửi thông báo HUỶ thất bại: " + e.getMessage());
+        }
+    }
 
 
     public Page<LichDatSan> timKiem(String keyword, LocalDate ngaydat, Integer sanBong, Integer trangThai, int page, int size) {
