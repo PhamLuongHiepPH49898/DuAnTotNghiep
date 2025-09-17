@@ -67,6 +67,6 @@ public class ThanhToanController {
      */
     @GetMapping("/thanh-toan/thanh-cong")
     public String hienThiThanhCong() {
-        return "Main/Success";
+        return "Main/ketQuaTb";
     }
 }

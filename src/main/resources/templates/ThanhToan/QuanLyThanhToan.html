@@ -7,48 +7,182 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
     <style>
-        body{background:#f0f2f5;font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif}
-        .sidebar{background:#fff;color:#1B1E21;height:100vh;position:fixed;top:0;left:0;width:260px;padding-top:60px;z-index:1030;box-shadow:2px 0 5px rgba(0,0,0,.1)}
-        .sidebar-logo{position:fixed;top:0;left:0;width:240px;height:60px;background:#fff;border-bottom:1px solid #dee2e6;display:flex;align-items:center;justify-content:center;z-index:1040;color:#595555}
-        .sidebar .nav-link{color:#1B1E21;padding:12px 20px}
-        .sidebar .nav-link.active,.sidebar .nav-link:hover{background:rgba(255,255,255,.2);padding-left:25px}
-        header{position:fixed;top:0;left:240px;right:0;height:60px;background:#fff;color:#333;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid #dee2e6;z-index:1020;justify-content:flex-end}
-        .main-wrapper{margin-left:240px;padding:100px 20px 40px}
-        @media (max-width:768px){.sidebar,.sidebar-logo,header{display:none}.main-wrapper{margin-left:0;padding-top:130px}}
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .sidebar {
+            background: #ffffff;
+            color: #1B1E21;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            padding-top: 60px;
+            z-index: 1030;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Logo trong sidebar */
+        .sidebar-logo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 60px;
+            background: white;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1040;
+            color: #595555;
+            /*gap: 5px;*/
+        }
+
+        .sidebar-logo img {
+            max-height: 40px;
+            object-fit: contain;
+        }
+
+        .sidebar .nav-link {
+            color: #1B1E21;
+            padding: 12px 20px;
+            transition: background 0.3s ease, padding-left 0.2s ease;
+        }
+
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding-left: 25px;
+        }
+
+        .offcanvas .nav-link {
+            color: #1B1E21;
+            padding: 12px 20px;
+            transition: background 0.3s ease, padding-left 0.2s ease;
+        }
+
+        .offcanvas .nav-link.active,
+        .offcanvas .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding-left: 25px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 240px;
+            right: 0;
+            height: 60px;
+            background: white;
+            color: #333;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 1px solid #dee2e6;
+            z-index: 1020;
+            justify-content: flex-end;
+        }
+
+        .main-wrapper {
+            margin-left: 240px;
+            padding: 100px 20px 40px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar,
+            .sidebar-logo {
+                display: none;
+            }
+
+            header {
+                display: none;
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+                padding-top: 130px;
+            }
+        }
+
+        .table img {
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            max-width: 80px;
+        }
+
+        footer {
+            background: #2563eb;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .form-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .form-content {
+                padding: 20px;
+            }
+        }
+
+        #mobileSidebar {
+            width: 240px !important;
+        }
     </style>
 </head>
 <body>
-<div class="sidebar-logo d-none d-md-flex">
-    <img src="/image/logo.png" alt="Logo">
-    <h4 class="ms-2 mb-0">SAMBA</h4>
-</div>
+<div class="sidebar-logo d-none d-md-flex"><img src="/image/logo.png" alt="Logo"><h4>SAMBA</h4></div>
 
-
+<!-- Sidebar (Desktop) -->
 <nav class="sidebar d-none d-md-block">
     <ul class="nav flex-column mt-3">
-        <li class="nav-item"><a class="nav-link" href="/quan-ly-san"><i class="bi bi-card-list"></i> Quản lý sân</a></li>
-        <li class="nav-item"><a class="nav-link" href="/quan-ly-gia-theo-khung-gio"><i class="bi bi-card-list"></i> Quản lý giá theo khung giờ</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/quan-ly-san"><i class="bi bi-card-list"></i> Quản lý sân</a>
+        </li>
+        <li class="nav-item"><a class="nav-link " href="/quan-ly-gia-theo-khung-gio"><i class="bi bi-card-list"></i>
+            Quản lý giá theo khung giờ</a></li>
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="bi bi-calendar-event"></i> Quản lý đặt sân</a>
-            <ul class="dropdown-menu">
+            <a class="nav-link dropdown-toggle" href="#" id="qlDatSanDropdown1" role="button"
+               data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-calendar-event"></i> Quản lý đặt sân
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="qlDatSanDropdown1">
                 <li><a class="dropdown-item" href="/quan-ly-lich-dat">Quản lý lịch đặt</a></li>
                 <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link active" href="/quan-ly-thanh-toan"><i class="bi bi-wallet2"></i> Cấu hình thanh toán</a></li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản lý
+            hoàn tiền</a>
+
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i>
+            Quản lý thanh
+            toán</a></li>
         <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
-        <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý thống kê</a></li>
-        <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay lại Trang chủ</a></li>
+        <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
+            thống kê</a></li>
+        <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay lại
+            Trang chủ</a></li>
     </ul>
 </nav>
 
-<header class="d-none d-md-flex mt-1">
+<header class="d-none d-md-flex">
     <div class="dropdown">
-        <a class="d-flex align-items-center dropdown-toggle text-decoration-none text-dark" href="#" data-bs-toggle="dropdown">
+        <a class="d-flex align-items-center dropdown-toggle text-decoration-none text-dark" href="#" role="button"
+           id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-person-circle me-2 fs-5 text-dark"></i>
             <span class="fw-semibold" th:text="${hoTen}"></span>
         </a>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu" aria-labelledby="userDropdown">
             <li>
                 <form th:action="@{/logout}" method="post">
                     <button type="submit" class="dropdown-item text-dark">Đăng xuất</button>
@@ -57,6 +191,63 @@
         </ul>
     </div>
 </header>
+
+
+<nav class="navbar navbar-light bg-white fixed-top d-md-none border-bottom shadow-sm">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <img src="/image/logo.png" alt="Logo"
+                 style="height: 100%; max-height: 60px; object-fit: contain; margin-right: 10px;">
+            <span class="dropdown-toggle fw-semibold text-dark text-decoration-none" th:text="${hoTen}" role="button"
+                  id="userDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false"></span>
+
+
+            <ul class="dropdown-menu" aria-labelledby="userDropdownMobile">
+                <li>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="dropdown-item text-dark">Đăng xuất</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+        <button class="btn btn-outline-secondary" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+            <i class="bi bi-list"></i>
+        </button>
+    </div>
+</nav>
+
+
+<div class="offcanvas offcanvas-start white" tabindex="-1" id="mobileSidebar">
+    <div class="offcanvas-body">
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-san"><i class="bi bi-card-list"></i> Quản lý sân</a>
+            </li>
+            <li class="nav-item"><a class="nav-link " href="/quan-ly-gia-theo-khung-gio"><i class="bi bi-card-list"></i>
+                Quản lý giá theo khung giờ</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="qlDatSanDropdown2" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-calendar-event"></i> Quản lý đặt sân
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="qlDatSanDropdown2">
+                    <li><a class="dropdown-item" href="/quan-ly-lich-dat">Quản lý lịch đặt</a></li>
+                    <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
+                </ul>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản
+                lý hoàn tiền</a>
+
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i>
+                Quản lý thanh
+                toán</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+            <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
+                thống kê</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay
+                lại Trang chủ</a></li>
+        </ul>
+    </div>
+</div>
 
 <main class="main-wrapper">
     <div class="container py-5">
@@ -81,34 +272,26 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <!-- dsCauHinh: List<CauHinhThanhToan> -->
-                            <tr th:each="tk, i : ${dsCauHinh}">
-                                <td th:text="${i.index + 1}"></td>
+                            <tr th:each="cfg, st : ${dsTaiKhoan}">
+                                <td th:text="${st.index + 1}"></td>
+                                <td th:text="${cfg.tenNganHang}"></td>
+                                <td th:text="${cfg.soTaiKhoan}"></td>
+                                <td th:text="${cfg.chuTaiKhoan}"></td>
                                 <td>
-                                    <div class="small">
-                                        <div th:text="${tk.tenNganHang}">MB Bank</div>
-                                        <code th:text="${tk.bankCode}">mbbank</code>
-                                    </div>
+                                    <span th:if="${cfg.active}" class="badge bg-success">Mặc định</span>
+                                    <span th:if="${!cfg.active}" class="text-muted">—</span>
                                 </td>
-                                <td th:text="${tk.soTaiKhoan}">000000</td>
-                                <td th:text="${tk.chuTaiKhoan}">OWNER</td>
                                 <td>
-                                    <span th:if="${tk.macDinh}" class="badge bg-success">Default</span>
-                                    <span th:unless="${tk.macDinh}" class="badge bg-secondary">No</span>
-                                </td>
-                                <td class="text-nowrap">
-                                    <form th:if="${!tk.macDinh}" th:action="@{'/quan-ly-thanh-toan/dat-mac-dinh/' + ${cfg.id}}" method="post" class="d-inline">
-                                        <button class="btn btn-sm btn-outline-success"><i class="bi bi-check2-circle"></i> Đặt mặc định</button>
-                                    </form>
-                                    <a class="btn btn-sm btn-info text-white" th:href="@{'/quan-ly-thanh-toan/sua/' + ${cfg.id}}">
-                                        <i class="bi bi-pencil"></i> Sửa
+                                    <a th:href="@{'/quan-ly-thanh-toan/sua/' + ${cfg.id}}" class="btn btn-sm btn-info text-white">
+                                        <i class="bi bi-pencil"></i> Edit
                                     </a>
-                                    <a class="btn btn-sm btn-danger" th:href="@{'/quan-ly-thanh-toan/xoa/' + ${cfg.id}}"
+                                    <a th:href="@{'/quan-ly-thanh-toan/xoa/' + ${cfg.id}}" class="btn btn-sm btn-danger"
                                        onclick="return confirm('Xóa cấu hình này?')">
-                                        <i class="bi bi-trash"></i> Xóa
+                                        <i class="bi bi-trash"></i> Delete
                                     </a>
                                 </td>
                             </tr>
+
                             <tr th:if="${#lists.isEmpty(dsCauHinh)}">
                                 <td colspan="6" class="text-center text-muted">Chưa có cấu hình nào</td>
                             </tr>
@@ -129,8 +312,11 @@
                                 <!-- banks: List<BankInfo{code, shortName}> -->
                                 <select id="bankSelect" name="bankCode" class="form-select" required>
                                     <option value="">Chọn ngân hàng</option>
-                                    <option th:each="b : ${banks}" th:value="${b.code}"
-                                            th:text="${b.shortName}" th:attr="data-name=${b.shortName}"></option>
+                                    <option th:each="bank : ${banks}"
+                                            th:value="${bank.code}"
+                                            th:text="${bank.shortName}"
+                                            th:attr="data-name=${bank.shortName}">
+                                    </option>
                                 </select>
                             </div>
 

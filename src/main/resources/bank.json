@@ -1,0 +1,40 @@
+{
+  "data": [
+    {
+      "code": "VPB",
+      "shortName": "VPBank"
+    },
+    {
+      "code": "TPB",
+      "shortName": "TPBank"
+    },
+    {
+      "code": "ICB",
+      "shortName": "VietinBank"
+    },
+    {
+      "code": "ACB",
+      "shortName": "ACB"
+    },
+    {
+      "code": "BIDV",
+      "shortName": "BIDV"
+    },
+    {
+      "code": "MB",
+      "shortName": "MBBank"
+    },
+    {
+      "code": "OCB",
+      "shortName": "OCB"
+    },
+    {
+      "code": "KLB",
+      "shortName": "KienLongBank"
+    },
+    {
+      "code": "MSB",
+      "shortName": "MSB"
+    }
+  ]
+}

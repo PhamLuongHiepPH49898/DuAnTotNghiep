@@ -1,220 +1,126 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Quản lý đặt sân</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <title>Thống kê doanh thu theo sân</title>
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+
     <style>
-        body {
+        :root{
+            --sidebar-w: 260px; /* chiều rộng sidebar cố định */
+            --header-h: 60px;   /* chiều cao header cố định  */
+        }
+
+        body{
             background-color: #f0f2f5;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .sidebar {
-            background: #ffffff;
-            color: #1B1E21;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 260px;
-            padding-top: 60px;
-            z-index: 1030;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        /* ===== Sidebar cố định (desktop) ===== */
+        .sidebar{
+            background:#fff;
+            color:#1B1E21;
+            height:100vh;
+            position:fixed;
+            top:0;
+            left:0;
+            width:var(--sidebar-w);
+            padding-top:var(--header-h);
+            z-index:1030;
+            box-shadow:2px 0 5px rgba(0,0,0,.1);
+        }
+        .sidebar .nav-link{ color:#1B1E21; padding:12px 20px; transition:.2s }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active{ background:rgba(0,0,0,.03); padding-left:26px }
+
+        /* Logo vùng header của sidebar */
+        .sidebar-logo{
+            position:fixed;
+            top:0; left:0;
+            width:var(--sidebar-w);
+            height:var(--header-h);
+            background:#fff;
+            border-bottom:1px solid #dee2e6;
+            display:flex; align-items:center; justify-content:center;
+            z-index:1040; color:#595555;
+            gap:8px;
+        }
+        .sidebar-logo img{ max-height:40px; object-fit:contain }
+
+        /* ===== Header cố định ===== */
+        header{
+            position:fixed;
+            top:0;
+            left:var(--sidebar-w);   /* KHỚP chiều rộng sidebar */
+            right:0;
+            height:var(--header-h);
+            background:#fff;
+            color:#333;
+            display:flex; align-items:center; justify-content:flex-end;
+            padding:0 20px;
+            border-bottom:1px solid #dee2e6;
+            z-index:1020;
         }
 
-        /* Logo trong sidebar */
-        .sidebar-logo {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 240px;
-            height: 60px;
-            background: white;
-            border-bottom: 1px solid #dee2e6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1040;
+        /* ===== ĐẨY TOÀN TRANG sang phải để không bị che ===== */
+        body.with-sidebar{ padding-left:var(--sidebar-w); }
+
+        /* Vùng nội dung chính (đừng set margin-left nữa) */
+        .main-wrapper{ margin-left:0; padding: calc(var(--header-h) + 20px) 20px 40px; }
+
+        /* ===== Mobile: ẩn sidebar cố định, dùng offcanvas ===== */
+        @media (max-width:768px){
+            .sidebar, .sidebar-logo, header{ display:none; }
+            body.with-sidebar{ padding-left:0; }
+            .main-wrapper{ padding:90px 16px 32px; }
         }
 
-        .sidebar-logo img {
-            max-height: 40px;
-            object-fit: contain;
-        }
-
-        .sidebar .nav-link {
-            color: #1B1E21;
-            padding: 12px 20px;
-            transition: background 0.3s ease, padding-left 0.2s ease;
-        }
-
-
-        .sidebar .nav-link.active,
-        .sidebar .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            padding-left: 25px;
-        }
-
-        .offcanvas .nav-link {
-            color: #1B1E21;
-            padding: 12px 20px;
-            transition: background 0.3s ease, padding-left 0.2s ease;
-        }
-
-        .offcanvas .nav-link.active,
-        .offcanvas .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            padding-left: 25px;
-        }
-
-        header {
-            position: fixed;
-            top: 0;
-            left: 240px;
-            right: 0;
-            height: 60px;
-            background: white;
-            color: #333;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            border-bottom: 1px solid #dee2e6;
-            z-index: 1020;
-            justify-content: flex-end;
-        }
-
-        .main-wrapper {
-            margin-left: 240px;
-            padding: 100px 20px 40px;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar,
-            .sidebar-logo {
-                display: none;
-            }
-
-            header {
-                display: none;
-            }
-
-            .main-wrapper {
-                margin-left: 0;
-                padding-top: 130px;
-            }
-        }
-
-        .table img {
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            max-width: 80px;
-        }
-
-        footer {
-            background: #2563eb;
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .form-content {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-        }
-
-        @media (max-width: 768px) {
-            .form-content {
-                padding: 20px;
-            }
-        }
-
-        #mobileSidebar {
-            width: 240px !important;
-        }
-
-        .date-filter-sidebar {
-            width: 200px;
-            float: left;
-            margin-right: 20px;
-        }
-
-        .date-filter-sidebar ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .date-filter-sidebar li {
-            margin-bottom: 10px;
-        }
-
-        .date-filter-sidebar a {
-            text-decoration: none;
-            font-weight: 500;
-            color: #0d6efd;
-        }
-
-        .date-filter-sidebar a.active {
-            font-weight: bold;
-            color: #dc3545;
-        }
+        /* Kích thước biểu đồ gọn đẹp (desktop 420px, mobile 300px) */
+        .chart-wrap{ height:420px; position:relative; }
+        @media (max-width:991.98px){ .chart-wrap{ height:300px; } }
     </style>
 </head>
+<body class="with-sidebar">
 
-<body>
-
-<!-- Logo sidebar (desktop) -->
+<!-- Logo (desktop) -->
 <div class="sidebar-logo d-none d-md-flex">
-    <img src="/image/logo.png" alt="Logo">
+    <img src="/image/logo.png" alt="Logo"><h5 class="m-0">SAMBA</h5>
 </div>
 
-<!-- Sidebar (Desktop) -->
+<!-- Sidebar (desktop) -->
 <nav class="sidebar d-none d-md-block">
     <ul class="nav flex-column mt-3">
-        <li class="nav-item"><a class="nav-link active" href="/quan-ly-san"><i class="bi bi-card-list"></i> Quản lý sân</a>
-        </li>
-        <li class="nav-item"><a class="nav-link " href="/quan-ly-gia-theo-khung-gio"><i class="bi bi-card-list"></i>
-            Quản lý giá theo khung giờ</a></li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-san"><i class="bi bi-card-list"></i> Quản lý sân</a></li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-gia-theo-khung-gio"><i class="bi bi-card-list"></i> Quản lý giá theo khung giờ</a></li>
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="qlDatSanDropdown1" role="button"
-               data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-calendar-event"></i> Quản lý đặt sân
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="qlDatSanDropdown1">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="bi bi-calendar-event"></i> Quản lý đặt sân</a>
+            <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="/quan-ly-lich-dat">Quản lý lịch đặt</a></li>
                 <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản lý
-            hoàn tiền</a>
-
-        <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i>
-            Quản lý thanh
-            toán</a></li>
-        <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người
-            dùng</a></li>
-        <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
-            thống kê</a></li>
-        <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay lại
-            Trang chủ</a></li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-arrow-counterclockwise"></i> Quản lý hoàn tiền</a></li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-wallet2"></i> Quản lý thanh toán</a></li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý thống kê</a></li>
+        <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay lại Trang chủ</a></li>
     </ul>
 </nav>
 
+<!-- Header (desktop) -->
 <header class="d-none d-md-flex">
     <div class="dropdown">
-        <a class="d-flex align-items-center dropdown-toggle text-decoration-none text-dark" href="#" role="button"
-           id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="d-flex align-items-center dropdown-toggle text-decoration-none text-dark" href="#" data-bs-toggle="dropdown">
             <i class="bi bi-person-circle me-2 fs-5 text-dark"></i>
-            <span class="fw-semibold" th:text="${hoTen}"></span>
+            <span class="fw-semibold" th:text="${hoTen}">Admin</span>
         </a>
-        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+        <ul class="dropdown-menu">
             <li>
                 <form th:action="@{/logout}" method="post">
                     <button type="submit" class="dropdown-item text-dark">Đăng xuất</button>
@@ -224,23 +130,12 @@
     </div>
 </header>
 
-
+<!-- Navbar mobile + offcanvas -->
 <nav class="navbar navbar-light bg-white fixed-top d-md-none border-bottom shadow-sm">
     <div class="container-fluid d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <img src="/image/logo.png" alt="Logo"
-                 style="height: 100%; max-height: 60px; object-fit: contain; margin-right: 10px;">
-            <span class="dropdown-toggle fw-semibold text-dark text-decoration-none" th:text="${hoTen}" role="button"
-                  id="userDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false"></span>
-
-
-            <ul class="dropdown-menu" aria-labelledby="userDropdownMobile">
-                <li>
-                    <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="dropdown-item text-dark">Đăng xuất</button>
-                    </form>
-                </li>
-            </ul>
+            <img src="/image/logo.png" alt="Logo" style="height:100%;max-height:60px;object-fit:contain;margin-right:10px;">
+            <span class="fw-semibold text-dark" th:text="${hoTen}">Admin</span>
         </div>
         <button class="btn btn-outline-secondary" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
             <i class="bi bi-list"></i>
@@ -248,126 +143,127 @@
     </div>
 </nav>
 
-
 <div class="offcanvas offcanvas-start white" tabindex="-1" id="mobileSidebar">
     <div class="offcanvas-body">
         <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link" href="/quan-ly-san"><i class="bi bi-card-list"></i> Quản lý sân</a>
-            </li>
-            <li class="nav-item"><a class="nav-link " href="/quan-ly-gia-theo-khung-gio"><i class="bi bi-card-list"></i>
-                Quản lý giá theo khung giờ</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-san">Quản lý sân</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-gia-theo-khung-gio">Quản lý giá theo khung giờ</a></li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="qlDatSanDropdown2" role="button"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-calendar-event"></i> Quản lý đặt sân
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="qlDatSanDropdown2">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Quản lý đặt sân</a>
+                <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="/quan-ly-lich-dat">Quản lý lịch đặt</a></li>
                     <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
                 </ul>
             </li>
-            <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản
-                lý hoàn tiền</a>
-
-            <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i>
-                Quản lý thanh
-                toán</a></li>
-            <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý
-                người dùng</a></li>
-            <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
-                thống kê</a></li>
-            <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay
-                lại Trang chủ</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien">Quản lý hoàn tiền</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan">Quản lý thanh toán</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung">Quản lý người dùng</a></li>
+            <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu">Quản lý thống kê</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}">Quay lại Trang chủ</a></li>
         </ul>
     </div>
 </div>
-<main class="main-wrapper">
-    <form method="get" th:action="@{/thongke/doanhthu}" class="row g-3 align-items-end mb-4">
-        <div class="col-md-2">
-            <label for="thang" class="form-label">Chọn tháng</label>
-            <select name="thang" id="thang" class="form-select">
-                <option th:each="i : ${#numbers.sequence(1,12)}"
-                        th:value="${i}"
-                        th:text="'Tháng ' + ${i}"
-                        th:selected="${i == thangChon}">
-                </option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <label for="nam" class="form-label">Chọn năm</label>
-            <select name="nam" id="nam" class="form-select">
-                <option th:each="y : ${#numbers.sequence(2020, 2030)}"
-                        th:value="${y}"
-                        th:text="${y}"
-                        th:selected="${y == namChon}">
-                </option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-primary mt-4">Xem biểu đồ</button>
-        </div>
-    </form>
 
-    <div class="card">
-        <div class="card-body">
-            <canvas id="barChart" height="100"></canvas>
+<!-- ========== NỘI DUNG ========= -->
+<main class="main-wrapper">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h3 class="m-0">Thống kê doanh thu theo sân</h3>
+        <form class="d-flex gap-2" method="get" th:action="@{/thongke/doanhthu}">
+            <input type="month" class="form-control" name="monthYear" th:value="${monthYear}">
+            <button class="btn btn-primary"><i class="bi bi-search"></i> Lọc</button>
+        </form>
+    </div>
+
+    <div class="row g-4">
+        <!-- BẢNG -->
+        <div class="col-lg-7">
+            <div class="card p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Bảng doanh thu (tháng [[${month}]]/[[${year}]])</h5>
+                    <span class="badge bg-success fs-6">
+            Tổng:
+            <span th:text="${#numbers.formatDecimal(total?:0, 0, 'POINT', 0, 'POINT')}"></span> ₫
+          </span>
+                </div>
+
+                <div class="table-responsive mt-3">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Sân</th>
+                            <th class="text-end">Lượt đặt</th>
+                            <th class="text-end">Doanh thu (₫)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="row, st : ${list}">
+                            <td th:text="${st.index + 1}">1</td>
+                            <td th:text="${row.tenSan}">Sân A</td>
+                            <td class="text-end" th:text="${row.soLuotDat}">0</td>
+                            <td class="text-end" th:text="${#numbers.formatDecimal(row.tongDoanhThu?:0, 0, 'POINT', 0, 'POINT')}">0</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(list)}">
+                            <td colspan="4" class="text-center text-muted">Không có dữ liệu</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- BIỂU ĐỒ -->
+        <div class="col-lg-5">
+            <div class="card h-100">
+                <div class="card-header fw-bold">Biểu đồ doanh thu</div>
+                <div class="card-body">
+                    <div class="chart-wrap">
+                        <canvas id="revChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- VẼ BIỂU ĐỒ -->
 <script th:inline="javascript">
-    /*<![CDATA[*/
-    const chartData = /*[[${chartData}]]*/ {};
-    const thangLabel = /*[[${thangChon}]]*/ 1;
-    const namLabel = /*[[${namChon}]]*/ 2025;
+    document.addEventListener('DOMContentLoaded', function () {
+        const labels = /*[[${labels}]]*/ [];
+        const values = /*[[${values}]]*/ [];
 
-    const labels = Object.keys(chartData);
-    const data = Object.values(chartData).map(san => Object.values(san)[0]); // chỉ lấy 1 tháng duy nhất
+        if (!labels || labels.length === 0) {
+            const c = document.getElementById('revChart');
+            if (c) c.replaceWith(document.createTextNode('Không có dữ liệu để vẽ biểu đồ'));
+            return;
+        }
 
-    const colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6610f2', '#fd7e14'];
+        const dataNums = values.map(v => typeof v === 'string' ? Number(v) : v);
+        const ctx = document.getElementById('revChart').getContext('2d');
 
-    const datasets = labels.map((label, index) => ({
-        label: label,
-        backgroundColor: colors[index % colors.length],
-        data: [data[index]]
-    }));
-
-    const ctx = document.getElementById('barChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Tháng ' + thangLabel + '/' + namLabel],
-            datasets: datasets
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Doanh thu theo tháng của từng sân bóng'
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function (context) {
-                            return context.dataset.label + ': ' + context.raw.toLocaleString() + ' đ';
-                        }
-                    }
-                }
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [{ label: 'Doanh thu (đ)', data: dataNums, borderWidth: 1 }]
             },
-            scales: {
-                y: {
-                    ticks: {
-                        callback: function (value) {
-                            return value.toLocaleString() + ' đ';
-                        }
-                    },
-                    beginAtZero: true
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: v => Number(v).toLocaleString('vi-VN') }
+                    }
+                },
+                plugins: {
+                    tooltip: { callbacks: { label: ctx => ctx.raw.toLocaleString('vi-VN') + ' đ' } }
                 }
             }
-        }
+        });
     });
-    /*]]>*/
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -3,12 +3,14 @@ package com.example.datn.Controller;
 
 import com.example.datn.Entity.TaiKhoanNganHang;
 import com.example.datn.Repository.TaiKhoanNganHangRepository;
-import com.example.datn.Service.BankService;
+import com.example.datn.Service.BankCatalogService;
+import com.example.datn.Service.TaiKhoanNganHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -19,22 +21,26 @@ public class QuanLyThanhToanController {
     private TaiKhoanNganHangRepository taiKhoanRepo;
 
     @Autowired
-    private BankService bankService;
+    private BankCatalogService bankCatalogService;
+
+    @Autowired
+    private TaiKhoanNganHangService service;
 
     @GetMapping
     public String hienThiTrangThanhToan(Model model) {
-        model.addAttribute("dsTaiKhoan", taiKhoanRepo.findAll());
-        model.addAttribute("banks", bankService.getAllBanks());  // lấy ngân hàng từ API
+        List<TaiKhoanNganHang> list = taiKhoanRepo.findAll();
+        model.addAttribute("dsTaiKhoan", list);
+        model.addAttribute("banks", bankCatalogService.getBanks());
         return "ThanhToan/QuanLyThanhToan";
     }
 
     @PostMapping("/them")
-    public String themTaiKhoan(@ModelAttribute TaiKhoanNganHang taiKhoan) {
-        if (taiKhoan.getBankCode() == null || taiKhoan.getBankCode().isEmpty() ||
-                taiKhoan.getTenNganHang() == null || taiKhoan.getTenNganHang().isEmpty()) {
-            throw new IllegalArgumentException("Ngân hàng không được để trống!");
-        }
-        taiKhoanRepo.save(taiKhoan);
+    public String themTaiKhoan(@RequestParam String bankCode,
+                               @RequestParam String tenNganHang,
+                               @RequestParam String soTaiKhoan,
+                               @RequestParam String chuTaiKhoan,
+                               @RequestParam(name="macDinh", defaultValue="false") boolean macDinh){
+        service.taoMoi(bankCode, tenNganHang, soTaiKhoan, chuTaiKhoan, macDinh);
         return "redirect:/quan-ly-thanh-toan";
     }
 
@@ -48,7 +54,7 @@ public class QuanLyThanhToanController {
         Optional<TaiKhoanNganHang> optionalTaiKhoan = taiKhoanRepo.findById(id);
         if (optionalTaiKhoan.isPresent()) {
             model.addAttribute("taiKhoan", optionalTaiKhoan.get());
-            model.addAttribute("banks", bankService.getAllBanks());
+            model.addAttribute("banks", bankCatalogService.getBanks());
             return "ThanhToan/SuaTaiKhoan";
         } else {
             return "redirect:/quan-ly-thanh-toan";
@@ -56,12 +62,13 @@ public class QuanLyThanhToanController {
     }
 
     @PostMapping("/cap-nhat")
-    public String capNhatTaiKhoan(@ModelAttribute TaiKhoanNganHang taiKhoan) {
-        if (taiKhoan.getBankCode() == null || taiKhoan.getBankCode().isEmpty() ||
-                taiKhoan.getTenNganHang() == null || taiKhoan.getTenNganHang().isEmpty()) {
-            throw new IllegalArgumentException("Ngân hàng không được để trống!");
-        }
-        taiKhoanRepo.save(taiKhoan);
+    public String capNhat(@RequestParam Integer id,
+                          @RequestParam String bankCode,
+                          @RequestParam String tenNganHang,
+                          @RequestParam String soTaiKhoan,
+                          @RequestParam String chuTaiKhoan,
+                          @RequestParam(name="macDinh", defaultValue = "false") boolean macDinh) {
+        service.capNhat(id, bankCode, tenNganHang, soTaiKhoan, chuTaiKhoan, macDinh);
         return "redirect:/quan-ly-thanh-toan";
     }
 }
