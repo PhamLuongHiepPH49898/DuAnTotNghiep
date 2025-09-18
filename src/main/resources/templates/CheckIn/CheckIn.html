@@ -86,7 +86,7 @@
 <div class="container">
     <p th:class="'message ' + (${message.contains('✅') ? 'success' : 'error'})"
        th:utext="${message}"></p>
-    <a th:href="@{/user/trang-chu}"
+    <a th:href="@{/ve-trang-chu}"
        th:class="'btn-home ' + (${message.contains('✅') ? 'success' : 'error'})">
         Quay lại trang chủ
     </a>
