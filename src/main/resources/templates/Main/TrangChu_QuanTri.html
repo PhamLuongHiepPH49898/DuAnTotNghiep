@@ -8,6 +8,45 @@
     <link rel="icon" type="image/png" th:href="@{/image/logo.png}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        .san-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 cột */
+            gap: 24px;
+        }
+
+        .san-item {
+            background: white;
+            border-radius: 14px;
+            border: 2px solid #28a745;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;   /* sắp xếp theo chiều dọc */
+            height: 430px;            /* chiều cao cố định (bạn có thể chỉnh 350–420px) */
+        }
+
+        .san-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .san-item .info {
+            flex: 1;                  /* chiếm toàn bộ khoảng trống còn lại */
+            padding: 12px;
+            overflow: hidden;
+        }
+
+        .datsan-btn {
+            margin: 0 12px 14px;
+            padding: 10px 16px;
+            text-align: center;
+            background: linear-gradient(90deg, #00c6ff, #0077cc);
+            color: white;
+            font-weight: 700;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
         * {
             font-family: 'Poppins', sans-serif;
             box-sizing: border-box;
@@ -260,7 +299,7 @@
 <div class="san-container">
     <h2>Danh sách sân bóng nổi bật</h2>
     <div class="san-grid">
-        <div th:each="san : ${danhSachSan}" class="san-item">
+        <div th:each="san : ${danhSachSan}" th:if="${san.trang_thai != 3}" class="san-item">
             <img th:if="${#strings.startsWith(san.hinh_anh, 'anh')}" th:src="@{'/image/' + ${san.hinh_anh}}" alt="Sân bóng">
             <img th:if="${!#strings.startsWith(san.hinh_anh, 'anh')}" th:src="@{'/uploads/' + ${san.hinh_anh}}" alt="Sân bóng">
             <div class="info">
@@ -268,7 +307,6 @@
                 <p><strong>Thể thao:</strong> <span th:text="${san.loaiMonTheThao.ten_mon_the_thao}"></span></p>
                 <p><strong>Địa chỉ:</strong> <span th:text="${san.dia_chi}"></span></p>
 
-                <!-- Hiển thị đánh giá -->
                 <div th:if="${san.danhGias != null}">
                     <div th:if="${!san.danhGias.isEmpty()}">
                         <div th:each="danhGia : ${san.danhGias}">
@@ -282,9 +320,8 @@
                         <p><i>Chưa có đánh giá.</i></p>
                     </div>
                 </div>
-
             </div>
-            <a th:href="@{'/datsan?id=' + ${san.id_san_bong}}">⚽ Đặt sân ngay</a>
+            <a th:href="@{'/datsan?id=' + ${san.id_san_bong}}" class="datsan-btn">Đặt sân ngay</a>
         </div>
     </div>
 </div>
