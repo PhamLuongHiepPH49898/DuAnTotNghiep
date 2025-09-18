@@ -77,6 +77,7 @@ public class ThanhToanService {
                 lich.setTrangThai(2); // đã hủy
                 lich.setGhiChu("Quá hạn thanh toán");
                 lichDatSanRepo.save(lich);
+
                 //Tạo lịch mới
                 LichDatSan lichMoi = new LichDatSan();
                 lichMoi.setNgayDat(lich.getNgayDat());

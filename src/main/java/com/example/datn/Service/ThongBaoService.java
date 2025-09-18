@@ -153,10 +153,10 @@ public class ThongBaoService {
         String tenSan = lichDatSan.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
 
         HoanTien hoanTien = null;
-        if (lichDatSan.getThanhToan() != null && lichDatSan.getThanhToan().getTrangThai() == 1) {
-            // Chỉ tạo hoàn tiền nếu đã thanh toán
-            hoanTien = hoanTienService.taoHoanTien(lichDatSan, lyDoHuy);
-        }
+//        if (lichDatSan.getThanhToan() != null && lichDatSan.getThanhToan().getTrangThai() == 1) {
+//            // Chỉ tạo hoàn tiền nếu đã thanh toán
+//            hoanTien = hoanTienService.taoHoanTien(lichDatSan, lyDoHuy);
+//        }
 
         String noiDung;
         if (hoanTien != null) {

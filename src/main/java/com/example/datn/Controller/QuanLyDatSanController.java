@@ -89,8 +89,6 @@ public class QuanLyDatSanController {
         }
 
 
-
-
         List<SanBong> danhSachSanLoc = sanBongService.timKiemSan(tenSan, loaiSanId, matSanId, monTheThaoId);
         Map<SanBong, List<LichDatSan>> lichDatMap = lichDatSanService.getLichDatSanTheoNgay(ngayDat, danhSachSanLoc);
         List<KhungGio> khungGios = lichDatSanService.getAllKhungGio();
@@ -169,9 +167,8 @@ public class QuanLyDatSanController {
         model.addAttribute("hoTen", hoTen);
 
         if (keyword != null) {
-            keyword = keyword.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
+            keyword = keyword.trim();
         }
-
 
         Page<LichDatSan> danhSachLichDatSan = lichDatSanService.timKiem(keyword, ngayDat, sanBong, trangThai, page, size);
         model.addAttribute("danhSachLichDatSan", danhSachLichDatSan);

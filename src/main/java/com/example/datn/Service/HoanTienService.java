@@ -50,7 +50,7 @@ public class HoanTienService {
     }
 
     public HoanTien taoHoanTien(LichDatSan lich, String lyDoHuy) {
-        BigDecimal soTienThanhToan = BigDecimal.valueOf(lich.getThanhToan().getSoTien());
+        BigDecimal soTienThanhToan = BigDecimal.valueOf(lich.getGiaApDung());
         BigDecimal phanTram = tinhPhanTramHoanTien(lich);
         BigDecimal soTienHoan = soTienThanhToan.multiply(phanTram)
                 .setScale(0, RoundingMode.HALF_UP); // làm tròn tiền

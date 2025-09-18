@@ -1,4 +1,3 @@
-
 package com.example.datn.Controller;
 
 
@@ -17,8 +16,8 @@ import com.example.datn.Service.DanhGiaService;
 import com.example.datn.Service.SanBongService;
 import com.example.datn.Service.TaiKhoanService;
 
-import com.example.datn.Service.SanBongService;
-import com.example.datn.Service.TaiKhoanService;
+import org.springframework.security.crypto.password.PasswordEncoder;// mk
+
 import com.example.datn.Service.ThongBaoService;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -59,9 +58,9 @@ public class SanBongController {
     private final TaiKhoanRepo taiKhoanRepo;
     private final DanhGiaService danhGiaService;
     private final ThongBaoService thongBaoService;
+    private final PasswordEncoder passwordEncoder;//mk
 
-
-    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo, TaiKhoanService taiKhoanService, TaiKhoanRepo taiKhoanRepo1, DanhGiaService danhGiaService, ThongBaoService thongBaoService) {
+    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo, TaiKhoanService taiKhoanService, TaiKhoanRepo taiKhoanRepo1, DanhGiaService danhGiaService, ThongBaoService thongBaoService,PasswordEncoder passwordEncoder) {
 
         this.sanBongService = sanBongService;
         this.loaiMatSanRepo = loaiMatSanRepo;
@@ -71,7 +70,7 @@ public class SanBongController {
         this.taiKhoanRepo = taiKhoanRepo1;
         this.danhGiaService = danhGiaService;
         this.thongBaoService = thongBaoService;
-
+        this.passwordEncoder = passwordEncoder; // mk
     }
 
     @GetMapping("/")
@@ -149,10 +148,9 @@ public class SanBongController {
         taiKhoan.setHo_ten(fullname);
         taiKhoan.setEmail(email);
         taiKhoan.setSo_dien_thoai(phone);
-        taiKhoan.setMat_khau(password);
+        taiKhoan.setMat_khau(passwordEncoder.encode(password));//mk
         taiKhoan.setVai_tro("NGUOI_DUNG");
         taiKhoan.setTrang_thai(0); // Tài khoản hoạt động
-
         taiKhoanRepo.save(taiKhoan);
         return "redirect:/user/trang-chu";
     }
@@ -167,6 +165,7 @@ public class SanBongController {
                         @RequestParam("mkMoi") String mkMoi,
                         @RequestParam("xacnhanMK") String xacnhanMK,
                         Model model) {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         TaiKhoan taiKhoan = taiKhoanRepo.findByEmail(email).orElse(null);
@@ -176,7 +175,7 @@ public class SanBongController {
             return "/Main/DoiPass";
         }
 
-        if (!taiKhoan.getMat_khau().equals(mkCu)) {
+        if (!passwordEncoder.matches(mkCu, taiKhoan.getMat_khau())) {
             model.addAttribute("error", "Mật khẩu cũ không đúng.");
             return "/Main/DoiPass";
         }
@@ -186,12 +185,9 @@ public class SanBongController {
             return "/Main/DoiPass";
         }
 
-        if (mkMoi.length() < 6) {
-            model.addAttribute("error", "Mật khẩu mới phải có ít nhất 6 ký tự.");
-            return "/Main/DoiPass";
-        }
 
-        taiKhoan.setMat_khau(mkMoi);
+        // Lưu mật khẩu mới sau khi mã hóa
+        taiKhoan.setMat_khau(passwordEncoder.encode(mkMoi));
         taiKhoanRepo.save(taiKhoan);
 
         model.addAttribute("message", "Đổi mật khẩu thành công!");
@@ -265,7 +261,7 @@ public class SanBongController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated()
-                && !authentication.getPrincipal().equals("anonymousUser")) {
+            && !authentication.getPrincipal().equals("anonymousUser")) {
 
             if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_QUAN_TRI"))) {
                 return "redirect:/admin/trang-chu";
@@ -293,7 +289,11 @@ public class SanBongController {
                           @RequestParam(required = false) Integer trangThai) {
 
         if (keyword != null) {
+/*
             keyword = keyword.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
+*/
+            keyword = keyword.trim();
+
             if (keyword.isEmpty()) {
                 keyword = null;
             }
@@ -446,7 +446,6 @@ public class SanBongController {
 
         String hoTen = taiKhoanService.getHoTenDangNhap();
         model.addAttribute("hoTen", hoTen);
-
         SanBong sanBongGoc = sanBongService.findById(id);
         if (sanBongGoc == null) {
             return "redirect:/quan-ly-san";
@@ -506,7 +505,7 @@ public class SanBongController {
         model.addAttribute("hoTen", hoTen);
 
         if (keyword != null) {
-            keyword = keyword.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
+            keyword = keyword.trim();
         }
         Page<SanBong> ketQua = sanBongService.timKiemTheoPage(keyword, loaiSan, monTheThao, page, size);
         model.addAttribute("danhSachSan", ketQua);
@@ -531,7 +530,3 @@ public class SanBongController {
     }
 
 }
-
-
-
-

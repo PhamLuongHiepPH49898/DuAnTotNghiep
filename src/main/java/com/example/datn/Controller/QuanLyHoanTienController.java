@@ -79,7 +79,7 @@ public class QuanLyHoanTienController {
         model.addAttribute("hoTen", hoTen);
 
         if (tenNguoiDat != null) {
-            tenNguoiDat = tenNguoiDat.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
+            tenNguoiDat = tenNguoiDat.trim();
         }
         if (soDienThoai != null) {
             soDienThoai = soDienThoai.replaceAll("[^0-9]", "").trim();
