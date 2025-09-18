@@ -19,6 +19,44 @@
       margin: 0;
       padding: 0;
     }
+    .san-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4 cột */
+      gap: 24px;
+    }
+
+    .san-item {
+      background: white;
+      border-radius: 14px;
+      border: 2px solid #28a745;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;   /* sắp xếp theo chiều dọc */
+      height: 380px;            /* chiều cao cố định (bạn có thể chỉnh 350–420px) */
+    }
+
+    .san-item img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .san-item .info {
+      flex: 1;                  /* chiếm toàn bộ khoảng trống còn lại */
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .datsan-btn {
+      margin: 0 12px 14px;
+      padding: 10px 16px;
+      text-align: center;
+      background: linear-gradient(90deg, #00c6ff, #0077cc);
+      color: white;
+      font-weight: 700;
+      border-radius: 8px;
+      text-decoration: none;
+    }
 
     /* --- HEADER NAV --- */
     header, .main-header {
@@ -244,11 +282,12 @@
 
     /* --- FOOTER --- */
     footer {
-      background: #4ca1af;
+      background: linear-gradient(90deg, #0077cc, #00c6ff);
       color: white;
       padding: 40px 20px;
       text-align: center;
     }
+
     footer .features {
       display: flex;
       justify-content: center;
@@ -285,6 +324,45 @@
       animation: ring 0.8s ease-in-out;
       transform-origin: top center;
     }
+    .san-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4 cột */
+      gap: 24px;
+    }
+
+    .san-item {
+      background: white;
+      border-radius: 14px;
+      border: 2px solid #28a745;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;   /* sắp xếp theo chiều dọc */
+      height: 430px;            /* chiều cao cố định (bạn có thể chỉnh 350–420px) */
+    }
+
+    .san-item img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .san-item .info {
+      flex: 1;                  /* chiếm toàn bộ khoảng trống còn lại */
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .datsan-btn {
+      margin: 0 12px 14px;
+      padding: 10px 16px;
+      text-align: center;
+      background: linear-gradient(90deg, #00c6ff, #0077cc);
+      color: white;
+      font-weight: 700;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
   </style>
 </head>
 <body>
@@ -321,16 +399,12 @@
     </nav>
   </div>
 </header>
-
 <div class="banner">
   <img src="/image/anh7.jpg" alt="Banner">
 </div>
-
 <div class="intro">
   <h2>Đặt sân nhanh chóng - Tiện lợi - Chính xác</h2>
-  <p>Trải nghiệm hệ thống đặt sân bóng hiện đại, thuận tiện và đáng tin cậy.</p>
 </div>
-
 <div class="san-container">
   <h2>Danh sách sân bóng nổi bật</h2>
   <div class="san-grid">
@@ -360,13 +434,24 @@
     </div>
   </div>
 </div>
-
 <footer>
   <div class="features">
-    <div><i class="bi bi-search"></i><h5>Tìm kiếm sân</h5></div>
-    <div><i class="bi bi-calendar-check"></i><h5>Đặt sân nhanh</h5></div>
-    <div><i class="bi bi-clock-history"></i><h5>Lịch sử đặt</h5></div>
-    <div><i class="bi bi-star-half"></i><h5>Đánh giá sân</h5></div>
+    <div>
+      <i class="bi bi-search"></i>
+      <h5>Tìm kiếm sân</h5>
+    </div>
+    <div>
+      <i class="bi bi-calendar-check"></i>
+      <h5>Đặt sân nhanh</h5>
+    </div>
+    <div>
+      <i class="bi bi-clock-history"></i>
+      <h5>Lịch sử đặt</h5>
+    </div>
+    <div>
+      <i class="bi bi-star-half"></i>
+      <h5>Đánh giá sân</h5>
+    </div>
   </div>
   <p>Email: support@sambabooking.vn | Hotline: 1800-1234</p>
   <p>Địa chỉ: Đâu đó trên thế giới</p>
