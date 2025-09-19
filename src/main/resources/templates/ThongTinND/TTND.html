@@ -373,34 +373,22 @@
             <input type="hidden" name="idLichDatSan" id="idLichDatSan">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Hủy lịch đã thanh toán</h5>
+                    <h5 class="modal-title">Hủy lịch</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body">
-                    <label class="form-label">Lý do hủy: </label>
+                    <label class="form-label">Nhập số tài khoản và ngân hàng</label>
 
                     <div>
                         <div>
-                            <input type="radio" id="lyDo1" name="lyDoHuy" value="Bận đột xuất" required onchange="toggleGhiChuRadio(this)">
-                            <label for="lyDo1">Bận đột xuất</label>
-                        </div>
-                        <div>
-                            <input type="radio" id="lyDo2" name="lyDoHuy" value="Đặt nhầm giờ" onchange="toggleGhiChuRadio(this)">
-                            <label for="lyDo2">Đặt nhầm giờ</label>
-                        </div>
-                        <div>
-                            <input type="radio" id="lyDo3" name="lyDoHuy" value="Muốn đổi sân/giờ khác" onchange="toggleGhiChuRadio(this)">
-                            <label for="lyDo3">Muốn đổi sân/giờ khác</label>
-                        </div>
-                        <div>
                             <input type="radio" id="lyDoKhac" name="lyDoHuy" value="Khác" onchange="toggleGhiChuRadio(this)">
-                            <label for="lyDoKhac">Khác</label>
+                            <label for="lyDoKhac">Nhấp vào đây để nhập thông tin</label>
                         </div>
                     </div>
 
                     <textarea class="form-control mt-2" id="ghiChuInput"  name="nhapLyDoHuy"
-                              placeholder="Nhập ghi chú..." style="display:none;"></textarea>
+                              placeholder="Nhập thông tin theo cú pháp STK - Ngân hàng (VD: 929233 - MB Bank)" style="display:none;"></textarea>
                 </div>
 
                 <div class="modal-footer">
