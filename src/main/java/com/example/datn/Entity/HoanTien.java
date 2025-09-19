@@ -42,7 +42,7 @@ public class HoanTien {
     @Column(name = "ngay_cap_nhat")
     private LocalDateTime ngayCapNhat;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "id_lich_dat_san", nullable = false)
     private LichDatSan lichDatSan;
 }

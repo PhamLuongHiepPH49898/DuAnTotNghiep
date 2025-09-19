@@ -66,7 +66,8 @@ public class ThanhToanController {
      * Trang hiển thị khi thanh toán thành công
      */
     @GetMapping("/thanh-toan/thanh-cong")
-    public String hienThiThanhCong() {
+    public String hienThiThanhCong(/*@ModelAttribute("ketQua") String ketQua,*/ Model model) {
+        model.addAttribute("ketQua", "success");
         return "Main/ketQuaTb";
     }
 }
