@@ -1,6 +1,7 @@
 
 package com.example.datn.Repository;
 
+import com.example.datn.Entity.KhungGio;
 import com.example.datn.Entity.LichDatSan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -82,6 +83,10 @@ public interface LichDatSanRepo extends JpaRepository<LichDatSan, Integer> {
 
     // Dùng cho thông báo
     List<LichDatSan> findByNgayDatAndTaiKhoanIsNotNullAndTrangThai(LocalDate ngayDat, int trangThai);
+
+    // Kiểm tra xem có lịch tồn tại với ngày và khung giờ này không và trạng thái không phải là "trống" (trangThai != 3)
+    @Query("SELECT COUNT(l) > 0 FROM LichDatSan l WHERE l.ngayDat = :ngayDat AND l.giaTheoKhungGio.khungGio = :khungGio AND l.trangThai <> 3")
+    boolean existsByNgayDatAndKhungGio(@Param("ngayDat") LocalDate ngayDat, @Param("khungGio") KhungGio khungGio);
 
 
 }

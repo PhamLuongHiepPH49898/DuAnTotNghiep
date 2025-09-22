@@ -210,7 +210,7 @@
             <span><strong>Môn thể thao:</strong> <span
                     th:text="${sanBongChiTiet.loaiMonTheThao.ten_mon_the_thao}"></span></span>
             <span><strong>Ghi chú:</strong> <span th:text="${sanBongChiTiet.mo_ta}"></span></span>
-            <span><strong>Trung bình sao:</strong> <span th:text="${trungBinhSao}"></span> ⭐</span>
+            <span><strong>Trung bình sao:</strong> <span th:text="${#numbers.formatDecimal(trungBinhSao,1,1)}"></span></span>
         </div>
     </div>
 

@@ -5,147 +5,177 @@
   <title>Đổi mật khẩu</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+  <link rel="icon" type="image/png" th:href="@{/image/logo.png}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
   <style>
+    * {
+      font-family: 'Poppins', sans-serif;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f2f5;
+      background-color: #f8f9fa;
       margin: 0;
       padding: 0;
     }
 
-    header, footer {
-      background: linear-gradient(90deg, #4ca1af, #c4e0e5);
+    /* ===== HEADER ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: linear-gradient(90deg, #0077cc, #00c6ff);
       color: white;
-      padding: 20px;
-      text-align: center;
-      border-bottom: 5px solid #89cff0;
-    }
-
-    header h1 {
-      font-size: 2.5rem;
-      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .menu {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 20px;
+      padding: 14px 28px;
+      flex-wrap: wrap;
     }
 
-    .menu-left a {
-      color: white;
-      margin-right: 20px;
-      font-size: 1.1rem;
-      text-decoration: none;
-      font-weight: 500;
+    .menu h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 0;
     }
 
-    .menu-left a:hover {
-      text-decoration: underline;
-    }
-
-    .user-menu {
+    .nav-links {
       display: flex;
+      gap: 20px;
       align-items: center;
-      cursor: pointer;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #ffe600;
+      transform: translateY(-2px);
+    }
+
+    /* ===== USER DROPDOWN ===== */
+    .user-menu {
       position: relative;
+      cursor: pointer;
+    }
+
+    .user-icon {
+      font-size: 1.8rem;
       color: white;
     }
 
-    .user-menu .user-icon {
-      font-size: 2.5rem;
-      margin-right: 8px;
-    }
-
+    /* Ẩn dropdown mặc định */
     .user-menu .dropdown-menu {
       display: none;
       position: absolute;
-      top: 120%;
       right: 0;
-      background-color: white;
+      top: 120%;
+      background: white;
       border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       min-width: 180px;
-      z-index: 1000;
       padding: 10px 0;
+      z-index: 1001;
     }
 
     .user-menu .dropdown-menu a {
       display: block;
-      padding: 10px 20px;
-      color: #333;
+      padding: 8px 16px;
       text-decoration: none;
+      color: #333;
       font-weight: 500;
     }
 
     .user-menu .dropdown-menu a:hover {
-      background-color: #4ca1af;
-      color: white;
+      background: #f1f1f1;
     }
 
+    /* Khi click vào icon -> thêm class active để hiện menu */
     .user-menu.active .dropdown-menu {
       display: block;
     }
 
+    /* ===== FORM ĐỔI MẬT KHẨU ===== */
     .form-doiPass {
-      max-width: 600px;
-      margin: 50px auto;
       background: white;
-      padding: 30px 40px;
+      max-width: 450px;
+      margin: 60px auto;
+      padding: 30px 35px;
       border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .form-doiPass h2 {
       text-align: center;
-      margin-bottom: 35px;
-      color: #1B1E21;
-      font-weight: 700;
-      font-size: 2rem;
+      margin-bottom: 25px;
+      font-weight: 600;
+      color: #0077cc;
     }
 
-    .btn-doiMK {
-      display: block;
-      margin: 30px auto 0 auto;
-      background-color: #53aab5;
-      color: white;
+    .form-doiPass label {
       font-weight: 500;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      transition: background-color 0.3s ease;
+      margin-bottom: 6px;
+      display: block;
     }
 
-    .btn-doiMK:hover {
-      background-color: #4296a0;
+    .form-doiPass .btn-doiMK {
+      width: 100%;
+      background: linear-gradient(90deg, #0077cc, #00c6ff);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .form-doiPass .btn-doiMK:hover {
+      background: linear-gradient(90deg, #005fa3, #00aee0);
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: linear-gradient(90deg, #0077cc, #00c6ff);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+      margin-top: 40px;
     }
 
     footer .features {
       display: flex;
-      justify-content: space-around;
+      justify-content: center;
+      gap: 40px;
       flex-wrap: wrap;
-      gap: 20px;
+      margin-bottom: 20px;
     }
 
-    footer .features div {
-      text-align: center;
-    }
-
-    footer .features i {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
+    footer .features h5 {
+      margin-top: 10px;
+      font-weight: 600;
     }
 
     footer .social-icons a {
       color: white;
-      font-size: 1.5rem;
-      margin: 0 10px;
-      transition: transform 0.3s ease;
+      font-size: 1.6rem;
+      margin: 0 12px;
+      transition: transform 0.3s;
     }
 
     footer .social-icons a:hover {
-      transform: scale(1.2);
+      transform: scale(1.3);
     }
 
     footer .btn {
@@ -154,29 +184,33 @@
       border: 2px solid white;
       padding: 8px 16px;
       border-radius: 20px;
+      font-weight: 600;
+      transition: all 0.3s;
     }
 
     footer .btn:hover {
       background-color: white;
-      color: #1e90ff;
+      color: #0077cc;
     }
   </style>
 </head>
 <body>
 
 <header class="menu-wrapper">
-  <h1>Hệ thống đặt sân bóng Samba</h1>
   <div class="menu">
-    <div class="menu-left">
-      <a href="/admin/trang-chu" class="active">Trang Chủ</a>
+    <h1>Hệ thống đặt sân bóng Samba</h1>
+    <div class="nav-links">
+      <a th:href="@{/ve-trang-chu}">Trang Chủ</a>
       <a href="/tim-kiem">Tìm kiếm</a>
-    </div>
-    <div class="user-menu">
-      <i class="bi bi-person-circle user-icon"></i>
-      <div class="dropdown-menu">
-        <a href="/thong-tin-ca-nhan">Thông tin cá nhân</a>
-        <a href="/doi-mat-khau">Đổi mật khẩu</a>
-        <a href="/logout">Đăng xuất</a>
+
+      <!-- User dropdown -->
+      <div class="user-menu">
+        <i class="bi bi-person-circle user-icon"></i>
+        <div class="dropdown-menu">
+          <a href="/thong-tin-nguoi-dung">Thông tin cá nhân</a>
+          <a href="/doi-mat-khau">Đổi mật khẩu</a>
+          <a href="/logout">Đăng xuất</a>
+        </div>
       </div>
     </div>
   </div>
@@ -188,21 +222,25 @@
   <div th:if="${message}" class="alert alert-success text-center" th:text="${message}"></div>
 </div>
 
-<!-- Form đổi mật khẩu -->
+<!-- ===== FORM ĐỔI MẬT KHẨU ===== -->
 <form th:action="@{/doi-mat-khau}" method="post" class="form-doiPass">
   <h2>Đổi mật khẩu</h2>
-  <div class="form-group mb-3">
-    <label for="mkCu">Mật khẩu cũ:</label>
+
+  <div class="mb-3">
+    <label for="mkCu">Mật khẩu cũ</label>
     <input type="password" id="mkCu" name="mkCu" class="form-control" required />
   </div>
-  <div class="form-group mb-3">
-    <label for="mkMoi">Mật khẩu mới:</label>
+
+  <div class="mb-3">
+    <label for="mkMoi">Mật khẩu mới</label>
     <input type="password" id="mkMoi" name="mkMoi" class="form-control" required />
   </div>
-  <div class="form-group mb-4">
-    <label for="xacnhanMK">Xác nhận mật khẩu mới:</label>
+
+  <div class="mb-4">
+    <label for="xacnhanMK">Xác nhận mật khẩu mới</label>
     <input type="password" id="xacnhanMK" name="xacnhanMK" class="form-control" required />
   </div>
+
   <button type="submit" class="btn-doiMK">Đổi mật khẩu</button>
 </form>
 
@@ -243,14 +281,15 @@
 
 <script>
   const userMenu = document.querySelector('.user-menu');
-  userMenu.addEventListener('click', function (e) {
-    e.stopPropagation();
-    this.classList.toggle('active');
-  });
-
-  document.addEventListener('click', function () {
-    userMenu.classList.remove('active');
-  });
+  if(userMenu){
+    userMenu.addEventListener('click', function (e) {
+      e.stopPropagation();
+      this.classList.toggle('active');
+    });
+    document.addEventListener('click', function () {
+      userMenu.classList.remove('active');
+    });
+  }
 </script>
 
 </body>

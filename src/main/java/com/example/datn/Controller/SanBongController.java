@@ -86,6 +86,12 @@ public class SanBongController {
         populateModel(model);
         return "Main/TrangChu";
     }
+    @GetMapping("/dieu-khoan")
+    public String dieuKhoan() { return "Main/DieuKhoan"; }
+
+    @GetMapping("/chinh-sach")
+    public String chinhSach() { return "Main/ChinhSach"; }
+
 
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
@@ -246,12 +252,24 @@ public class SanBongController {
 //    }
 
     @GetMapping("/admin/trang-chu")
-    public String trangChu_QuanTri(Model model) {
+    public String trangChu_QuanTri(Model model ,HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("username", auth.getName());
         List<SanBong> danhSachSan = sanBongService.findAll();
         model.addAttribute("danhSachSan", danhSachSan);
         populateModel(model);
+        // Lấy thông tin tài khoản từ SecurityContext
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+        TaiKhoan taiKhoan = userDetails.getTaiKhoan();
+
+        //  Set idTaiKhoan vào session để sử dụng cho thông báo
+        request.getSession().setAttribute("idTaiKhoan", taiKhoan.getId());
+        danhSachSan = sanBongService.findAll();
+        model.addAttribute("danhSachSan", danhSachSan);
+        //
+        int soLuongThongBaoMoi = thongBaoService.demThongBaoChuaDoc(taiKhoan.getId());
+        model.addAttribute("soLuongThongBaoMoi", soLuongThongBaoMoi);
+
         System.out.println("Logged-in user: " + auth.getName());
         return "Main/TrangChu_QuanTri";
     }
@@ -323,10 +341,19 @@ public class SanBongController {
         if (san == null) {
             return "redirect:/trang-chu"; // Không tìm thấy sân thì về trang chủ
         }
+        List<DanhGia> danhSach = danhGiaService.layDanhGiaTheoSan(id);
+
+        // 👉 Tính trung bình số sao
+        double trungBinhSao = 0;
+        if (!danhSach.isEmpty()) {
+            double tong = danhSach.stream().mapToDouble(DanhGia::getSao).sum();
+            trungBinhSao = tong / danhSach.size();
+        }
 
         model.addAttribute("sanBongChiTiet", san);
         model.addAttribute("danhSachDanhGia", danhGiaService.layDanhGiaTheoSan(id));
         model.addAttribute("danhGia", new DanhGia()); // form đánh giá cần dòng này
+        model.addAttribute("trungBinhSao", trungBinhSao);
 
         return "Main/ChiTietSan";
     }

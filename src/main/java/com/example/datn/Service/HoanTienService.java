@@ -1,6 +1,7 @@
 package com.example.datn.Service;
 
 import com.example.datn.Entity.HoanTien;
+import com.example.datn.Entity.KhungGio;
 import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Repository.HoanTienRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class HoanTienService {
     @Autowired
     private HoanTienRepo hoanTienRepo;
 
+    @Autowired
+    private ThongBaoService thongBaoService;
+
     public Page<HoanTien> getAllHoanTien(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return hoanTienRepo.findAll(pageable);
@@ -32,6 +36,17 @@ public class HoanTienService {
             hoanTien.setTrangThai(1);
             hoanTien.setNgayCapNhat(LocalDateTime.now());
             hoanTienRepo.save(hoanTien);
+            try {
+                LichDatSan lichDatSan = hoanTien.getLichDatSan();
+                KhungGio khungGio = lichDatSan.getGiaTheoKhungGio().getKhungGio();
+                String lyDoHuy = hoanTien.getLyDo(); // nếu có lưu lý do
+
+                thongBaoService.taoThongBaoDuyetHoanTien(lichDatSan, khungGio, hoanTien, lyDoHuy
+                );
+            } catch (Exception e) {
+                System.err.println("Gửi thông báo duyệt hoàn tiền thất bại: " + e.getMessage());
+
+            }
         }
     }
 
@@ -41,6 +56,13 @@ public class HoanTienService {
             hoanTien.setTrangThai(2);
             hoanTien.setNgayCapNhat(LocalDateTime.now());
             hoanTienRepo.save(hoanTien);
+            try {
+                LichDatSan lich = hoanTien.getLichDatSan();
+                KhungGio khungGio = lich.getGiaTheoKhungGio().getKhungGio();
+                thongBaoService.taoThongBaoTuChoiHoanTien(lich, khungGio, hoanTien);
+            } catch (Exception e) {
+                System.err.println("Gửi thông báo từ chối hoàn tiền thất bại"+ e.getMessage());
+            }
         }
     }
 

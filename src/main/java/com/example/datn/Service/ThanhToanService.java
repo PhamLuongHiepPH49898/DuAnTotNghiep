@@ -77,6 +77,8 @@ public class ThanhToanService {
                 lich.setTrangThai(2); // đã hủy
                 lich.setGhiChu("Quá hạn thanh toán");
                 lichDatSanRepo.save(lich);
+                // Kiểm tra xem đã có lịch với ngày và khung giờ này chưa
+                boolean isExist = lichDatSanRepo.existsByNgayDatAndKhungGio(lich.getNgayDat(), lich.getGiaTheoKhungGio().getKhungGio());
 
                 //Tạo lịch mới
                 LichDatSan lichMoi = new LichDatSan();

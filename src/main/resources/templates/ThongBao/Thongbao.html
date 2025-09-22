@@ -116,7 +116,7 @@
 
 <h1>Danh sách thông báo của bạn</h1>
 
-<a th:href="@{/user/trang-chu}" class="btn-back">Quay về Trang Chủ</a>
+<a th:href="@{${homeUrl}}" class="btn-back">Quay về Trang Chủ</a>
 
 <p th:if="${error}" th:text="${error}" class="error"></p>
 

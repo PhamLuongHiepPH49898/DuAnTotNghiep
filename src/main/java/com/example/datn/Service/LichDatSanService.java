@@ -3,9 +3,11 @@ package com.example.datn.Service;
 import com.example.datn.Entity.KhungGio;
 import com.example.datn.Entity.LichDatSan;
 import com.example.datn.Entity.SanBong;
+import com.example.datn.Entity.TaiKhoan;
 import com.example.datn.Repository.KhungGioRepo;
 import com.example.datn.Repository.LichDatSanRepo;
 import com.example.datn.Repository.SanBongRepo;
+import com.example.datn.Repository.TaiKhoanRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +25,7 @@ public class LichDatSanService {
     @Autowired
     private LichDatSanRepo lichDatSanRepo;
     @Autowired
-    private SanBongRepo sanBongRepo;
+    private TaiKhoanRepo taiKhoanRepo;
     @Autowired
     private KhungGioRepo khungGioRepo;
     @Autowired
@@ -99,15 +101,33 @@ public class LichDatSanService {
             lichMoi.setTaiKhoan(null);
             lichDatSanRepo.save(lichMoi);
 
-        }try {
-            KhungGio khungGio = lichDatSan.getGiaTheoKhungGio().getKhungGio();
-            thongBaoService.taoThongBaoHuyNguoiDung(
-                    lichDatSan,
-                    khungGio,
-                    lichDatSan.getGhiChu() != null ? lichDatSan.getGhiChu() : "Không có"
-            );
-        } catch (Exception e) {
-            System.err.println("[WARN] Gửi thông báo HUỶ thất bại: " + e.getMessage());
+            try {
+                KhungGio khungGio = lichDatSan.getGiaTheoKhungGio().getKhungGio();
+
+                // Gửi thông báo cho người dùng
+                thongBaoService.taoThongBaoHuyNguoiDung(
+                        lichDatSan,
+                        khungGio,
+                        ghiChu != null ? ghiChu : "Không có"
+                );
+
+                // 🔑 Gửi thông báo cho tất cả Admin
+
+
+                List<TaiKhoan> admins = taiKhoanRepo.findByVaiTro("QUAN_TRI");
+                System.out.println(">>> TaiKhoan trong lich: " + lichDatSan.getTaiKhoan());
+                System.out.println(">>> Số admin tìm thấy: " + admins.size());
+                for (TaiKhoan admin : admins) {
+                    thongBaoService.taoThongBaoHuyNguoiDungChoAdmin(
+                            lichDatSan,
+                            khungGio,
+                            ghiChu != null ? ghiChu : "Không có",
+                            admin
+                    );
+                }
+            } catch (Exception e) {
+                System.err.println("[WARN] Gửi thông báo HUỶ thất bại: " + e.getMessage());
+            }
         }
     }
 

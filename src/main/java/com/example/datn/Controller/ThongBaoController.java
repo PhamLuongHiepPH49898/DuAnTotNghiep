@@ -10,6 +10,7 @@ import com.example.datn.Service.ThongBaoService;
 import com.example.datn.Uttil.EnvUtil;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class ThongBaoController {
     @Autowired
     private KhungGioRepo khungGioRepository;
 
-    @GetMapping("/xem-thong-bao")
+    /*@GetMapping("/xem-thong-bao")
     public String hienThiThongBaoGET(Model model, HttpSession session) {
         return hienThiThongBao(model, session);
     }
@@ -37,7 +38,7 @@ public class ThongBaoController {
     @PostMapping("/xem-thong-bao")
     public String hienThiThongBaoPOST(Model model, HttpSession session) {
         return hienThiThongBao(model, session);
-    }
+    }*/
 
     private String hienThiThongBao(Model model, HttpSession session) {
         Integer idTaiKhoan = (Integer) session.getAttribute("idTaiKhoan");
@@ -55,6 +56,34 @@ public class ThongBaoController {
         model.addAttribute("thongBaoList", thongBaoList);
         return "ThongBao/ThongBao";
     }
+    @GetMapping("/xem-thong-bao")
+    public String hienThiThongBaoGET(Model model,
+                                     HttpSession session,
+                                     Authentication authentication) {
+        setHomeUrl(model, authentication);
+        return hienThiThongBao(model, session);
+    }
+
+    @PostMapping("/xem-thong-bao")
+    public String hienThiThongBaoPOST(Model model,
+                                      HttpSession session,
+                                      Authentication authentication) {
+        setHomeUrl(model, authentication);
+        return hienThiThongBao(model, session);
+    }
+
+    // Hàm phụ để truyền homeUrl
+    private void setHomeUrl(Model model, Authentication authentication) {
+        String homeUrl = "/trang-chu"; // giá trị mặc định nếu không có role
+        if (authentication != null) {
+            boolean isAdmin = authentication.getAuthorities()
+                    .stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_QUAN_TRI"));
+            homeUrl = isAdmin ? "/admin/trang-chu" : "/user/trang-chu";
+        }
+        model.addAttribute("homeUrl", homeUrl);
+    }
+
     @GetMapping("/chi-tiet/{idThongBao}")
     public String chiTietThongBao(@PathVariable Integer idThongBao, Model model) {
         // Cập nhật trạng thái thành "đã đọc"
