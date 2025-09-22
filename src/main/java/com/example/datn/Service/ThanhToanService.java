@@ -77,25 +77,31 @@ public class ThanhToanService {
                 lich.setTrangThai(2); // đã hủy
                 lich.setGhiChu("Quá hạn thanh toán");
                 lichDatSanRepo.save(lich);
+
                 // Kiểm tra xem đã có lịch với ngày và khung giờ này chưa
                 boolean isExist = lichDatSanRepo.existsByNgayDatAndKhungGio(lich.getNgayDat(), lich.getGiaTheoKhungGio().getKhungGio());
 
-                //Tạo lịch mới
-                LichDatSan lichMoi = new LichDatSan();
-                lichMoi.setNgayDat(lich.getNgayDat());
-                lichMoi.setGiaTheoKhungGio(lich.getGiaTheoKhungGio());
-                lichMoi.setTrangThai(3); // 3 = trống
-                lichMoi.setGhiChu("Tạo lại sau khi huỷ quá hạn");
-                lichMoi.setNgayTao(LocalDateTime.now());
-                lichMoi.setGiaApDung(null);
-                lichMoi.setTaiKhoan(null);
-                lichDatSanRepo.save(lichMoi);
-                //huy -> gui thongbao
-                try {
-                    KhungGio khungGio = lich.getGiaTheoKhungGio().getKhungGio();
-                    thongBaoService.taoThongBaoHuy(lich, khungGio);
-                } catch (Exception e) {
-                    System.err.println("[WARN] Gửi thông báo HUỶ thất bại: " + e.getMessage());
+                if (!isExist) {
+                    // Tạo lịch mới chỉ khi chưa có lịch tồn tại
+                    LichDatSan lichMoi = new LichDatSan();
+                    lichMoi.setNgayDat(lich.getNgayDat());
+                    lichMoi.setGiaTheoKhungGio(lich.getGiaTheoKhungGio());
+                    lichMoi.setTrangThai(3); // 3 = trống
+                    lichMoi.setGhiChu("Tạo lại sau khi huỷ quá hạn");
+                    lichMoi.setNgayTao(LocalDateTime.now());
+                    lichMoi.setGiaApDung(null);
+                    lichMoi.setTaiKhoan(null);
+                    lichDatSanRepo.save(lichMoi);
+
+                    // Hủy -> gửi thông báo
+                    try {
+                        KhungGio khungGio = lich.getGiaTheoKhungGio().getKhungGio();
+                        thongBaoService.taoThongBaoHuy(lich, khungGio);
+                    } catch (Exception e) {
+                        System.err.println("[WARN] Gửi thông báo HUỶ thất bại: " + e.getMessage());
+                    }
+                } else {
+                    System.out.println("Lịch đã tồn tại, không tạo lịch mới.");
                 }
             }
             return mapToDTO(tt);
