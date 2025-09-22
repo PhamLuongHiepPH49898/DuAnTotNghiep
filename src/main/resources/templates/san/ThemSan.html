@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
     <style>
         body {
-            background-color:  #f0f2f5;
+            background-color: #f0f2f5;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
@@ -172,9 +172,11 @@
         </li>
         <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản lý
             hoàn tiền</a>
-        <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i> Quản lý thanh toán</a>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i> Quản lý
+            thanh toán</a>
         </li>
-        <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người
+            dùng</a></li>
         <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
             thống kê</a></li>
         <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay lại
@@ -241,11 +243,14 @@
                     <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
                 </ul>
             </li>
-            <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản lý hoàn tiền</a>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản
+                lý hoàn tiền</a>
 
-            <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i> Quản lý thanh
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i>
+                Quản lý thanh
                 toán</a></li>
-            <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý
+                người dùng</a></li>
             <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
                 thống kê</a></li>
             <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay
@@ -264,12 +269,12 @@
               class="form-content">
 
 
-                <div class="mb-3 ">
-                    <label class="form-label">Tên sân bóng</label>
-                    <input type="text" class="form-control" th:field="*{ten_san_bong}" placeholder="Nhập tên sân bóng">
-                    <div class="text-danger" th:if="${#fields.hasErrors('ten_san_bong')}"
-                         th:errors="*{ten_san_bong}"></div>
-                </div>
+            <div class="mb-3 ">
+                <label class="form-label">Tên sân bóng</label>
+                <input type="text" class="form-control" th:field="*{ten_san_bong}" placeholder="Nhập tên sân bóng">
+                <div class="text-danger" th:if="${#fields.hasErrors('ten_san_bong')}"
+                     th:errors="*{ten_san_bong}"></div>
+            </div>
 
 
             <div class="mb-3">
@@ -319,8 +324,18 @@
 
             <div class="mb-3">
                 <label class="form-label">Hình ảnh</label>
-                <input type="file" class="form-control" th:field="*{file}"/>
+                <input type="file" class="form-control" th:field="*{file}" onchange="previewImage(event)"/>
                 <div class="text-danger" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></div>
+            </div>
+
+            <div id="preview-container" class="mb-3">
+                <!-- Thẻ img để preview ảnh -->
+                <img id="img-preview" alt="Xem trước ảnh" class="mb-3"
+                     th:if="${sanBong.hinh_anh != null}"
+                     th:src="${#strings.startsWith(sanBong.hinh_anh, 'anh')
+                  ? '/image/' + sanBong.hinh_anh
+                  : '/uploads/' + sanBong.hinh_anh}"
+                     style=" max-width: 200px; margin-top: 10px;"/>
             </div>
 
             <div class="mb-4">
@@ -343,6 +358,24 @@
 
 <!-- Bootstrap Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function previewImage(event) {
+        const previewContainer = document.getElementById('preview-container');
+        let img = document.getElementById('img-preview');
+
+        if (!img) {
+            img = document.createElement('img');
+            img.id = 'img-preview';
+            img.style.maxWidth = '200px';
+            img.style.marginTop = '10px';
+            previewContainer.appendChild(img);
+        }
+        img.src = URL.createObjectURL(event.target.files[0]);
+        img.style.display = 'block';
+    }
+
+</script>
 
 </body>
 </html>
