@@ -186,8 +186,8 @@
                 <i class="bi bi-calendar-event"></i> Quản lý đặt sân
             </a>
             <ul class="dropdown-menu" aria-labelledby="qlDatSanDropdown1">
-                <li><a class="dropdown-item" href="/quan-ly-lich-dat">Quản lý lịch đặt</a></li>
-                <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
+                <li><a class="dropdown-item" href="/quan-ly-lich-dat">Lịch sân</a></li>
+                <li><a class="dropdown-item" href="/duyet-huy-lich">Lịch đã đặt</a></li>
             </ul>
         </li>
         <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản lý
@@ -196,7 +196,8 @@
         <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i>
             Quản lý thanh
             toán</a></li>
-        <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+        <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người
+            dùng</a></li>
         <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
             thống kê</a></li>
         <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay lại
@@ -259,8 +260,8 @@
                     <i class="bi bi-calendar-event"></i> Quản lý đặt sân
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="qlDatSanDropdown2">
-                    <li><a class="dropdown-item" href="/quan-ly-lich-dat">Quản lý lịch đặt</a></li>
-                    <li><a class="dropdown-item" href="/duyet-huy-lich">Duyệt/Hủy lịch</a></li>
+                    <li><a class="dropdown-item" href="/quan-ly-lich-dat">Lịch sân</a></li>
+                    <li><a class="dropdown-item" href="/duyet-huy-lich">Lịch đã đặt</a></li>
                 </ul>
             </li>
             <li class="nav-item"><a class="nav-link" href="/quan-ly-hoan-tien"><i class="bi bi-calendar-event"></i> Quản
@@ -269,7 +270,8 @@
             <li class="nav-item"><a class="nav-link" href="/quan-ly-thanh-toan"><i class="bi bi-calendar-event"></i>
                 Quản lý thanh
                 toán</a></li>
-            <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý người dùng</a></li>
+            <li class="nav-item"><a class="nav-link" href="/quan-ly-nguoi-dung"><i class="bi bi-people"></i> Quản lý
+                người dùng</a></li>
             <li class="nav-item"><a class="nav-link" href="/thongke/doanhthu"><i class="bi bi-bar-chart"></i> Quản lý
                 thống kê</a></li>
             <li class="nav-item"><a class="nav-link" th:href="@{/ve-trang-chu}"><i class="bi bi-house-door"></i> Quay
@@ -283,23 +285,34 @@
             <i class="bi bi-cash-coin"></i> Quản lý hoàn tiền
         </h3>
 
-        <form method="get" th:action="@{/quan-ly-hoan-tien/tim-kiem}" class="row g-3 mb-3">
+        <form method="get" th:action="@{/quan-ly-hoan-tien/tim-kiem}" class="row g-3 mb-3 align-items-end">
+
+            <div class="col-md-2">
+                <label class="form-label">Ngày hủy</label>
+                <input type="date" name="ngayHuy" class="form-control" th:value="${ngayHuy}"
+                       onchange="this.form.submit()">
+            </div>
+
             <!-- Tên người đặt -->
-            <div class="col-md-3">
+            <div class="col-md-2">
+                <label class="form-label">Tên người đặt</label>
+
                 <input type="text" name="tenNguoiDat" class="form-control"
                        th:value="${tenNguoiDat}" placeholder="Tên người đặt">
             </div>
 
             <!-- Số điện thoại -->
-            <div class="col-md-3">
+            <div class="col-md-2">
+                <label class="form-label">Số điện thoại</label>
                 <input type="text" name="soDienThoai" class="form-control"
                        th:value="${soDienThoai}" placeholder="Số điện thoại">
             </div>
 
             <!-- Chọn sân bóng -->
             <div class="col-md-2">
+                <label class="form-label">Sân bóng</label>
                 <select name="sanBongId" class="form-select">
-                    <option value="">-- Tất cả sân bóng --</option>
+                    <option value="">-- Tất cả --</option>
                     <option th:each="sb : ${dsSanBong}"
                             th:value="${sb.id_san_bong}"
                             th:text="${sb.ten_san_bong}"
@@ -310,8 +323,9 @@
 
             <!-- Trạng thái -->
             <div class="col-md-2">
+                <label class="form-label">Trạng thái</label>
                 <select name="trangThai" class="form-select">
-                    <option value="">-- Tất cả trạng thái --</option>
+                    <option value="">-- Tất cả --</option>
                     <option value="0" th:selected="${trangThai != null and trangThai == 0}">Chờ duyệt</option>
                     <option value="1" th:selected="${trangThai != null and trangThai == 1}">Đã duyệt</option>
                     <option value="2" th:selected="${trangThai != null and trangThai == 2}">Từ chối</option>
@@ -393,7 +407,7 @@
                     <a class="page-link"
                        th:if="${isTimKiem}"
                        th:href="@{/quan-ly-hoan-tien/tim-kiem(page=${currentPage - 1}, size=10,
-                            tenNguoiDat=${tenNguoiDat}, soDienThoai=${soDienThoai}, sanBongid=${sanBongId}, trangThai=${trangThai})}">
+                            tenNguoiDat=${tenNguoiDat}, ngayHuy=${ngayHuy}, soDienThoai=${soDienThoai}, sanBongid=${sanBongId}, trangThai=${trangThai})}">
                         Trước
                     </a>
                     <a class="page-link"
@@ -410,7 +424,7 @@
                     <a class="page-link"
                        th:if="${isTimKiem}"
                        th:href="@{/quan-ly-hoan-tien/tim-kiem(page=${i}, size=10,
-                            tenNguoiDat=${tenNguoiDat}, soDienThoai=${soDienThoai}, sanBongid=${sanBongId}, trangThai=${trangThai})}"
+                            tenNguoiDat=${tenNguoiDat}, ngayHuy=${ngayHuy}, soDienThoai=${soDienThoai}, sanBongid=${sanBongId}, trangThai=${trangThai})}"
                        th:text="${i + 1}"></a>
 
                     <a class="page-link"
@@ -424,7 +438,7 @@
                     <a class="page-link"
                        th:if="${isTimKiem}"
                        th:href="@{/quan-ly-hoan-tien/tim-kiem(page=${currentPage + 1}, size=10,
-                            tenNguoiDat=${tenNguoiDat}, soDienThoai=${soDienThoai}, sanBongid=${sanBongId}, trangThai=${trangThai})}">
+                            tenNguoiDat=${tenNguoiDat}, ngayHuy=${ngayHuy}, soDienThoai=${soDienThoai}, sanBongid=${sanBongId}, trangThai=${trangThai})}">
                         Tiếp
                     </a>
                     <a class="page-link"

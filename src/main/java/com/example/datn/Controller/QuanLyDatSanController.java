@@ -144,7 +144,7 @@ public class QuanLyDatSanController {
             LichDatSan lich = lichDatSanRepo.findById(id).orElseThrow();
             lichDatSanService.huy(id, ghiChu);
             if (hoanTien == 1  && lich.getThanhToan().getTrangThai() == 1) {
-                hoanTienService.taoHoanTienAdmin(lich, ghiChu);
+                hoanTienService.taoHoanTienAdmin(lich);
             }
             redirectAttributes.addFlashAttribute("success", "Đã hủy lịch thành công!");
         } catch (Exception e) {

@@ -145,54 +145,35 @@ public class ThongBaoService {
     }
 
     // Gửi thông báo HUỶ đơn từ phía người dùng
-    public void taoThongBaoHuyNguoiDung(LichDatSan lichDatSan, KhungGio khungGio, String lyDoHuy) {
+    public void taoThongBaoHuyNguoiDung(LichDatSan lichDatSan, KhungGio khungGio,HoanTien hoanTien) {
         String tenSan = lichDatSan.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
+        BigDecimal phanTramHoanTien = BigDecimal.ZERO;
+        BigDecimal soTienHoan = BigDecimal.ZERO;
 
-        HoanTien hoanTien = null;
-//        if (lichDatSan.getThanhToan() != null && lichDatSan.getThanhToan().getTrangThai() == 1) {
-//            // Chỉ tạo hoàn tiền nếu đã thanh toán
-//            hoanTien = hoanTienService.taoHoanTien(lichDatSan, lyDoHuy);
-//        }
-
-        String noiDung;
         if (hoanTien != null) {
-            BigDecimal phanTramHoanTien = hoanTien.getPhanTramHoan().multiply(BigDecimal.valueOf(100));
-            BigDecimal soTienHoan = hoanTien.getSoTienHoan();
+            phanTramHoanTien = hoanTien.getPhanTramHoan().multiply(BigDecimal.valueOf(100));
+            soTienHoan = hoanTien.getSoTienHoan();
+        }
 
-            noiDung = "<div style='font-family:sans-serif; color:#000;'>"
-                    + "<p>Kính gửi: " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
-                    + "<p>Bạn đã <strong>hủy đơn đặt sân</strong> tại sân <strong>\"" + tenSan + "\"</strong> "
-                    + "ngày <strong>" + lichDatSan.getNgayDat() + "</strong> trong khung giờ "
-                    + "<strong>" + khungGio.getGioBatDau() + " - " + khungGio.getGioKetThuc() + "</strong>.</p>"
-                    // === Thêm đoạn này ===
-                    + "<p style='color:#d9534f;'><em>Yêu cầu huỷ của bạn đã được gửi. "
-                    + "Vui lòng chờ admin duyệt để hoàn tiền (nếu đủ điều kiện).</em></p>"
-                    // ======================
-                    + "<p><strong>Thông tin hoàn tiền (dự kiến):</strong></p>"
-                    + "<ul>"
-                    + "<li>Tỉ lệ hoàn tiền: <strong>" + phanTramHoanTien.stripTrailingZeros().toPlainString() + "%</strong></li>"
-                    + "<li>Số tiền hoàn dự kiến: <strong>" + soTienHoan + " VNĐ</strong></li>"
-                    + "<li>Lý do hủy: <strong>" + lyDoHuy + "</strong></li>"
-                    + "</ul>"
-                    + "<p>Khoản hoàn tiền sẽ được xử lý theo phương thức thanh toán bạn đã sử dụng sau khi được duyệt.</p>"
-                    + "<p>Nếu có thắc mắc, vui lòng liên hệ qua email: "
-                    + "<a href=\"mailto:sambasport.booking@gmail.com\">sambasport.booking@gmail.com</a></p>"
-                    + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Ban quản trị Sân bóng Samba</strong></p>"
-                    + "</div>";
-        }
-        else {
-            // Trường hợp chưa thanh toán, không hiển thị thông tin hoàn tiền
-            noiDung = "<div style='font-family:sans-serif; color:#000;'>"
-                      + "<p>Kính gửi: " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
-                      + "<p>Bạn đã <strong>hủy đơn đặt sân</strong> tại sân <strong>\"" + tenSan + "\"</strong> "
-                      + "ngày <strong>" + lichDatSan.getNgayDat() + "</strong> trong khung giờ "
-                      + "<strong>" + khungGio.getGioBatDau() + " - " + khungGio.getGioKetThuc() + "</strong>.</p>"
-                      + "<p>Vì đơn hàng của bạn chưa thanh toán nên không phát sinh hoàn tiền.</p>"
-                      + "<p>Nếu có thắc mắc, vui lòng liên hệ qua email: "
-                      + "<a href=\"mailto:sambasport.booking@gmail.com\">sambasport.booking@gmail.com</a></p>"
-                      + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Ban quản trị Sân bóng Samba</strong></p>"
-                      + "</div>";
-        }
+        String noiDung = "<div style='font-family:sans-serif; color:#000;'>"
+                         + "<p>Kính gửi: " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
+                         + "<p>Bạn đã <strong>hủy đơn đặt sân</strong> tại sân <strong>\"" + tenSan + "\"</strong> "
+                         + "ngày <strong>" + lichDatSan.getNgayDat() + "</strong> trong khung giờ "
+                         + "<strong>" + khungGio.getGioBatDau() + " - " + khungGio.getGioKetThuc() + "</strong>.</p>"
+                         // === Thêm đoạn này ===
+                         + "<p style='color:#d9534f;'><em>Yêu cầu huỷ của bạn đã được gửi. "
+                         + "Vui lòng chờ admin duyệt để hoàn tiền (nếu đủ điều kiện).</em></p>"
+                         // ======================
+                         + "<p><strong>Thông tin hoàn tiền (dự kiến):</strong></p>"
+                         + "<ul>"
+                         + "<li>Tỉ lệ hoàn tiền: <strong>" + phanTramHoanTien.stripTrailingZeros().toPlainString() + "%</strong></li>"
+                         + "<li>Số tiền hoàn dự kiến: <strong>" + soTienHoan + " VNĐ</strong></li>"
+                         + "</ul>"
+                         + "<p>Khoản hoàn tiền sẽ được xử lý theo phương thức thanh toán bạn đã sử dụng sau khi được duyệt.</p>"
+                         + "<p>Nếu có thắc mắc, vui lòng liên hệ qua email: "
+                         + "<a href=\"mailto:sambasport.booking@gmail.com\">sambasport.booking@gmail.com</a></p>"
+                         + "<p style='margin-top:16px;'>Trân trọng,<br><strong>Ban quản trị Sân bóng Samba</strong></p>"
+                         + "</div>";
 
         ThongBao thongBao = new ThongBao();
         thongBao.setTieuDe(hoanTien != null ? "Xác nhận hủy đơn & hoàn tiền" : "Xác nhận hủy đơn");

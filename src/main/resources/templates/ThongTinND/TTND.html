@@ -273,19 +273,7 @@
                         <!--                            <a th:href="@{/lich-dat/huy(id=${lich.id})}" class="btn btn-danger btn-sm"-->
                         <!--                               onclick="return confirm('Bạn có chắc chắn muốn hủy lịch này?')">🗑️ Hủy</a>-->
                         <!--                        </td>-->
-                        <td>
-                            <th:block
-                                    th:with="startDateTime=${T(java.time.LocalDateTime).of(lich.ngayDat, lich.giaTheoKhungGio.khungGio.gioKetThuc)}">
-                            <button
-                                    th:if="${startDateTime.isAfter(T(java.time.LocalDateTime).now())}"
-                                    type="button"
-                                    class="btn btn-danger btn-sm"
-                                    th:onclick="|modalHuyLich(${lich.id})|">
-                                🗑️ Hủy
-                            </button>
-                            </th:block>
 
-                        </td>
 
 
                     </tr>

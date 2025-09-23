@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -26,9 +28,15 @@ public class HoanTienService {
     @Autowired
     private ThongBaoService thongBaoService;
 
-    public Page<HoanTien> getAllHoanTien(int page, int size) {
+    public Page<HoanTien> getAllHoanTien(LocalDate ngayHuy, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return hoanTienRepo.findAll(pageable);
+        LocalDateTime start = null;
+        LocalDateTime end = null;
+        if (ngayHuy != null) {
+            start = ngayHuy.atStartOfDay();
+            end = ngayHuy.atTime(LocalTime.MAX);
+        }
+        return hoanTienRepo.findAll(start, end, pageable);
     }
 
     public void duyet(int id) {
@@ -67,9 +75,15 @@ public class HoanTienService {
         }
     }
 
-    public Page<HoanTien> timKiem(String tenNguoiDat, String soDienThoai, Integer sanBongId, Integer trangThai, int page, int size) {
+    public Page<HoanTien> timKiem(String tenNguoiDat, LocalDate ngayHuy, String soDienThoai, Integer sanBongId, Integer trangThai, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return hoanTienRepo.timKiem(tenNguoiDat, soDienThoai, sanBongId, trangThai, pageable);
+        LocalDateTime start = null;
+        LocalDateTime end = null;
+        if (ngayHuy != null) {
+            start = ngayHuy.atStartOfDay();
+            end = ngayHuy.atTime(LocalTime.MAX);
+        }
+        return hoanTienRepo.timKiem(tenNguoiDat, start, end, soDienThoai, sanBongId, trangThai, pageable);
     }
 
     public HoanTien taoHoanTien(LichDatSan lich, String lyDoHuy) {
@@ -90,7 +104,7 @@ public class HoanTienService {
         return hoanTienRepo.save(hoanTien);
     }
 
-    public HoanTien taoHoanTienAdmin(LichDatSan lich, String lyDo) {
+    public HoanTien taoHoanTienAdmin(LichDatSan lich) {
         BigDecimal soTienThanhToan = BigDecimal.valueOf(lich.getThanhToan().getSoTien());
 
         HoanTien hoanTien = new HoanTien();
@@ -99,7 +113,7 @@ public class HoanTienService {
         hoanTien.setPhanTramHoan(BigDecimal.ONE); // luôn 100%
         hoanTien.setSoTienHoan(soTienThanhToan);
         hoanTien.setTrangThai(0); // chờ xử lý
-        hoanTien.setLyDo(lyDo);
+        hoanTien.setLyDo(null);
         hoanTien.setNgayHuy(LocalDateTime.now());
 
         return hoanTienRepo.save(hoanTien);

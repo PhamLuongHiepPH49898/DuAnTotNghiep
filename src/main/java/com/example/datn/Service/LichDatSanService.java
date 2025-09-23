@@ -1,13 +1,7 @@
 package com.example.datn.Service;
 
-import com.example.datn.Entity.KhungGio;
-import com.example.datn.Entity.LichDatSan;
-import com.example.datn.Entity.SanBong;
-import com.example.datn.Entity.TaiKhoan;
-import com.example.datn.Repository.KhungGioRepo;
-import com.example.datn.Repository.LichDatSanRepo;
-import com.example.datn.Repository.SanBongRepo;
-import com.example.datn.Repository.TaiKhoanRepo;
+import com.example.datn.Entity.*;
+import com.example.datn.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +24,8 @@ public class LichDatSanService {
     private KhungGioRepo khungGioRepo;
     @Autowired
     private ThongBaoService thongBaoService;
+    @Autowired
+    private HoanTienRepo hoanTienRepo;
 
     public Page<LichDatSan> getLichDatSan(LocalDate ngayDat, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -76,19 +72,21 @@ public class LichDatSanService {
             lichMoi.setTaiKhoan(null);
             lichDatSanRepo.save(lichMoi);
 
-        }try {
+        }
+        try {
             KhungGio khungGio = lichDatSan.getGiaTheoKhungGio().getKhungGio();
             thongBaoService.taoThongBaoHuy(lichDatSan, khungGio);
         } catch (Exception e) {
             System.err.println("[WARN] Gửi thông báo HUỶ thất bại: " + e.getMessage());
         }
     }
+
     public void huyPhiaUser(int id, String ghiChu) {
         LichDatSan lichDatSan = lichDatSanRepo.findById(id).orElse(null);
         if (lichDatSan != null) {
 
             lichDatSan.setTrangThai(2);
-            lichDatSan.setGhiChu(ghiChu);
+            lichDatSan.setGhiChu(null);
             lichDatSanRepo.save(lichDatSan);
 
             LichDatSan lichMoi = new LichDatSan();
@@ -105,14 +103,9 @@ public class LichDatSanService {
                 KhungGio khungGio = lichDatSan.getGiaTheoKhungGio().getKhungGio();
 
                 // Gửi thông báo cho người dùng
-                thongBaoService.taoThongBaoHuyNguoiDung(
-                        lichDatSan,
-                        khungGio,
-                        ghiChu != null ? ghiChu : "Không có"
-                );
-
-                // 🔑 Gửi thông báo cho tất cả Admin
-
+                HoanTien hoanTien = hoanTienRepo.findByLichDatSanId(lichDatSan.getId());
+                thongBaoService.taoThongBaoHuyNguoiDung(lichDatSan, khungGio, hoanTien);
+                //  Gửi thông báo cho tất cả Admin
 
                 List<TaiKhoan> admins = taiKhoanRepo.findByVaiTro("QUAN_TRI");
                 System.out.println(">>> TaiKhoan trong lich: " + lichDatSan.getTaiKhoan());
@@ -137,6 +130,7 @@ public class LichDatSanService {
         return lichDatSanRepo.timKiem(keyword, ngaydat, sanBong, trangThai, pageable);
 
     }
+
     public List<LichDatSan> getLichSuDatSanByTaiKhoan(int taiKhoanId) {
         return lichDatSanRepo.findByTaiKhoanId(taiKhoanId);
     }
