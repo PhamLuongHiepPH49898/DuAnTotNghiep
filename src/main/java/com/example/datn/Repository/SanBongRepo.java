@@ -50,4 +50,10 @@ public interface SanBongRepo extends JpaRepository<SanBong, Integer>, JpaSpecifi
     @Query("SELECT s FROM SanBong s WHERE s.trang_thai = 0")
     List<SanBong> findSanBongById();
 
+
+    @Query("SELECT COUNT(s) > 0 FROM SanBong s WHERE s.ten_san_bong = :ten")
+    boolean existsByTenSanBong(@Param("ten") String ten);
+
+    @Query("SELECT COUNT(s) > 0 FROM SanBong s WHERE s.ten_san_bong = :ten AND s.id_san_bong <> :id")
+    boolean existsByTenSanBongAndIdSanBongNot(@Param("ten") String ten, @Param("id") int id);
 }

@@ -5,6 +5,7 @@ import com.example.datn.Entity.TaiKhoanNganHang;
 import com.example.datn.Repository.TaiKhoanNganHangRepository;
 import com.example.datn.Service.BankCatalogService;
 import com.example.datn.Service.TaiKhoanNganHangService;
+import com.example.datn.Service.TaiKhoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,11 +27,18 @@ public class QuanLyThanhToanController {
     @Autowired
     private TaiKhoanNganHangService service;
 
+    @Autowired
+    private TaiKhoanService taiKhoanService;
+
     @GetMapping
     public String hienThiTrangThanhToan(Model model) {
         List<TaiKhoanNganHang> list = taiKhoanRepo.findAll();
         model.addAttribute("dsTaiKhoan", list);
         model.addAttribute("banks", bankCatalogService.getBanks());
+
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("hoTen", hoTen);
+
         return "ThanhToan/QuanLyThanhToan";
     }
 

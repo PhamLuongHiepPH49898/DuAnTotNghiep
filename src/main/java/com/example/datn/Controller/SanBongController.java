@@ -6,10 +6,7 @@ import com.example.datn.Entity.DanhGia;
 
 import com.example.datn.Entity.SanBong;
 import com.example.datn.Entity.TaiKhoan;
-import com.example.datn.Repository.LoaiMatSanRepo;
-import com.example.datn.Repository.LoaiMonTheThaoRepo;
-import com.example.datn.Repository.LoaiSanRepo;
-import com.example.datn.Repository.TaiKhoanRepo;
+import com.example.datn.Repository.*;
 import com.example.datn.Security.CustomUserDetails;
 
 import com.example.datn.Service.DanhGiaService;
@@ -59,8 +56,9 @@ public class SanBongController {
     private final DanhGiaService danhGiaService;
     private final ThongBaoService thongBaoService;
     private final PasswordEncoder passwordEncoder;//mk
+    private final SanBongRepo sanBongRepo;//mk
 
-    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo, TaiKhoanService taiKhoanService, TaiKhoanRepo taiKhoanRepo1, DanhGiaService danhGiaService, ThongBaoService thongBaoService,PasswordEncoder passwordEncoder) {
+    public SanBongController(SanBongService sanBongService, LoaiMatSanRepo loaiMatSanRepo, LoaiSanRepo loaiSanRepo, LoaiMonTheThaoRepo loaiMonTheThaoRepo, TaiKhoanRepo taiKhoanRepo, TaiKhoanService taiKhoanService, TaiKhoanRepo taiKhoanRepo1, DanhGiaService danhGiaService, ThongBaoService thongBaoService, PasswordEncoder passwordEncoder, SanBongRepo sanBongRepo) {
 
         this.sanBongService = sanBongService;
         this.loaiMatSanRepo = loaiMatSanRepo;
@@ -71,6 +69,7 @@ public class SanBongController {
         this.danhGiaService = danhGiaService;
         this.thongBaoService = thongBaoService;
         this.passwordEncoder = passwordEncoder; // mk
+        this.sanBongRepo = sanBongRepo;
     }
 
     @GetMapping("/")
@@ -380,6 +379,10 @@ public class SanBongController {
 
     @GetMapping("/form-them-san-bong")
     public String formThem(Model model) {
+
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("hoTen", hoTen);
+
         model.addAttribute("sanBong", new SanBong());
         model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
         model.addAttribute("dsLoaiMonTheThao", loaiMonTheThaoRepo.findAll());
@@ -390,12 +393,20 @@ public class SanBongController {
     @PostMapping("/them-san-bong")
     public String themSanBong(@Valid @ModelAttribute("sanBong") SanBong sanBong, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) throws IOException {
 
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("hoTen", hoTen);
+
         MultipartFile file = sanBong.getFile();
 
 
         if (file == null || file.isEmpty()) {
             bindingResult.rejectValue("file", "file.empty", "Bạn phải chọn file ảnh");
         }
+
+        if (sanBongRepo.existsByTenSanBong(sanBong.getTen_san_bong())) {
+            bindingResult.rejectValue("ten_san_bong", "tenSanBong.duplicate", "Tên sân bóng đã tồn tại");
+        }
+
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("dsLoaiSan", loaiSanRepo.findAll());
@@ -421,8 +432,7 @@ public class SanBongController {
             sanBong.setHinh_anh(fileName); // Chỉ lưu tên file
         }
 
-        String hoTen = taiKhoanService.getHoTenDangNhap();
-        model.addAttribute("hoTen", hoTen);
+
 
         // Lấy tài khoản đang đăng nhập
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -476,6 +486,9 @@ public class SanBongController {
         SanBong sanBongGoc = sanBongService.findById(id);
         if (sanBongGoc == null) {
             return "redirect:/quan-ly-san";
+        }
+        if (sanBongRepo.existsByTenSanBongAndIdSanBongNot(sanBong.getTen_san_bong(), id)) {
+            bindingResult.rejectValue("ten_san_bong", "tenSanBong.duplicate", "Tên sân bóng đã tồn tại");
         }
 
         if (bindingResult.hasErrors()) {

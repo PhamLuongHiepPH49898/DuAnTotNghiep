@@ -1,6 +1,7 @@
 package com.example.datn.Controller;
 
 import com.example.datn.DTO.DoanhThuSanProjection;
+import com.example.datn.Service.TaiKhoanService;
 import com.example.datn.Service.ThongKeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,8 @@ import java.util.List;
 public class ThongKeController {
 
     private final ThongKeService thongKeService;
+    private final TaiKhoanService taiKhoanService;
+
 
     @GetMapping("/doanhthu")
     public String doanhThuTheoSan(
@@ -50,6 +53,9 @@ public class ThongKeController {
         model.addAttribute("month", kq.month());
         model.addAttribute("year", kq.year());
         model.addAttribute("monthYear", ym.toString()); // "yyyy-MM"
+
+        String hoTen = taiKhoanService.getHoTenDangNhap();
+        model.addAttribute("hoTen", hoTen);
 
         // LƯU Ý: Render trực tiếp view, đừng redirect (redirect sẽ mất model)
         return "ThongKe/DoanhThuTheoSan";
