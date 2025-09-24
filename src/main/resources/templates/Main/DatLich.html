@@ -206,7 +206,7 @@
     let slotsTonTai = /*[[${cacSlotTonTai}]]*/ [];
     let weekDates = /*[[${weekDates}]]*/ [];
     let offset = /*[[${offset}]]*/ 0;
-
+    const idSan = /*[[${danhSachSan[0].id_san_bong}]]*/ 0;
     function formatDateKey(date) {
         const localDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         const year = localDate.getFullYear();
@@ -328,8 +328,7 @@
             return;
         }
         localStorage.setItem("chiTietDatLichList", JSON.stringify(selectedSlots));
-        window.location.href = "/xacnhan";
-    }
+        window.location.href = "/xacnhan?idSan=" + idSan;    }
 
     function changeDate(weekOffset) {
         const urlParams = new URLSearchParams(window.location.search);

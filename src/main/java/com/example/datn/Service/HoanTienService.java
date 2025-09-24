@@ -48,9 +48,8 @@ public class HoanTienService {
             try {
                 LichDatSan lichDatSan = hoanTien.getLichDatSan();
                 KhungGio khungGio = lichDatSan.getGiaTheoKhungGio().getKhungGio();
-                String lyDoHuy = hoanTien.getLyDo(); // nếu có lưu lý do
 
-                thongBaoService.taoThongBaoDuyetHoanTien(lichDatSan, khungGio, hoanTien, lyDoHuy
+                thongBaoService.taoThongBaoDuyetHoanTien(lichDatSan, khungGio, hoanTien
                 );
             } catch (Exception e) {
                 System.err.println("Gửi thông báo duyệt hoàn tiền thất bại: " + e.getMessage());

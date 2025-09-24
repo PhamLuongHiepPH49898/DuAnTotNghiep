@@ -22,6 +22,7 @@ public class NhacLichScheduler {
     private final ThongBaoService thongBaoService;
     // @Scheduled(cron = "0 0 0 * * ?") // chạy lúc 00:00 mỗi ngày
     @Scheduled(fixedRate = 60000) // Mỗi phút để test
+/*
     public void guiThongBaoTruocMotNgay() {
         LocalDate ngayMai = LocalDate.now().plusDays(1);
 
@@ -41,6 +42,7 @@ public class NhacLichScheduler {
             }
         }
     }
+*/
 
     @Scheduled(fixedRate = 60000)
     public void guiThongBaoTruocMotGio() {

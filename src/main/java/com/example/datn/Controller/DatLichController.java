@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import java.math.BigDecimal;
 import java.security.Principal;
@@ -82,17 +84,21 @@ public class DatLichController {
     }
 
     @GetMapping("/xacnhan")
-    public String hienThiFormXacNhan(Model model, Principal principal) {
+    public String hienThiFormXacNhan(@RequestParam("idSan") Integer idSan,Model model, Principal principal) {
         String email = principal.getName(); // Lấy email từ người dùng đang đăng nhập
         Optional<TaiKhoan> taiKhoan = taiKhoanRepo.findByEmail(email);
-
+        SanBong san = datSanService.laySanTheoId(idSan);
+        if (san == null) return "redirect:/trang-chu";
         if (taiKhoan.isPresent()) {
             XacNhanDatLichDTO xacNhan = new XacNhanDatLichDTO();
             xacNhan.setHoTen(taiKhoan.get().getHo_ten());
             xacNhan.setSoDienThoai(taiKhoan.get().getSo_dien_thoai());
             xacNhan.setEmail(taiKhoan.get().getEmail());
 
-            // Gán vào model đúng cách
+            String query = san.getTen_san_bong() + " " + san.getDia_chi();
+            String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
+            String fullMapUrl = "https://maps.google.com/maps?q=" + encodedQuery + "&t=&z=15&ie=UTF8&iwloc=&output=embed";
+            model.addAttribute("googleMapsUrl", fullMapUrl);
             model.addAttribute("xacNhan", xacNhan);
         } else {
             return "redirect:/login?error=notfound";

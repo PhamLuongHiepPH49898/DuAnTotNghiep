@@ -52,7 +52,7 @@ public class ThongBaoService {
 
 
     // Gửi thông báo nhắc lịch
-    public void taoThongBaoNhacLich(LichDatSan lichDatSan, KhungGio khungGio) {
+    /*public void taoThongBaoNhacLich(LichDatSan lichDatSan, KhungGio khungGio) {
         String tenSan = lichDatSan.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
         String diaChi = lichDatSan.getGiaTheoKhungGio().getSanBong().getDia_chi();
 
@@ -82,7 +82,7 @@ public class ThongBaoService {
         thongBaoRepository.save(thongBao);
         sendEmail(lichDatSan.getTaiKhoan().getEmail(), thongBao.getTieuDe(), noiDung);
     }
-
+*/
     //
     public void taoThongBaoNhacLichTruoc1h(LichDatSan lichDatSan, KhungGio khungGio) {
         String tenSan = lichDatSan.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
@@ -187,21 +187,20 @@ public class ThongBaoService {
         sendEmail(lichDatSan.getTaiKhoan().getEmail(), thongBao.getTieuDe(), noiDung);
     }
 
-    public void taoThongBaoDuyetHoanTien(LichDatSan lichDatSan,KhungGio khungGio, HoanTien hoanTien, String lyDoHuy) {
+    public void taoThongBaoDuyetHoanTien(LichDatSan lichDatSan,KhungGio khungGio, HoanTien hoanTien) {
         String tenSan = lichDatSan.getGiaTheoKhungGio().getSanBong().getTen_san_bong();
         BigDecimal phanTramHoanTien = hoanTien.getPhanTramHoan().multiply(BigDecimal.valueOf(100));
         BigDecimal soTienHoan = hoanTien.getSoTienHoan();
 
         String noiDung = "<div style='font-family:sans-serif; color:#000;'>"
                 + "<p>Kính gửi: " + lichDatSan.getTaiKhoan().getHo_ten() + ",</p>"
-                + "<p>Bạn đã <strong>hủy đơn đặt sân</strong> tại sân <strong>\"" + tenSan + "\"</strong> "
+                + "<p>Yêu cầu <strong>hủy đơn đặt sân</strong> tại sân <strong>\"" + tenSan + "\"</strong> "
                 + "ngày <strong>" + lichDatSan.getNgayDat() + "</strong> trong khung giờ "
-                + "<strong>" + khungGio.getGioBatDau() + " - " + khungGio.getGioKetThuc() + "</strong>.</p>"
+                + "<strong>" + khungGio.getGioBatDau() + " - " + khungGio.getGioKetThuc() + "</strong> đã được duyệt và sẽ được hoàn theo thông tin dưới đây.</p>"
                 + "<p><strong>Thông tin hoàn tiền:</strong></p>"
                 + "<ul>"
                 + "<li>Tỉ lệ hoàn tiền: <strong>" + phanTramHoanTien.stripTrailingZeros().toPlainString() + "%</strong></li>"
                 + "<li>Số tiền hoàn dự kiến: <strong>" + soTienHoan + " VNĐ</strong></li>"
-                + "<li>Lý do hủy: <strong>" + lyDoHuy + "</strong></li>"
                 + "</ul>"
                 + "<p>Khoản hoàn tiền sẽ được xử lý theo phương thức thanh toán bạn đã sử dụng.</p>"
                 + "<p>Nếu có thắc mắc, vui lòng liên hệ qua email: "

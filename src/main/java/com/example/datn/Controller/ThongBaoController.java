@@ -30,15 +30,6 @@ public class ThongBaoController {
     @Autowired
     private KhungGioRepo khungGioRepository;
 
-    /*@GetMapping("/xem-thong-bao")
-    public String hienThiThongBaoGET(Model model, HttpSession session) {
-        return hienThiThongBao(model, session);
-    }
-
-    @PostMapping("/xem-thong-bao")
-    public String hienThiThongBaoPOST(Model model, HttpSession session) {
-        return hienThiThongBao(model, session);
-    }*/
 
     private String hienThiThongBao(Model model, HttpSession session) {
         Integer idTaiKhoan = (Integer) session.getAttribute("idTaiKhoan");
@@ -108,7 +99,7 @@ public class ThongBaoController {
         KhungGio khungGio = khungGioRepository.findById(lichDatSan.getGiaTheoKhungGio().getKhungGio().getId())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khung giờ"));
 
-        thongBaoService.taoThongBaoNhacLich(lichDatSan, khungGio);
+        thongBaoService.taoThongBaoNhacLichTruoc1h(lichDatSan, khungGio);
         return "redirect:/thong-bao/xem-thong-bao";
     }
 }

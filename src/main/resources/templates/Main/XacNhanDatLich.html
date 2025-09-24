@@ -203,7 +203,11 @@
 
     <div id="hiddenInputs"></div>
     <p>Google Maps:</p>
-    <iframe src="https://maps.google.com/maps?q=Dan%20Sport%20Center,%20Dong%20Ha&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="250"></iframe>
+    <iframe
+            th:src="${googleMapsUrl}"
+            width="100%" height="250"
+            style="border:0;" allowfullscreen="" loading="lazy">
+    </iframe>
     <div class="section" style="margin-top: 20px;">
         <h3>LƯU Ý VỀ CHÍNH SÁCH HỦY & HOÀN TIỀN</h3>
         <ul style="padding-left: 18px; line-height: 1.8; margin-bottom: 0;">
