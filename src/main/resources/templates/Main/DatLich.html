@@ -163,7 +163,9 @@
     <thead>
     <tr>
         <th>Giờ</th>
-        <th th:each="date : ${weekDates}" th:text="${#temporals.format(date, 'EEEE dd/MM')}" class="text-center">Ngày</th>
+        <th th:each="date : ${weekDates}"
+            th:text="${#temporals.format(date, 'EEEE dd/MM', T(java.util.Locale).forLanguageTag('vi-VN'))}"
+            class="text-center">Ngày</th>
     </tr>
     </thead>
     <tbody>

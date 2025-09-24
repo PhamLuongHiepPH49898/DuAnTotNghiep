@@ -35,7 +35,9 @@ public class CheckInService {
         }
 
         LichDatSan lich = optional.get();
-
+        if (lich.getTrangThai() == 2) {
+            return "❌ Lịch đã bị hủy, bạn không thể check-in.";
+        }
         // Đã check-in trước đó?
         if (lich.getTrangThaiCheckIn() != null) {
             if (lich.getTrangThaiCheckIn() == 1) {
