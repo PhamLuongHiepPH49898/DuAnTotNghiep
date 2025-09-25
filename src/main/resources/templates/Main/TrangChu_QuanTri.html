@@ -268,6 +268,31 @@
             background-color: white;
             color: #0077cc;
         }
+
+        /* --- NÚT TRÒN CHAT FACEBOOK (floating) --- */
+        .fb-chat-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #0084ff; /* màu Messenger */
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 2000;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+        }
+        .fb-chat-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+            color: #fff;
+        }
     </style>
 
 </head>
@@ -366,11 +391,31 @@
         <a href="#"><i class="bi bi-twitter"></i></a>
         <a href="#"><i class="bi bi-instagram"></i></a>
     </div>
+
     <div class="mt-3">
         <a href="#" class="btn btn-outline-light">Lên đầu trang</a>
     </div>
 </footer>
+
+<!-- ✅ Nút tròn cố định để chat Facebook -->
+<a href="https://www.facebook.com/profile.php?id=100084279005739"
+   target="_blank"
+   class="fb-chat-btn"
+   aria-label="Chat Facebook">
+    <i class="bi bi-messenger"></i>
+</a>
+
 <script>
+    function toggleMenu() {
+        const dropdown = document.querySelector('.user-dropdown');
+        dropdown.classList.toggle('open');
+    }
+    document.addEventListener("click", function (e) {
+        const menu = document.querySelector('.user-dropdown');
+        if (menu && !menu.contains(e.target)) {
+            menu.classList.remove('open');
+        }
+    });
     document.querySelector('.btn-outline-light').addEventListener('click', function (e) {
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });
